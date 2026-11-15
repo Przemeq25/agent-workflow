@@ -17,7 +17,7 @@ Each developer picks the tools they use. `agent-workflow sync` generates the ada
 ## Install
 
 ```bash
-npm i -D github:Przemeq25/agent-workflow#v0.1.0
+npm i -D github:Przemeq25/agent-workflow#<tag or commit>
 npx agent-workflow init            # or: init --tools claude,codex
 ```
 
@@ -139,4 +139,4 @@ GitHub Actions step:
 npm test
 ```
 
-Releases are git tags (`v0.1.0`); projects pin a tag in `package.json`.
+Releases are git tags (`v0.1.1`); projects pin a tag or a commit in `package.json`. npm records GitHub dependencies as `git+ssh` in the lockfile, but fetches a public repository over HTTPS, so CI and deploys need no keys.
