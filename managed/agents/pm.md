@@ -1,7 +1,7 @@
 ---
 name: pm
 description: Product Manager. Turns the PRD into changes in work/changes/<ID>/ (proposal.md plus subtasks with acceptance criteria in change.json), agrees the design with tech-lead and runs user approval. Use for larger scope.
-tier: strong
+tier: high
 access: full
 mode: primary
 ---

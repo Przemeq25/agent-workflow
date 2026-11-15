@@ -1,7 +1,7 @@
 ---
 name: prd-tech-explore
 description: Technical exploration of an existing repository. Reverse-engineers stack, packages, scripts, conventions, patterns, tests, CI and written rules into the same files prd-tech produces (tech-prd.md, engineering.md, tech-notes.md) as an evidence-backed draft, so pm and tech-lead can work as in a new project. Run once when adopting an existing codebase.
-tier: strong
+tier: high
 access: prd-tech
 mode: primary
 ---

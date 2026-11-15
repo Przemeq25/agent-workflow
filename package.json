@@ -1,10 +1,11 @@
 {
 	"name": "@przemeq25/agent-workflow",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "Tool-independent agent workflow (PRD → PM → Tech Lead → implementer, reviewer, QA → PR) with roles and skills in .agents/ and generated adapters for Claude Code, Codex and OpenCode.",
 	"type": "module",
 	"bin": {
-		"agent-workflow": "bin/agent-workflow.mjs"
+		"agent-workflow": "bin/agent-workflow.mjs",
+		"create-agent-workflow": "bin/agent-workflow.mjs"
 	},
 	"exports": {
 		".": "./lib/sync.mjs",

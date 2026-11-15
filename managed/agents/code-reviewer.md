@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
-description: Independent review of a subtask diff against its design, acceptance criteria and the project's review rules. Verdict APPROVE, CHANGES_REQUIRED or SPEC_CONFLICT. Read-only, strong model. Called by tech-lead or autopilot.
-tier: strong
+description: Independent review of a subtask diff against its design, acceptance criteria and the project's review rules. Verdict APPROVE, CHANGES_REQUIRED or SPEC_CONFLICT. Read-only, high-tier model. Called by tech-lead or autopilot.
+tier: high
 access: read-only
 mode: subagent
 ---

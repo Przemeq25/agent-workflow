@@ -1,7 +1,7 @@
 ---
 name: prd-explore
 description: Product exploration of an existing repository. Reverse-engineers what the product already does (features, flows, data model, UI copy, tests) into the same files prd produces (prd.md, roadmap.md, prd-notes.md) as an evidence-backed draft marking what is implemented, so pm can plan further work. Run once when adopting an existing codebase, after or alongside prd-tech-explore.
-tier: strong
+tier: high
 access: prd
 mode: primary
 ---

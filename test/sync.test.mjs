@@ -26,9 +26,39 @@ const run = (dir, ...args) =>
 	spawnSync("node", [CLI, ...args], { cwd: dir, encoding: "utf8" });
 const read = (dir, rel) => readFileSync(join(dir, rel), "utf8");
 
-test("init creates the project skeleton, managed files and claude adapters", () => {
+test("init without a choice creates only .agents/ and AGENTS.md, no tool adapters", () => {
 	const dir = project();
 	const r = run(dir, "init");
+	assert.equal(r.status, 0, r.stderr);
+	assert.ok(existsSync(join(dir, "AGENTS.md")));
+	assert.ok(existsSync(join(dir, ".agents/agents/tech-lead.md")));
+	for (const rel of [".claude", "CLAUDE.md", ".codex", ".opencode"])
+		assert.ok(!existsSync(join(dir, rel)), rel);
+	assert.deepEqual(JSON.parse(read(dir, ".agents/workflow.json")).tools, []);
+	assert.match(r.stdout, /no tool adapters/);
+	// postinstall after a plain install generates nothing either
+	const p = spawnSync("node", [join(PKG, "lib", "postinstall.mjs")], {
+		env: { ...process.env, INIT_CWD: dir },
+		encoding: "utf8",
+	});
+	assert.equal(p.status, 0, p.stderr);
+	assert.ok(!existsSync(join(dir, ".claude")));
+});
+
+test("postinstall does nothing before init", () => {
+	const dir = project();
+	const p = spawnSync("node", [join(PKG, "lib", "postinstall.mjs")], {
+		env: { ...process.env, INIT_CWD: dir },
+		encoding: "utf8",
+	});
+	assert.equal(p.status, 0, p.stderr);
+	assert.ok(!existsSync(join(dir, ".agents")));
+	assert.ok(!existsSync(join(dir, "AGENTS.md")));
+});
+
+test("init --tools claude creates the project skeleton, managed files and claude adapters", () => {
+	const dir = project();
+	const r = run(dir, "init", "--yes", "--tools", "claude");
 	assert.equal(r.status, 0, r.stderr);
 	for (const rel of [
 		"AGENTS.md",
@@ -55,9 +85,65 @@ test("init creates the project skeleton, managed files and claude adapters", () 
 	assert.match(v.stdout, /still has TODOs/);
 });
 
-test("claude adapter maps tier and access", () => {
+test("init saves chosen models per tier, locally when asked, and the loop runner", () => {
 	const dir = project();
 	run(dir, "init");
+	const r = run(
+		dir,
+		"init",
+		"--yes",
+		"--local",
+		"--tools",
+		"codex,claude",
+		"--models",
+		"codex.high=gpt-5.5,codex.low=gpt-5.5-mini,claude.high=opus",
+		"--runner",
+		"codex",
+	);
+	assert.equal(r.status, 0, r.stderr);
+	assert.deepEqual(JSON.parse(read(dir, ".agents/workflow.json")).tools, []);
+	const local = JSON.parse(read(dir, ".agents/workflow.local.json"));
+	assert.deepEqual(local.tools, ["codex", "claude"]);
+	assert.equal(local.loop.runner, "codex");
+	assert.deepEqual(local.models.claude, {
+		high: "opus",
+		standard: "sonnet",
+		low: "haiku",
+	});
+	assert.match(read(dir, ".codex/agents/tech-lead.toml"), /model = "gpt-5\.5"/);
+	assert.doesNotMatch(read(dir, ".codex/agents/implementer.toml"), /model =/);
+	assert.match(read(dir, ".claude/agents/pm.md"), /model: opus/);
+	assert.match(read(dir, ".gitignore"), /workflow\.local\.json/);
+});
+
+test("init warns when the developer's local file overrides the project choice", () => {
+	const dir = project();
+	run(dir, "init", "--yes", "--local", "--tools", "codex");
+	const r = run(dir, "init", "--yes", "--tools", "none");
+	assert.equal(r.status, 0, r.stderr);
+	assert.match(r.stdout, /workflow\.local\.json overrides this choice/);
+	assert.ok(existsSync(join(dir, ".codex/agents/pm.toml")));
+});
+
+test("old tier name strong still maps to high", () => {
+	const dir = project();
+	run(dir, "init");
+	writeFileSync(
+		join(dir, ".agents/workflow.json"),
+		'{ "tools": ["claude"], "models": { "claude": { "strong": "opus-old" } } }',
+	);
+	writeFileSync(
+		join(dir, ".agents/agents/legacy.md"),
+		"---\nname: legacy\ndescription: Old role.\ntier: strong\n---\n\nBody.\n",
+	);
+	syncProject(dir, { quiet: true });
+	assert.match(read(dir, ".claude/agents/legacy.md"), /model: opus-old/);
+	assert.match(read(dir, ".claude/agents/tech-lead.md"), /model: opus-old/);
+});
+
+test("claude adapter maps tier and access", () => {
+	const dir = project();
+	run(dir, "init", "--yes", "--tools", "claude");
 	const impl = read(dir, ".claude/agents/implementer.md");
 	assert.match(impl, /model: sonnet/);
 	assert.match(impl, /guard\.mjs" --role no-commit/);
@@ -74,7 +160,7 @@ test("claude adapter maps tier and access", () => {
 
 test("developer chooses tools locally; removed tools lose their adapters", () => {
 	const dir = project();
-	run(dir, "init");
+	run(dir, "init", "--yes", "--tools", "claude");
 	writeFileSync(
 		join(dir, ".agents/workflow.local.json"),
 		'{ "tools": ["codex", "opencode"], "guard": { "defaultBranch": "x" } }',
@@ -90,6 +176,7 @@ test("developer chooses tools locally; removed tools lose their adapters", () =>
 	assert.ok(!existsSync(join(dir, ".claude/agents/implementer.md")));
 	assert.ok(!existsSync(join(dir, "CLAUDE.md")));
 	assert.ok(!existsSync(join(dir, ".claude/skills")));
+	assert.ok(!existsSync(join(dir, ".claude")), "empty .claude/ is removed");
 	assert.match(
 		read(dir, ".codex/agents/code-reviewer.toml"),
 		/sandbox_mode = "read-only"/,
@@ -127,14 +214,14 @@ test("an existing hand-written file is never overwritten without --force", () =>
 	const dir = project();
 	writeFileSync(join(dir, "AGENTS.md"), "my own\n");
 	writeFileSync(join(dir, "CLAUDE.md"), "my claude\n");
-	run(dir, "init");
+	run(dir, "init", "--yes", "--tools", "claude");
 	assert.equal(read(dir, "AGENTS.md"), "my own\n");
 	assert.equal(read(dir, "CLAUDE.md"), "my claude\n");
 });
 
 test("project-specific roles are adapted too, and init never overwrites project skills", () => {
 	const dir = project();
-	run(dir, "init");
+	run(dir, "init", "--yes", "--tools", "claude");
 	writeFileSync(join(dir, ".agents/skills/business-rules/SKILL.md"), "mine\n");
 	writeFileSync(
 		join(dir, ".agents/agents/designer.md"),
@@ -152,7 +239,7 @@ test("project-specific roles are adapted too, and init never overwrites project 
 
 test("sync is idempotent", () => {
 	const dir = project();
-	run(dir, "init");
+	run(dir, "init", "--yes", "--tools", "claude,codex,opencode");
 	const r = syncProject(dir, { quiet: true });
 	assert.deepEqual(r.written, []);
 	assert.deepEqual(r.conflicts, []);

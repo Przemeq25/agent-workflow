@@ -52,7 +52,11 @@ function ruleCommand(label) {
 const workflow = loadConfig(ROOT);
 const loopCfg = workflow.loop ?? {};
 const cfg = {
-	runner: process.env.AGENT_LOOP_RUNNER ?? loopCfg.runner ?? "claude",
+	runner:
+		process.env.AGENT_LOOP_RUNNER ??
+		loopCfg.runner ??
+		workflow.tools[0] ??
+		"claude",
 	verifyEnv: loopCfg.verifyEnv ?? {},
 	platform: process.env.AGENT_LOOP_PLATFORM ?? "",
 	base: process.env.AGENT_LOOP_BASE ?? "",
@@ -374,7 +378,7 @@ const REQUIRED_AGENTS = [
 	"code-reviewer",
 	"qa",
 ];
-const TIERS = ["strong", "standard", "inherit"];
+const TIERS = ["high", "standard", "low", "inherit", "strong"];
 const ACCESS = ["full", "no-commit", "qa", "read-only", "prd", "prd-tech"];
 const MODES = ["primary", "subagent", "all"];
 

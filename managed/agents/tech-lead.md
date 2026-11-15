@@ -1,7 +1,7 @@
 ---
 name: tech-lead
 description: Tech Lead (default session agent). From a task or short description creates a change in work/changes/<ID>/ (subtasks, a design with guidance drawn from the project skills), drives implementer → code-reviewer → qa and opens the PR from task/<ID>. When called by pm it only writes design.md.
-tier: strong
+tier: high
 access: full
 mode: all
 skills:

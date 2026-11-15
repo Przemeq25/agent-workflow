@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
-import { PKG, printReport, scaffold, syncProject } from "../lib/sync.mjs";
+import { basename, join, resolve } from "node:path";
+import { parseModels, parseTools, runInit } from "../lib/init.mjs";
+import { PKG, printReport, syncProject } from "../lib/sync.mjs";
 
 const HELP = `${PKG.name} ${PKG.version}
 
 Setup
-  agent-workflow init [--tools claude,codex,opencode] [--force]
-      create .agents/workflow.json and the five project skills (only missing ones),
-      add npm scripts and the postinstall hook, then sync
+  agent-workflow init
+      create .agents/ (roles, skills, AGENTS.md) and ask which tools get adapter files, which
+      models the high/standard/low tiers use, the main role and the loop runner; then sync.
+      No tools chosen = only .agents/ and AGENTS.md.
+      Without questions: --yes [--tools claude,codex|none] [--models claude.high=opus,…]
+      [--default-agent tech-lead] [--runner codex] [--local] [--no-postinstall] [--force]
   agent-workflow sync [--tools …] [--force] [--check]
       copy the managed roles, skills, guard, templates and AGENTS.md into the project
       and generate the adapters of the chosen tools (git-ignored)
@@ -22,7 +26,7 @@ Changes and loop
   agent-workflow loop [--max N] [--change ID] [--retry ID/ST] [--dry-run]
   agent-workflow watch [same flags]  loop without end
 
-Tools for adapters: AGENT_WORKFLOW_TOOLS env > .agents/workflow.local.json > .agents/workflow.json.`;
+Tools for adapters: AGENT_WORKFLOW_TOOLS env > .agents/workflow.local.json > .agents/workflow.json > none.`;
 
 function flag(args, name) {
 	const i = args.indexOf(name);
@@ -32,7 +36,7 @@ function flag(args, name) {
 	return v && !v.startsWith("--") ? v : true;
 }
 
-function addScripts(root) {
+function addScripts(root, { postinstall = true } = {}) {
 	const file = join(root, "package.json");
 	if (!existsSync(file)) return [];
 	const text = readFileSync(file, "utf8");
@@ -55,7 +59,9 @@ function addScripts(root) {
 			added.push(k);
 		}
 	const hook = `node -e "import('${PKG.name}/postinstall').catch(()=>{})"`;
-	if (!pkg.scripts.postinstall) {
+	if (!postinstall) {
+		// nothing: the developer runs `agent-workflow sync` by hand
+	} else if (!pkg.scripts.postinstall) {
 		pkg.scripts.postinstall = hook;
 		added.push("postinstall");
 	} else if (!pkg.scripts.postinstall.includes(PKG.name))
@@ -71,25 +77,34 @@ function addScripts(root) {
 
 async function main() {
 	const args = process.argv.slice(2);
-	const cmd = args.shift();
+	// `npm init agent-workflow` runs the `create-agent-workflow` bin: same as `init`.
+	const asCreate = basename(process.argv[1] ?? "").startsWith("create-");
+	const cmd =
+		asCreate && (!args[0] || args[0].startsWith("--")) ? "init" : args.shift();
 	const root = resolve(process.cwd());
 	const toolsArg = flag(args, "--tools");
-	const tools = typeof toolsArg === "string" ? toolsArg.split(",") : undefined;
+	const tools = parseTools(toolsArg === true ? "" : toolsArg);
 	const force = Boolean(flag(args, "--force"));
 	switch (cmd) {
 		case "init": {
-			const created = scaffold(root);
-			for (const f of created) console.log(`[agent-workflow] + ${f}`);
-			const scripts = addScripts(root);
-			if (scripts.length)
-				console.log(
-					`[agent-workflow] package.json scripts: ${scripts.join(", ")}`,
-				);
-			syncProject(root, { tools, force });
-			console.log(
-				"[agent-workflow] next: fill the TODOs in .agents/skills/*-rules (or run the prd-tech-explore role), then `agent-workflow validate`.",
+			const models = flag(args, "--models");
+			const defaultAgent = flag(args, "--default-agent");
+			const runner = flag(args, "--runner");
+			return runInit(
+				root,
+				{
+					tools,
+					force,
+					yes: Boolean(flag(args, "--yes") || flag(args, "-y")),
+					models: parseModels(models),
+					defaultAgent:
+						typeof defaultAgent === "string" ? defaultAgent : undefined,
+					runner: typeof runner === "string" ? runner : undefined,
+					local: Boolean(flag(args, "--local")),
+					postinstall: !flag(args, "--no-postinstall"),
+				},
+				addScripts,
 			);
-			return;
 		}
 		case "sync": {
 			const check = Boolean(flag(args, "--check"));
