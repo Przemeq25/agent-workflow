@@ -1,0 +1,55 @@
+<!-- Managed by @przemeq25/agent-workflow. Do not edit: changes are overwritten by `agent-workflow sync`. Project rules live in .agents/skills/*-rules. -->
+# Agent instructions
+
+This repository uses a generic, tool-independent agent workflow. Roles, skills and templates live in `.agents/`.
+Everything specific to this project (language, market, stack, commands, tests, review) lives only in the
+project skills in `.agents/skills/`. This file contains no project rules.
+
+## Where things are
+
+| Path | What it is | Who changes it |
+|---|---|---|
+| `.agents/agents/*.md` | roles: `tech-lead` (default), `pm`, `prd`, `prd-tech`, `prd-explore`, `prd-tech-explore`, `autopilot`, `implementer`, `code-reviewer`, `qa` | the package (`agent-workflow sync`) |
+| `.agents/skills/team-*` | generic workflow skills | the package |
+| `.agents/skills/*-rules` | **project rules**: `workflow-rules`, `business-rules`, `engineering-rules`, `review-rules`, `testing-rules` | a human |
+| `.agents/skills/<other>` | technology skills of the project | a human |
+| `.agents/templates/`, `.agents/docs/` | proposal and design templates, format of changes and reports | the package |
+| `.agents/hooks/guard.mjs` | guard that blocks forbidden operations (used by tools with hooks) | the package |
+| `.agents/workflow.json` | project configuration: tools, models, guard rules, loop | a human |
+| `context/foundation/` | PRD, roadmap, technical standards | `prd`, `prd-tech` |
+| `context/engineering.md` | verified code patterns | `prd-tech` |
+| `work/changes/<ID>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
+
+Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/agents/`, `.opencode/agents/`) are generated from `.agents/` by
+`agent-workflow sync` for the tools each developer uses, and are not committed. Never edit them.
+
+## Start
+
+1. Read the project skill `workflow-rules` first, then only the skills and documents your task needs.
+2. Check facts in the repository. Do not assume that an API, file or piece of infrastructure exists.
+3. If you were started as a role, follow `.agents/agents/<role>.md`. Otherwise act as `tech-lead`.
+
+## Flow
+
+`prd` and `prd-tech` (or `prd-explore` and `prd-tech-explore` for an existing codebase) → `pm`
+(`change.json`, `proposal.md`) ⇄ `tech-lead` (`design.md`) → user approval (`agent-workflow approve <ID>`)
+→ `tech-lead` or the loop (`autopilot`) → subtasks land on `task/<ID>` → main PR `task/<ID>` → default branch,
+merged only by a human. A single task goes straight to `tech-lead`. Fixes after PR review are done by
+`tech-lead` on the same branch.
+
+## Delegation
+
+Roles ask other roles by name ("ask `implementer`"). Use your tool's subagent mechanism with that role. If your
+tool cannot start a named subagent, start a generic subagent with the instructions from
+`.agents/agents/<role>.md`, or perform the role yourself and say so in the report. Review and QA are then done
+critically, as someone other than the author.
+
+## Hard boundaries
+
+- Never push to the default branch, force push, merge into the default branch or deploy. A human merges.
+- Giving `tech-lead` a task, or starting the loop, is consent to commit and push `task/<ID>` and `sub/<ID>/<ST>`,
+  to open PRs and (the loop only) to merge green subtask PRs into `task/<ID>`.
+- Do not change roles, permissions, hooks, `.agents/workflow.json`, this file, the tool adapters or `.env`.
+- Do not turn proposals into approved decisions. An unanswered product decision blocks the dependent code.
+- PASS only with executed evidence; an unexecuted check is NOT VERIFIED. Never reveal or commit secrets,
+  production data or credentials.

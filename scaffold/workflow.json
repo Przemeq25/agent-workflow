@@ -1,0 +1,16 @@
+{
+	"tools": ["claude"],
+	"defaultAgent": "tech-lead",
+	"models": {
+		"claude": { "strong": "opus", "standard": "sonnet" },
+		"codex": {},
+		"opencode": {}
+	},
+	"guard": {
+		"defaultBranch": "main",
+		"forbiddenCommands": []
+	},
+	"claude": { "permissions": { "deny": [] } },
+	"opencode": { "bashDeny": [] },
+	"loop": { "runner": "claude", "verifyEnv": {} }
+}
