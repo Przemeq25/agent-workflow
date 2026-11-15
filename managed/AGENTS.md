@@ -9,7 +9,7 @@ project skills in `.agents/skills/`. This file contains no project rules.
 
 | Path | What it is | Who changes it |
 |---|---|---|
-| `.agents/agents/*.md` | roles: `tech-lead` (default), `pm`, `prd`, `prd-tech`, `prd-explore`, `prd-tech-explore`, `autopilot`, `implementer`, `code-reviewer`, `qa` | the package (`agent-workflow sync`) |
+| `.agents/agents/*.md` | roles: `tech-lead` (default), `pm`, `prd`, `prd-tech`, `prd-explore`, `prd-tech-explore`, `autopilot`, `implementer`, `code-reviewer`, `qa`, `scout` and `clerk` (cheap helpers) | the package (`agent-workflow sync`) |
 | `.agents/skills/team-*` | generic workflow skills | the package |
 | `.agents/skills/*-rules` | **project rules**: `workflow-rules`, `business-rules`, `engineering-rules`, `review-rules`, `testing-rules` | a human |
 | `.agents/skills/<other>` | technology skills of the project | a human |
@@ -43,6 +43,15 @@ Roles ask other roles by name ("ask `implementer`"). Use your tool's subagent me
 tool cannot start a named subagent, start a generic subagent with the instructions from
 `.agents/agents/<role>.md`, or perform the role yourself and say so in the report. Review and QA are then done
 critically, as someone other than the author.
+
+### Cheap helpers
+
+Two roles run on the `low` tier so a strong model does not spend tokens on mechanical work:
+
+- `scout` (read-only): searches and maps the code, collects git facts, and returns paths with short facts, not file contents.
+- `clerk`: runs commands it is given and reports pass or fail in a few lines, moves and renames files, archives finished changes.
+
+Roles that coordinate (`tech-lead`, `pm`, `autopilot`, `prd-explore`, `prd-tech-explore`) hand such work to them when a search would read more than a few files or a command only needs its result reported. Give them a precise task: the question or the exact steps, the allowed files and the report you expect. Do not hand them design, review, QA verdicts, delivery reports or anything that needs a decision. A subagent usually cannot start another subagent, so `implementer`, `qa` and `code-reviewer` do their own lookups. If your tool cannot start a named subagent, do the work yourself.
 
 ## Hard boundaries
 

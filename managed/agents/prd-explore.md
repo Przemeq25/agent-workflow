@@ -35,6 +35,8 @@ You write only these files (the workflow guard blocks other writes where the too
 
 ## Process
 
+Cheap lookups: ask `scout` for searches across more than a few files and for git history (see Cheap helpers in `AGENTS.md`).
+
 1. **Inventory** sources and record what you read.
 2. **Feature map:** list features by user flow, with status and evidence. Note dead code, stubs and half-finished work.
 3. **Draft** `prd.md` (goal and problem only if documented, users and flow as observed, requirements, scenarios, NFRs that are measurable in code or config, out of scope as observed, open decisions, changelog), then `roadmap.md` and `prd-notes.md`.

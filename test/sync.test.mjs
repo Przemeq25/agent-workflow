@@ -60,6 +60,44 @@ test("init creates spec/, and a project with the old work/ still validates with 
 	assert.match(v.stdout, /work\/changes valid/);
 });
 
+test("cheap helpers: scout and clerk run on the low tier with their own models", () => {
+	const dir = project();
+	run(
+		dir,
+		"init",
+		"--yes",
+		"--tools",
+		"claude,codex",
+		"--models",
+		"claude.low=haiku,codex.low=gpt-5.5-mini",
+	);
+	const scout = read(dir, ".claude/agents/scout.md");
+	assert.match(scout, /model: haiku/);
+	assert.match(scout, /tools: Read, Glob, Grep, Bash/);
+	assert.match(scout, /--role read-only/);
+	const clerk = read(dir, ".claude/agents/clerk.md");
+	assert.match(clerk, /model: haiku/);
+	assert.match(clerk, /--role no-commit/);
+	assert.match(
+		read(dir, ".codex/agents/scout.toml"),
+		/model = "gpt-5\.5-mini"/,
+	);
+	assert.match(
+		read(dir, ".codex/agents/scout.toml"),
+		/sandbox_mode = "read-only"/,
+	);
+	assert.match(
+		read(dir, ".codex/agents/clerk.toml"),
+		/model = "gpt-5\.5-mini"/,
+	);
+	// without a low model the tool default is used, never a stronger one by accident
+	const bare = project();
+	run(bare, "init", "--yes", "--tools", "codex");
+	assert.doesNotMatch(read(bare, ".codex/agents/scout.toml"), /model =/);
+	assert.match(read(dir, "AGENTS.md"), /### Cheap helpers/);
+	assert.match(read(dir, ".agents/agents/tech-lead.md"), /ask `scout`/);
+});
+
 test("postinstall does nothing before init", () => {
 	const dir = project();
 	const p = spawnSync("node", [join(PKG, "lib", "postinstall.mjs")], {

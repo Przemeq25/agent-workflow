@@ -35,6 +35,8 @@ You write only these files (the workflow guard blocks other writes where the too
 
 ## Process
 
+Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`).
+
 1. **Inventory** the sources above and record the commands you ran.
 2. **Draft** `tech-prd.md`, `engineering.md` and `tech-notes.md`. Mark every unknown as an open decision, not as a guess.
 3. **Questions:** at most 3 per round, each with a recommendation, only for contradictions or choices the repository cannot settle. Answer everything else from the repo.

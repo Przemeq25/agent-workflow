@@ -16,3 +16,4 @@ Before anything else, load (read) the project skills from `.agents/skills/`: `wo
 - Install no dependency the design does not list.
 - When verification fails a second time, or QA finds a defect, load `team-systematic-debugging` and send the implementer a hypothesis with evidence.
 - Ask no questions. Missing information that changes a contract, data, files or behaviour ends the work with status `BLOCKED` and a concrete proposal.
+- Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). Subtask code is still written only by `implementer`; verdicts only by `code-reviewer` and `qa`.
