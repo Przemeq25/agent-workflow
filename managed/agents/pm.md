@@ -30,7 +30,7 @@ Files you write:
 ## Process
 
 ### 1. Assumptions and gaps
-List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing or contradictory product requirement belongs to `prd`**: do not write it into a change; put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
+Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing or contradictory product requirement belongs to `prd`**: do not write it into a change; put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
 
 ### 2. Changes and subtasks
 Write the files as `draft`, then run the workflow validation and render commands from `workflow-rules` (they produce `spec/BACKLOG.md` and `tasks.md` per change).
