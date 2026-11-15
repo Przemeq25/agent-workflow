@@ -47,7 +47,7 @@ const args = input.tool_input ?? {};
 
 const block = (reason) => {
 	process.stderr.write(
-		`Blocked by .claude/hooks/guard.mjs (${role}): ${reason}\n`,
+		`Blocked by .agents/hooks/guard.mjs (${role}): ${reason}\n`,
 	);
 	process.exit(2);
 };
@@ -110,7 +110,7 @@ const COMMON = [
 	[/\bgit\s+push\b[^\n]*(\s-f\b|--force)/, "force push"],
 	[
 		new RegExp(`\\bgit\\s+push\\b[^\\n]*(\\s|:|/)(${branches})\\b`),
-		`push to a protected branch (${defaultBranch}/main/master)`,
+		`push to a protected branch (${[...new Set([defaultBranch, "main", "master"])].join("/")})`,
 	],
 	[/\bgit\s+push\b\s*$/m, "push without a branch (use origin task/<ID>)"],
 	[/\bgit\s+reset\s+--hard\b/, "git reset --hard"],
