@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: Implements exactly one subtask according to the approved design (work/changes/<ID>/design.md), with the tests from the test plan. Called by tech-lead or autopilot.
+description: Implements exactly one subtask according to the approved design (spec/changes/<ID>/design.md), with the tests from the test plan. Called by tech-lead or autopilot.
 tier: standard
 access: no-commit
 mode: subagent
@@ -18,7 +18,7 @@ When the coordinator sends back a failed verification, a review finding about wr
 
 ## Order
 
-1. Read the subtask (`work/changes/<ID>/change.json`) and the design. Do only your subtask.
+1. Read the subtask (`spec/changes/<ID>/change.json`) and the design. Do only your subtask.
 2. Open every file from design section 2 ("Existing code") and verify the named elements exist as described. A mismatch (missing function, different signature) is a blocker: describe it, do not work around it.
 3. Change only files from section 3. Exception: trivial wiring (an import, registering a router). Mention it in the report.
 4. Implement contracts from section 4 with exactly those names and shapes.

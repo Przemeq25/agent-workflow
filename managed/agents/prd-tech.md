@@ -1,7 +1,7 @@
 ---
 name: prd-tech
 description: Technical PRD author. Decides and records engineering standards for implementer, reviewer and QA: stack, allowed packages, code style, design system, test strategy, review criteria, definition of done, development flow (context/foundation/tech-prd.md). Run on project start or when technology or rules change. Writes no application code and no change designs.
-tier: strong
+tier: high
 access: prd-tech
 mode: primary
 ---

@@ -24,7 +24,7 @@ Commands that must never run (shared database, deploy): TODO.
 
 ## Paths
 - Product: `context/foundation/prd.md`, `roadmap.md`, `prd-notes.md`. Technical standards: `context/foundation/tech-prd.md`, `tech-notes.md`, `context/engineering.md`.
-- Changes: `work/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/<ST>.md`), templates in `.agents/templates/`, format in `.agents/docs/work-format.md`.
+- Changes: `spec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/<ST>.md`), templates in `.agents/templates/`, format in `.agents/docs/spec-format.md`.
 - Source: TODO. Tests: TODO.
 
 ## Git and delivery

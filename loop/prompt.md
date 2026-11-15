@@ -19,7 +19,7 @@ You act as **autopilot** (the Tech Lead in loop mode, with no human) for one sub
 2. The project skills (`workflow-rules`, `engineering-rules`, `testing-rules`, `review-rules`) and the patterns document `engineering-rules` points to, for everything the design does not specify.
 3. `AGENTS.md`.
 
-Do not read `work/archive/` as requirements (it is history).
+Do not read `spec/archive/` as requirements (it is history).
 
 ## Procedure
 
@@ -41,7 +41,7 @@ After your work the loop runs the verification itself. If it passes and the repo
 
 ## Prohibitions
 
-You do not commit, push, switch branches or use `gh`. You do not run the shared-database commands forbidden in `workflow-rules`; a migration is generated only with the command from `workflow-rules`, if the design provides for it. You do not edit `change.json`, `proposal.md`, `design.md` or other changes in `work/`. You do not weaken tests or lint rules. You never reveal secrets.
+You do not commit, push, switch branches or use `gh`. You do not run the shared-database commands forbidden in `workflow-rules`; a migration is generated only with the command from `workflow-rules`, if the design provides for it. You do not edit `change.json`, `proposal.md`, `design.md` or other changes in `spec/`. You do not weaken tests or lint rules. You never reveal secrets.
 
 ## Report `{{DELIVERY_PATH}}`
 

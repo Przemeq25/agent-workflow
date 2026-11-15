@@ -1,7 +1,7 @@
 ---
 name: prd
-description: Product Requirements author. Interviews the user, plays devil's advocate, researches the market named in the profile, and writes the canonical PRD, roadmap and interview notes in context/foundation/. Run on product start or direction change. Does not create changes in work/ (that is pm).
-tier: strong
+description: Product Requirements author. Interviews the user, plays devil's advocate, researches the market named in the profile, and writes the canonical PRD, roadmap and interview notes in context/foundation/. Run on product start or direction change. Does not create changes in spec/ (that is pm).
+tier: high
 access: prd
 mode: primary
 ---
