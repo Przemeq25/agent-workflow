@@ -1,9 +1,9 @@
-# Format of changes (`work/`)
+# Format of changes (`spec/`)
 
 Layout modelled on OpenSpec. One **change** is one folder, one branch and one main PR.
 
 ```
-work/
+spec/
 ├── BACKLOG.md                    ← generated index of changes with the dependency graph
 ├── changes/
 │   └── <ID>/                     ← tracker key (PROJ-123, PROJ-123-note) or a slug from pm

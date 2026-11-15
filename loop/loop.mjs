@@ -2,7 +2,7 @@
 // Agent loop of @przemeq25/agent-workflow (generic; project commands come from .agents/skills/workflow-rules,
 // settings from .agents/workflow.json).
 //
-// Model: work/changes/<ID>/ is one change (a task from pm or a tracker key) with subtasks.
+// Model: spec/changes/<ID>/ is one change (a task from pm or a tracker key) with subtasks.
 //   change.json  metadata, status, subtasks with AC and dependencies
 //   proposal.md  pm: why and what (AC of the whole change)
 //   design.md    tech-lead: how in code (technical spec + skill guidance)
@@ -36,7 +36,11 @@ import { loadConfig, syncProject } from "../lib/sync.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(process.env.AGENT_LOOP_ROOT ?? process.cwd());
-const WORK = "work";
+// Changes live in spec/. A project that still has only the old work/ keeps working until it renames it.
+const WORK =
+	existsSync(join(ROOT, "spec")) || !existsSync(join(ROOT, "work", "changes"))
+		? "spec"
+		: "work";
 const STATE_DIR = join(ROOT, ".agent-loop");
 const STATE_FILE = join(STATE_DIR, "state.json");
 const LOCK_FILE = join(STATE_DIR, "lock");
@@ -580,7 +584,7 @@ export function renderIndex(changes) {
 	const lines = [
 		"# Zmiany",
 		"",
-		"> Generated (`agent-workflow render`). Details: `work/changes/<ID>/`. Delivery state: `agent-workflow status`.",
+		"> Generated (`agent-workflow render`). Details: `spec/changes/<ID>/`. Delivery state: `agent-workflow status`.",
 		"",
 		"```mermaid",
 		"flowchart TD",
@@ -1405,6 +1409,10 @@ function cmdValidate() {
 	const changeCheck = validate(changes);
 	const errors = [...cfgCheck.errors, ...changeCheck.errors];
 	const warnings = [...cfgCheck.warnings, ...changeCheck.warnings];
+	if (WORK === "work")
+		warnings.push(
+			"changes are still in work/: the roles now expect spec/. Rename it: git mv work spec",
+		);
 	console.log(
 		`.agents: ${cfgCheck.agents?.length ?? 0} roles, ${cfgCheck.skills?.length ?? 0} skills`,
 	);
@@ -1412,13 +1420,13 @@ function cmdValidate() {
 	for (const e of errors) console.log(`❌ ${e}`);
 	if (errors.length) process.exit(1);
 	console.log(
-		`✅ work/changes valid (${changes.length} change(s), ${warnings.length} warning(s))`,
+		`✅ ${WORK}/changes valid (${changes.length} change(s), ${warnings.length} warning(s))`,
 	);
 }
 
 function cmdRender() {
 	renderAll(loadChanges());
-	console.log("✅ wrote work/BACKLOG.md and tasks.md in every change");
+	console.log(`✅ wrote ${WORK}/BACKLOG.md and tasks.md in every change`);
 }
 
 async function cmdStatus() {
@@ -1442,7 +1450,7 @@ function cmdApprove(ids) {
 		const c = changes.find((x) => x.id === id);
 		const problems = [];
 		if (!c || c._missing)
-			problems.push("no such change (work/changes/<ID>/change.json)");
+			problems.push("no such change (spec/changes/<ID>/change.json)");
 		else {
 			if (c.status === "cancelled") problems.push("change cancelled");
 			if ((c.openQuestions ?? []).length)
@@ -1477,7 +1485,7 @@ async function cmdPublish() {
 	const adapter = makeAdapter();
 	if (adapter.name !== "github") {
 		log(
-			`platform ${adapter.name}: no issue tracker. Changes stay in work/changes (tracker key as ID or the "jira" field).`,
+			`platform ${adapter.name}: no issue tracker. Changes stay in spec/changes (tracker key as ID or the "jira" field).`,
 		);
 		return;
 	}
@@ -1531,7 +1539,7 @@ async function cmdRun(flags) {
 	const { errors } = validate(changes);
 	if (errors.length)
 		die(
-			`work/changes has errors (agent-workflow validate):\n${errors.join("\n")}`,
+			`spec/changes has errors (agent-workflow validate):\n${errors.join("\n")}`,
 		);
 	acquireLock();
 	const base = detectBase();

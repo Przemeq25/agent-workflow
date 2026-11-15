@@ -18,7 +18,7 @@ project skills in `.agents/skills/`. This file contains no project rules.
 | `.agents/workflow.json` | project configuration: tools, models, guard rules, loop | a human |
 | `context/foundation/` | PRD, roadmap, technical standards | `prd`, `prd-tech` |
 | `context/engineering.md` | verified code patterns | `prd-tech` |
-| `work/changes/<ID>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
+| `spec/changes/<ID>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
 
 Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/agents/`, `.opencode/agents/`) are generated from `.agents/` by
 `agent-workflow sync` for the tools each developer uses, and are not committed. Never edit them.

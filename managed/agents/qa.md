@@ -16,7 +16,7 @@ Load `testing-rules` and `team-verification`.
 
 ## Order
 
-1. Read the subtask (AC in `work/changes/<ID>/change.json`), the design (section 9 test plan, section 7 errors) and the testing rules.
+1. Read the subtask (AC in `spec/changes/<ID>/change.json`), the design (section 9 test plan, section 7 errors) and the testing rules.
 2. For each AC find the test that covers it (`rg`). Judge whether it verifies the Given/When/Then behaviour, not only that something renders.
 3. Add or fix missing or weak tests. You may edit test files only, as defined in `testing-rules`. Use isolated test data as described there.
 4. Run the project's test and typecheck commands (or targeted files). Run e2e only when the plan requires it and the environment allows it; otherwise NOT VERIFIED with the reason.

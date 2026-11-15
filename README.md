@@ -22,7 +22,7 @@ npm i -D github:Przemeq25/agent-workflow#<tag or commit>   # installs only, gene
 npx agent-workflow init                                    # questions, see below
 ```
 
-`init` creates `.agents/` (managed roles, skills, guard, templates), `AGENTS.md`, `.agents/workflow.json` and
+`init` creates `.agents/` (managed roles, skills, guard, templates), `AGENTS.md`, `spec/changes/`, `.agents/workflow.json` and
 skeletons of the five project skills (only missing files), then asks:
 
 1. **Tools** that get adapter files: `claude`, `codex`, `opencode`, several or none (default: none).
@@ -63,6 +63,7 @@ PRD and the technical standards and draft the five project skills for you.
 | `.agents/workflow.json` | yes | you (project config) |
 | `.agents/.managed.json` | yes | package (hashes of managed files) |
 | `.agents/workflow.local.json` | no | each developer |
+| `spec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/`), `spec/BACKLOG.md` | yes | `pm`, `tech-lead`, the loop |
 | `.claude/agents/`, `.claude/skills`, `.claude/settings.json`, `CLAUDE.md` | no | generated |
 | `.codex/agents/*.toml`, `.opencode/agents/*.md` | no | generated |
 
@@ -112,6 +113,9 @@ skills: [team-verification]             # preloaded where the tool supports it
   "loop": { "runner": "claude", "verifyEnv": { "SKIP_ENV_VALIDATION": "1" } }
 }
 ```
+
+Projects created before 0.2.0 keep changes in `work/`; the loop still reads it and `validate` suggests
+`git mv work spec`.
 
 ## Commands
 

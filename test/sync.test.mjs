@@ -45,6 +45,21 @@ test("init without a choice creates only .agents/ and AGENTS.md, no tool adapter
 	assert.ok(!existsSync(join(dir, ".claude")));
 });
 
+test("init creates spec/, and a project with the old work/ still validates with a hint", () => {
+	const dir = project();
+	run(dir, "init");
+	assert.ok(existsSync(join(dir, "spec/changes/.gitkeep")));
+	assert.ok(!existsSync(join(dir, "work")));
+	assert.match(read(dir, "AGENTS.md"), /spec\/changes\/<ID>\//);
+	const legacy = project();
+	run(legacy, "init");
+	spawnSync("git", ["mv", "spec", "work"], { cwd: legacy });
+	spawnSync("mv", ["spec", "work"], { cwd: legacy });
+	const v = run(legacy, "validate");
+	assert.match(v.stdout, /git mv work spec/);
+	assert.match(v.stdout, /work\/changes valid/);
+});
+
 test("postinstall does nothing before init", () => {
 	const dir = project();
 	const p = spawnSync("node", [join(PKG, "lib", "postinstall.mjs")], {
@@ -68,7 +83,7 @@ test("init --tools claude creates the project skeleton, managed files and claude
 		".agents/skills/workflow-rules/SKILL.md",
 		".agents/hooks/guard.mjs",
 		".agents/templates/design.md",
-		".agents/docs/work-format.md",
+		".agents/docs/spec-format.md",
 		".agents/.managed.json",
 		".claude/agents/implementer.md",
 		".claude/settings.json",

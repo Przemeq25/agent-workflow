@@ -1,7 +1,7 @@
 # <ID> — <title> · design (technical spec)
 
 > Revision: R1 · Author: tech-lead · Date: YYYY-MM-DD
-> Change: `work/changes/<ID>/` (proposal.md, change.json) · Requirements: FR-…, US-…
+> Change: `spec/changes/<ID>/` (proposal.md, change.json) · Requirements: FR-…, US-…
 > After approval the loop delivers exactly this file. Any change after approval needs `agent-workflow approve <ID>` again.
 > Describe sections 3, 4 and 9 per subtask (ST-01, ST-02…) when the change has several subtasks.
 > Write the content in the user language set by `business-rules`. Keep the numbered headings.

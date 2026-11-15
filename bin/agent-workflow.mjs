@@ -18,8 +18,8 @@ Setup
       and generate the adapters of the chosen tools (git-ignored)
 
 Changes and loop
-  agent-workflow validate            check .agents/, managed files and work/changes
-  agent-workflow render              write work/BACKLOG.md and tasks.md
+  agent-workflow validate            check .agents/, managed files and spec/changes
+  agent-workflow render              write spec/BACKLOG.md and tasks.md
   agent-workflow status              delivery state from git and PRs
   agent-workflow approve <ID…>       approve changes (stores a fingerprint)
   agent-workflow publish             create tracker issues for approved changes
