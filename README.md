@@ -96,6 +96,22 @@ mode: primary | subagent | all
 skills: [team-verification]             # preloaded where the tool supports it
 ```
 
+## Cheap helpers on the `low` tier
+
+Two roles keep mechanical work off the strong models:
+
+| Role | Access | Does |
+|---|---|---|
+| `scout` | read-only | searches and maps code, collects git facts, returns paths and short facts, never file contents |
+| `clerk` | no commit/push | runs the commands it is given and reports pass or fail briefly, moves and renames files, archives finished changes |
+
+Coordinating roles (`tech-lead`, `pm`, `autopilot`, `prd-explore`, `prd-tech-explore`) hand them lookups and
+command runs. They never get design, review, QA verdicts or delivery reports. Subagents usually cannot start
+other subagents, so `implementer`, `qa` and `code-reviewer` do their own lookups.
+
+The saving needs a cheap model in `models.<tool>.low`. `init` suggests `haiku` for Claude; for Codex and OpenCode
+enter a small model, otherwise the tool's default model runs these roles.
+
 ## Project config `.agents/workflow.json`
 
 ```jsonc

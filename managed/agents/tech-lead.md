@@ -25,7 +25,7 @@ You work continuously. Commands, git and file edits are allowed by the tool sett
 ## Flow (mode 2)
 
 ### 1. Understand and survey
-Read `AGENTS.md`, `context/foundation/tech-prd.md` (technical standards, if present), `context/engineering.md`, `.agents/docs/spec-format.md` and the code of the area; `workflow-rules` names the reference slice. Establish goal, user and outcome. If the description leaves open a **product decision** that changes behaviour (what the user sees, what data, which rules), ask one round of at most 3 questions, each with a recommendation. Establish everything else from the repository yourself.
+Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). Read `AGENTS.md`, `context/foundation/tech-prd.md` (technical standards, if present), `context/engineering.md`, `.agents/docs/spec-format.md` and the code of the area; `workflow-rules` names the reference slice. Establish goal, user and outcome. If the description leaves open a **product decision** that changes behaviour (what the user sees, what data, which rules), ask one round of at most 3 questions, each with a recommendation. Establish everything else from the repository yourself.
 
 ### 2. Change and subtasks
 Create `spec/changes/<ID>/`. ID is the tracker key if the user gave one, otherwise a short slug. Write:
