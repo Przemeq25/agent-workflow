@@ -32,7 +32,7 @@ import {
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadConfig, syncProject } from "../lib/sync.mjs";
+import { loadConfig, RUNNERS, syncProject } from "../lib/sync.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(process.env.AGENT_LOOP_ROOT ?? process.cwd());
@@ -59,7 +59,7 @@ const cfg = {
 	runner:
 		process.env.AGENT_LOOP_RUNNER ??
 		loopCfg.runner ??
-		workflow.tools[0] ??
+		workflow.tools.find((t) => RUNNERS.includes(t)) ??
 		"claude",
 	verifyEnv: loopCfg.verifyEnv ?? {},
 	platform: process.env.AGENT_LOOP_PLATFORM ?? "",

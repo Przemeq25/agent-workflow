@@ -65,7 +65,7 @@ PRD and the technical standards and draft the five project skills for you.
 | `.agents/workflow.local.json` | no | each developer |
 | `spec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/`), `spec/BACKLOG.md` | yes | `pm`, `tech-lead`, the loop |
 | `.claude/agents/`, `.claude/skills`, `.claude/settings.json`, `CLAUDE.md` | no | generated |
-| `.codex/agents/*.toml`, `.opencode/agents/*.md` | no | generated |
+| `.codex/agents/*.toml`, `.opencode/agents/*.md`, `.kilo/agents/*.md` | no | generated |
 
 Managed files are overwritten by `sync` only while you have not edited them. A local edit is kept and reported;
 `sync --force` replaces it. `validate` (and `sync --check`) fail when a managed file is out of date.
@@ -86,6 +86,7 @@ The local file may change tools, models and the loop runner. It cannot change th
 | Claude Code | `CLAUDE.md` with `@AGENTS.md` (generated) | `.claude/skills` → symlink to `.agents/skills` (copy on Windows) | `.claude/agents/*.md` | guard hook per role + `settings.json` |
 | Codex | `AGENTS.md` (native) | `.agents/skills` (native) | `.codex/agents/*.toml` | `sandbox_mode` (read-only roles) |
 | OpenCode | `AGENTS.md` (native) | `.agents/skills` (native) | `.opencode/agents/*.md` | `permission` patterns per role |
+| Kilo (CLI, VS Code, JetBrains) | `AGENTS.md` (native) | `.agents/skills` (native) | `.kilo/agents/*.md` | `permission` patterns per role; reads, `question` and `task` pre-allowed |
 
 Role frontmatter is tool-neutral and mapped by the adapters:
 
@@ -95,6 +96,22 @@ access: full | no-commit | qa | read-only | prd | prd-tech
 mode: primary | subagent | all
 skills: [team-verification]             # preloaded where the tool supports it
 ```
+
+## Questions to the user
+
+Every generated role ends with a short "Asking the user" section for its tool, so questions arrive as a picker
+instead of text:
+
+| Tool | Question tool | Notes |
+|---|---|---|
+| Claude Code | `AskUserQuestion` | up to 4 questions, 2-4 options, recommended option first |
+| OpenCode, Kilo | `question` | header, options with descriptions, `multiple` when needed; Kilo agents get `question: allow` |
+| Codex | `request_user_input` | only in Plan mode unless `features.default_mode_request_user_input = true` |
+| anything else | none | numbered list at the end of the message (rule in `AGENTS.md`) |
+
+Before work that needs decisions, a role shows one **Decisions** block: the questions with recommendations, the
+order of steps and what is blocked. Subagents cannot ask; they return questions in their report. The loop never
+asks.
 
 ## Cheap helpers on the `low` tier
 
