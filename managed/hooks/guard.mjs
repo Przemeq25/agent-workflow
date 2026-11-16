@@ -59,7 +59,7 @@ const PROTECTED = [
 	/(^|\/)\.agents\/(workflow(\.local)?|\.managed|\.generated)\.json$/,
 	/(^|\/)\.claude\/(agents\/|hooks\/|settings(\.local)?\.json$)/,
 	/(^|\/)\.claude\/skills\/team-[^/]+\//,
-	/(^|\/)\.(codex|opencode)\/agents\//,
+	/(^|\/)\.(codex|opencode|kilo)\/agents\//,
 	/(^|\/)(AGENTS|CLAUDE)\.md$/,
 	/(^|\/)\.env(\..+)?$/,
 ];
@@ -146,7 +146,7 @@ const writesProtected =
 	/(\bsed\s+-i|>{1,2}|\btee\b|\bmv\b|\bcp\b|\brm\b|\bperl\s+-[a-z]*i)/.test(
 		cmd,
 	) &&
-	/(\.agents\/(agents|hooks|templates|docs|skills\/team-|workflow|\.managed|\.generated)|\.claude\/(agents|hooks|settings)|\.(codex|opencode)\/agents|(AGENTS|CLAUDE)\.md|(^|[\s'"/])\.env(?!\.example)\b)/.test(
+	/(\.agents\/(agents|hooks|templates|docs|skills\/team-|workflow|\.managed|\.generated)|\.claude\/(agents|hooks|settings)|\.(codex|opencode|kilo)\/agents|(AGENTS|CLAUDE)\.md|(^|[\s'"/])\.env(?!\.example)\b)/.test(
 		cmd,
 	);
 if (writesProtected)

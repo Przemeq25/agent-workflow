@@ -20,7 +20,7 @@ project skills in `.agents/skills/`. This file contains no project rules.
 | `context/engineering.md` | verified code patterns | `prd-tech` |
 | `spec/changes/<ID>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
 
-Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/agents/`, `.opencode/agents/`) are generated from `.agents/` by
+Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/agents/`, `.opencode/agents/`, `.kilo/agents/`) are generated from `.agents/` by
 `agent-workflow sync` for the tools each developer uses, and are not committed. Never edit them.
 
 ## Start
@@ -52,6 +52,21 @@ Two roles run on the `low` tier so a strong model does not spend tokens on mecha
 - `clerk`: runs commands it is given and reports pass or fail in a few lines, moves and renames files, archives finished changes.
 
 Roles that coordinate (`tech-lead`, `pm`, `autopilot`, `prd-explore`, `prd-tech-explore`) hand such work to them when a search would read more than a few files or a command only needs its result reported. Give them a precise task: the question or the exact steps, the allowed files and the report you expect. Do not hand them design, review, QA verdicts, delivery reports or anything that needs a decision. A subagent usually cannot start another subagent, so `implementer`, `qa` and `code-reviewer` do their own lookups. If your tool cannot start a named subagent, do the work yourself.
+
+## Asking the user
+
+Questions and decisions must be easy to find, never buried in a long answer.
+
+- **Before work that needs decisions**, show one block titled **Decisions** first: each open question with your
+  recommendation, the proposed order of steps, and what stays blocked until the user answers.
+- **Ask through your tool's question tool** when it has one, so the user gets a picker instead of text:
+  `AskUserQuestion` (Claude Code), `question` (OpenCode, Kilo), `request_user_input` (Codex, when available),
+  `ask_followup_question` (older Kilo Code and Roo Code extensions). The generated role files say which one you have.
+- **Without such a tool**, end the message with a numbered list and nothing after it:
+  `1. <question>? A) <option> (recommended) B) <option>. Blocks: <what>.`
+- At most 3-4 questions per round, each with a recommendation. Answer yourself what the repository answers.
+- Subagents cannot reach the user. They put open questions at the top of their report and the coordinator asks.
+- An unattended run (the loop, `autopilot`) asks nothing: it records the assumption or marks the subtask blocked.
 
 ## Hard boundaries
 

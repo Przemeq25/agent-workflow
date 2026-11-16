@@ -98,6 +98,50 @@ test("cheap helpers: scout and clerk run on the low tier with their own models",
 	assert.match(read(dir, ".agents/agents/tech-lead.md"), /ask `scout`/);
 });
 
+test("each tool's roles say how to ask the user; kilo agents allow reads, question and task", () => {
+	const dir = project();
+	const r = run(
+		dir,
+		"init",
+		"--yes",
+		"--tools",
+		"claude,opencode,kilo,codex",
+		"--models",
+		"kilo.high=anthropic/claude-opus-5-5,kilo.low=anthropic/claude-haiku-5-5",
+	);
+	assert.equal(r.status, 0, r.stderr);
+	assert.match(read(dir, ".claude/agents/tech-lead.md"), /`AskUserQuestion`/);
+	assert.match(
+		read(dir, ".opencode/agents/pm.md"),
+		/through the `question` tool/,
+	);
+	assert.match(read(dir, ".codex/agents/tech-lead.toml"), /request_user_input/);
+	const tl = read(dir, ".kilo/agents/tech-lead.md");
+	assert.match(tl, /model: anthropic\/claude-opus-5-5/);
+	assert.match(tl, /question: allow/);
+	assert.match(tl, /task: allow/);
+	assert.match(tl, /read: allow/);
+	assert.match(tl, /## Asking the user \(kilo\)/);
+	const scout = read(dir, ".kilo/agents/scout.md");
+	assert.match(scout, /model: anthropic\/claude-haiku-5-5/);
+	assert.match(scout, /question: deny/);
+	assert.match(scout, /task: deny/);
+	assert.match(scout, /edit: deny/);
+	assert.match(scout, /cannot ask the user/);
+	assert.match(read(dir, ".kilo/agents/autopilot.md"), /cannot ask the user/);
+	assert.match(read(dir, "AGENTS.md"), /## Asking the user/);
+	assert.match(read(dir, ".gitignore"), /\/\.kilo\/agents\//);
+	// kilo cannot run the loop: the runner is the first tool that can
+	assert.equal(
+		JSON.parse(read(dir, ".agents/workflow.json")).loop.runner,
+		undefined,
+	);
+	const k = project();
+	run(k, "init", "--yes", "--tools", "kilo");
+	assert.ok(existsSync(join(k, ".kilo/agents/pm.md")));
+	assert.ok(!existsSync(join(k, ".opencode")));
+});
+
 test("postinstall does nothing before init", () => {
 	const dir = project();
 	const p = spawnSync("node", [join(PKG, "lib", "postinstall.mjs")], {
