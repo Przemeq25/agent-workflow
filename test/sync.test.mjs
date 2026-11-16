@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
 	existsSync,
 	lstatSync,
+	mkdirSync,
 	mkdtempSync,
 	readFileSync,
 	writeFileSync,
@@ -162,7 +164,8 @@ test("init --tools claude creates the project skeleton, managed files and claude
 		".agents/workflow.json",
 		".agents/agents/tech-lead.md",
 		".agents/skills/team-verification/SKILL.md",
-		".agents/skills/workflow-rules/SKILL.md",
+		".agents/commands/prd.md",
+		".agents/templates/skills/workflow-rules.md",
 		".agents/hooks/guard.mjs",
 		".agents/templates/design.md",
 		".agents/docs/spec-format.md",
@@ -179,7 +182,87 @@ test("init --tools claude creates the project skeleton, managed files and claude
 	assert.match(read(dir, "package.json"), /postinstall/);
 	const v = run(dir, "validate");
 	assert.equal(v.status, 0, v.stdout + v.stderr);
-	assert.match(v.stdout, /still has TODOs/);
+	assert.match(v.stdout, /project not set up: missing workflow-rules/);
+	assert.match(v.stdout, /Run \/prd/);
+	assert.match(r.stdout, /next: run \/prd/);
+	// no rule skills are scaffolded any more: /prd writes them
+	assert.ok(!existsSync(join(dir, ".agents/skills/workflow-rules")));
+	for (const old of ["prd", "prd-tech", "prd-explore", "prd-tech-explore"])
+		assert.ok(!existsSync(join(dir, `.agents/agents/${old}.md`)), old);
+	assert.ok(!existsSync(join(dir, ".agents/skills/team-writing-plans")));
+});
+
+test("/prd becomes a command in claude, opencode and kilo and an explicit-only skill in codex", () => {
+	const dir = project();
+	const r = run(
+		dir,
+		"init",
+		"--yes",
+		"--tools",
+		"claude,opencode,kilo,codex",
+		"--models",
+		"claude.high=opus,opencode.high=anthropic/claude-opus-5-5,kilo.high=openrouter/x-high",
+	);
+	assert.equal(r.status, 0, r.stderr);
+	const cc = read(dir, ".claude/commands/prd.md");
+	assert.match(cc, /^model: opus$/m);
+	assert.match(cc, /disable-model-invocation: true/);
+	assert.match(cc, /argument-hint: "\[all\|product\|tech\] \[what changed\]"/);
+	assert.match(cc, /`\$ARGUMENTS`/);
+	assert.match(cc, /`AskUserQuestion`/);
+	const oc = read(dir, ".opencode/commands/prd.md");
+	assert.match(oc, /^model: anthropic\/claude-opus-5-5$/m);
+	assert.match(oc, /through the `question` tool/);
+	assert.match(
+		read(dir, ".kilo/commands/prd.md"),
+		/^model: openrouter\/x-high$/m,
+	);
+	const cx = read(dir, ".agents/skills/prd/SKILL.md");
+	assert.match(cx, /^name: prd$/m);
+	assert.match(cx, /Run only when the user invokes \$prd/);
+	assert.match(cx, /the text the user wrote after `\$prd`/);
+	assert.doesNotMatch(cx, /\$ARGUMENTS/);
+	assert.match(
+		read(dir, ".agents/skills/prd/agents/openai.yaml"),
+		/allow_implicit_invocation: false/,
+	);
+	assert.match(read(dir, ".gitignore"), /\/\.agents\/skills\/prd\//);
+	assert.match(read(dir, ".gitignore"), /\/\.claude\/commands\//);
+	// the generated Codex skill is not a project skill: no routing-table error
+	const v = run(dir, "validate");
+	assert.equal(v.status, 0, v.stdout + v.stderr);
+	assert.doesNotMatch(
+		v.stdout,
+		/skill prd: missing from the skill routing table/,
+	);
+	// dropping codex removes its skill folder completely
+	run(dir, "init", "--yes", "--tools", "claude");
+	assert.ok(!existsSync(join(dir, ".agents/skills/prd")));
+	assert.ok(!existsSync(join(dir, ".opencode")));
+	assert.ok(existsSync(join(dir, ".claude/commands/prd.md")));
+});
+
+test("a project with written rule skills validates without the setup warning", () => {
+	const dir = project();
+	run(dir, "init", "--yes", "--tools", "claude");
+	for (const name of [
+		"business-rules",
+		"engineering-rules",
+		"review-rules",
+		"testing-rules",
+		"workflow-rules",
+	]) {
+		mkdirSync(join(dir, ".agents/skills", name), { recursive: true });
+		const tpl = read(dir, `.agents/templates/skills/${name}.md`);
+		writeFileSync(
+			join(dir, ".agents/skills", name, "SKILL.md"),
+			tpl.replaceAll("<fill>", "filled"),
+		);
+	}
+	const v = run(dir, "validate");
+	assert.equal(v.status, 0, v.stdout + v.stderr);
+	assert.doesNotMatch(v.stdout, /project not set up/);
+	assert.doesNotMatch(v.stdout, /routing table/);
 });
 
 test("init saves chosen models per tier, locally when asked, and the loop runner", () => {
@@ -319,6 +402,7 @@ test("an existing hand-written file is never overwritten without --force", () =>
 test("project-specific roles are adapted too, and init never overwrites project skills", () => {
 	const dir = project();
 	run(dir, "init", "--yes", "--tools", "claude");
+	mkdirSync(join(dir, ".agents/skills/business-rules"), { recursive: true });
 	writeFileSync(join(dir, ".agents/skills/business-rules/SKILL.md"), "mine\n");
 	writeFileSync(
 		join(dir, ".agents/agents/designer.md"),
@@ -332,6 +416,24 @@ test("project-specific roles are adapted too, and init never overwrites project 
 		read(dir, ".claude/agents/designer.md"),
 		/Body of the project role/,
 	);
+});
+
+test("a managed file the package dropped is removed with its empty folder", () => {
+	const dir = project();
+	run(dir, "init", "--yes");
+	const manifest = JSON.parse(read(dir, ".agents/.managed.json"));
+	const rel = ".agents/skills/team-old/SKILL.md";
+	mkdirSync(join(dir, ".agents/skills/team-old"), { recursive: true });
+	writeFileSync(join(dir, rel), "old\n");
+	manifest.files[rel] = createHash("sha256")
+		.update("old\n")
+		.digest("hex")
+		.slice(0, 16);
+	writeFileSync(join(dir, ".agents/.managed.json"), JSON.stringify(manifest));
+	const r = syncProject(dir, { quiet: true });
+	assert.ok(r.removed.includes(rel));
+	assert.ok(!existsSync(join(dir, ".agents/skills/team-old")));
+	assert.ok(existsSync(join(dir, ".agents/skills")));
 });
 
 test("sync is idempotent", () => {
