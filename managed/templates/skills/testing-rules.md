@@ -5,10 +5,10 @@ description: Test conventions of this repository - test types, locations, databa
 
 # Testing rules
 
-- Types: TODO (unit, component, integration, end-to-end) with examples in `context/engineering.md`.
-- Locations: TODO.
-- Data: TODO (isolated test database or fixtures; what is never mocked).
+- Types: <fill> (unit, component, integration, end-to-end) with an example file each.
+- Locations: <fill>.
+- Data: <fill> (isolated test database or fixtures; what is never mocked).
 - Every AC gets at least one test that checks Given/When/Then behaviour. Errors and edge cases from design section 7 get tests when specified.
 - Never weaken assertions or add lint/type suppressions to pass. Report flaky tests instead of retrying until green.
 - End-to-end tests only when the test plan requires them and the environment allows it; otherwise NOT VERIFIED with the reason.
-- QA may edit only test files: TODO (the patterns; keep them in sync with `guard.testFiles` in `.agents/workflow.json`).
+- QA may edit only test files: <fill> (the patterns; keep them in sync with `guard.testFiles` in `.agents/workflow.json`).

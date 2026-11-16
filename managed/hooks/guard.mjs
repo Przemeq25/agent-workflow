@@ -54,12 +54,12 @@ const block = (reason) => {
 
 // Files no agent changes: managed workflow files, configuration, tool adapters, rules files, secrets.
 const PROTECTED = [
-	/(^|\/)\.agents\/(agents|hooks|templates|docs)\//,
+	/(^|\/)\.agents\/(agents|commands|hooks|templates|docs)\//,
 	/(^|\/)\.agents\/skills\/team-[^/]+\//,
 	/(^|\/)\.agents\/(workflow(\.local)?|\.managed|\.generated)\.json$/,
-	/(^|\/)\.claude\/(agents\/|hooks\/|settings(\.local)?\.json$)/,
+	/(^|\/)\.claude\/(agents\/|commands\/|hooks\/|settings(\.local)?\.json$)/,
 	/(^|\/)\.claude\/skills\/team-[^/]+\//,
-	/(^|\/)\.(codex|opencode|kilo)\/agents\//,
+	/(^|\/)\.(codex|opencode|kilo)\/(agents|commands)\//,
 	/(^|\/)(AGENTS|CLAUDE)\.md$/,
 	/(^|\/)\.env(\..+)?$/,
 ];
@@ -74,7 +74,7 @@ const DOC_ROLES = {
 	),
 	"prd-tech": new RegExp(
 		config.docRoles?.["prd-tech"] ??
-			"(^|/)context/(foundation/(tech-prd|tech-notes)|engineering)\\.md$",
+			"(^|/)context/foundation/tech-notes\\.md$|(^|/)\\.agents/skills/[a-z-]+-rules/",
 	),
 };
 const TEST_FILES = new RegExp(
@@ -146,7 +146,7 @@ const writesProtected =
 	/(\bsed\s+-i|>{1,2}|\btee\b|\bmv\b|\bcp\b|\brm\b|\bperl\s+-[a-z]*i)/.test(
 		cmd,
 	) &&
-	/(\.agents\/(agents|hooks|templates|docs|skills\/team-|workflow|\.managed|\.generated)|\.claude\/(agents|hooks|settings)|\.(codex|opencode|kilo)\/agents|(AGENTS|CLAUDE)\.md|(^|[\s'"/])\.env(?!\.example)\b)/.test(
+	/(\.agents\/(agents|commands|hooks|templates|docs|skills\/team-|workflow|\.managed|\.generated)|\.claude\/(agents|commands|hooks|settings)|\.(codex|opencode|kilo)\/(agents|commands)|(AGENTS|CLAUDE)\.md|(^|[\s'"/])\.env(?!\.example)\b)/.test(
 		cmd,
 	);
 if (writesProtected)

@@ -3,13 +3,14 @@
 A tool-independent agent workflow for software projects:
 
 ```
-prd / prd-tech ─► pm (change + subtasks + AC) ⇄ tech-lead (design) ─► user approves
+/prd (context + project skills) ─► pm (change + subtasks + AC) ⇄ tech-lead (design) ─► user approves
    ─► tech-lead or the loop: implementer → code-reviewer → qa ─► PR task/<ID> → main (a human merges)
 ```
 
 Roles, skills and templates live in **`.agents/`** of your project and contain **no project rules**. Everything
-specific to a project (language, market, stack, commands, tests, review) lives in five project skills you write
-once: `workflow-rules`, `business-rules`, `engineering-rules`, `review-rules`, `testing-rules`.
+specific to a project (language, market, stack, commands, tests, review) lives in five project skills:
+`workflow-rules`, `business-rules`, `engineering-rules`, `review-rules`, `testing-rules`. You do not write them by
+hand: the `/prd` command writes them while it creates the PRD.
 
 Installing the package changes nothing in your project. `agent-workflow init` asks which tools get their own
 adapter files (Claude Code, Codex, OpenCode; git-ignored) and which models the tiers use. Choose none and you
@@ -22,8 +23,8 @@ npm i -D github:Przemeq25/agent-workflow#<tag or commit>   # installs only, gene
 npx agent-workflow init                                    # questions, see below
 ```
 
-`init` creates `.agents/` (managed roles, skills, guard, templates), `AGENTS.md`, `spec/changes/`, `.agents/workflow.json` and
-skeletons of the five project skills (only missing files), then asks:
+`init` creates `.agents/` (managed roles, commands, skills, guard, templates), `AGENTS.md`, `spec/changes/` and
+`.agents/workflow.json`, then asks:
 
 1. **Tools** that get adapter files: `claude`, `codex`, `opencode`, several or none (default: none).
 2. **Models** per chosen tool for the `high`, `standard` and `low` tiers (empty = the tool's default model;
@@ -48,8 +49,32 @@ Once published to npm, `npm init agent-workflow` runs the same `init` (the packa
 "postinstall": "node -e \"import('@przemeq25/agent-workflow/postinstall').catch(()=>{})\""
 ```
 
-For an existing codebase, run the `prd-tech-explore` and `prd-explore` roles once: they reverse-engineer the
-PRD and the technical standards and draft the five project skills for you.
+## Set up a project: `/prd`
+
+After `init`, run **`/prd`** in your tool (Codex: **`$prd`**). One command, new or existing codebase:
+
+1. **Product:** interview (new project) or exploration of the code with evidence (existing project), devil's
+   advocate, optional market research, requirements with a dependency graph. Writes `context/foundation/prd.md`,
+   `roadmap.md`, `prd-notes.md` and the `business-rules` skill.
+2. **Technical:** reads manifests, configs, CI, written rules, code patterns and tests, asks only about what the
+   repository does not settle, and writes `workflow-rules`, `engineering-rules` (with
+   `references/patterns.md`), `testing-rules`, `review-rules` and `context/foundation/tech-notes.md` (reasons and
+   history). It proposes well-known technology skills for the stack and installs them only after you agree.
+
+Every skill and document is shown as a draft and written after you approve it. `/prd product`, `/prd tech` or
+`/prd tech new test runner` run one part or an update; the command then works only on what changed. The skill
+structure comes from `.agents/templates/skills/`; the skills are the single source of project rules for all roles.
+
+| Tool | Where the command lives (generated, git-ignored) | Model |
+|---|---|---|
+| Claude Code | `.claude/commands/prd.md` | `models.claude.high` |
+| OpenCode | `.opencode/commands/prd.md` | `models.opencode.high` |
+| Kilo | `.kilo/commands/prd.md` | `models.kilo.high` |
+| Codex | `.agents/skills/prd/` (explicit-only skill, `$prd`) | session model |
+| others | point the tool at `.agents/commands/prd.md` | |
+
+Projects set up before 0.4 with `context/foundation/tech-prd.md` and `context/engineering.md`: `/prd` (update mode) moves
+their rules into the skills and asks before deleting the old files.
 
 ## Layout in a project
 
@@ -57,8 +82,10 @@ PRD and the technical standards and draft the five project skills for you.
 |---|---|---|
 | `AGENTS.md` | yes | package (managed) |
 | `.agents/agents/*.md` | yes | package (managed); you may add project roles next to them |
+| `.agents/commands/*.md` (`/prd`) | yes | package (managed) |
 | `.agents/skills/team-*` | yes | package (managed) |
-| `.agents/skills/*-rules`, other skills | yes | you |
+| `.agents/skills/*-rules` | yes | written by `/prd`, approved by you |
+| other skills in `.agents/skills/` | yes | you |
 | `.agents/hooks/guard.mjs`, `.agents/templates/`, `.agents/docs/` | yes | package (managed) |
 | `.agents/workflow.json` | yes | you (project config) |
 | `.agents/.managed.json` | yes | package (hashes of managed files) |
@@ -122,7 +149,7 @@ Two roles keep mechanical work off the strong models:
 | `scout` | read-only | searches and maps code, collects git facts, returns paths and short facts, never file contents |
 | `clerk` | no commit/push | runs the commands it is given and reports pass or fail briefly, moves and renames files, archives finished changes |
 
-Coordinating roles (`tech-lead`, `pm`, `autopilot`, `prd-explore`, `prd-tech-explore`) hand them lookups and
+Coordinating roles (`tech-lead`, `pm`, `autopilot`) and the `/prd` command hand them lookups and
 command runs. They never get design, review, QA verdicts or delivery reports. Subagents usually cannot start
 other subagents, so `implementer`, `qa` and `code-reviewer` do their own lookups.
 

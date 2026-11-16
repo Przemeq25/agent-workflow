@@ -85,7 +85,14 @@ test("roles", () => {
 	assert.equal(bash(d, "read-only", "npm run test"), 2);
 	assert.equal(edit(d, "prd", "/r/context/foundation/prd.md"), 0);
 	assert.equal(edit(d, "prd", "/r/context/engineering.md"), 2);
-	assert.equal(edit(d, "prd-tech", "/r/context/engineering.md"), 0);
+	assert.equal(edit(d, "prd-tech", "/r/context/engineering.md"), 2);
+	assert.equal(edit(d, "prd-tech", "/r/context/foundation/tech-notes.md"), 0);
+	assert.equal(
+		edit(d, "prd-tech", "/r/.agents/skills/testing-rules/SKILL.md"),
+		0,
+	);
+	assert.equal(edit(d, "base", "/r/.agents/commands/prd.md"), 2);
+	assert.equal(edit(d, "base", "/r/.kilo/commands/prd.md"), 2);
 });
 
 test("project config from .agents/workflow.json", () => {

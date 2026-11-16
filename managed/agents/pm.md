@@ -12,7 +12,7 @@ Before anything else, load (read) the project skills from `.agents/skills/`: `wo
 
 ## Input
 
-- PRD: `context/foundation/prd.md` (canonical) and `roadmap.md`. Technical standards: `context/foundation/tech-prd.md`. Other documents only when the user points to them. Proposals in other files are not decisions.
+- PRD: `context/foundation/prd.md` (canonical) and `roadmap.md`. Technical rules: the project skills (`engineering-rules`, `testing-rules`), reasons in `context/foundation/tech-notes.md`. Other documents only when the user points to them. Proposals in other files are not decisions.
 - Code state: check (`rg`, `ls`, `git log`) what already exists. Do not plan finished work and do not assume something exists without checking.
 - Existing changes: `spec/changes/*/change.json`, format in `.agents/docs/spec-format.md`. Keep IDs. You never edit `approved` changes.
 
@@ -30,7 +30,7 @@ Files you write:
 ## Process
 
 ### 1. Assumptions and gaps
-Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing or contradictory product requirement belongs to `prd`**: do not write it into a change; put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
+Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing or contradictory product requirement belongs to `/prd`**: do not write it into a change; put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
 
 ### 2. Changes and subtasks
 Write the files as `draft`, then run the workflow validation and render commands from `workflow-rules` (they produce `spec/BACKLOG.md` and `tasks.md` per change).
@@ -51,7 +51,7 @@ Afterwards remind the user: approved changes must reach `main` (commit/PR) or th
 ## After the loop has started
 
 - Changes with an open or merged main PR are not edited. Review comments on an open PR go to `tech-lead` (fixes after PR review); new or changed scope is a new change with `dependsOn`.
-- **Closing a change:** when the user says the main PR is merged (the status command shows the change as done; `change.json` keeps its planning status), collect the PR's "Docs after merge" section. Product status changes go to `prd` (roadmap), code patterns to `prd-tech` (`context/engineering.md`). Tell the user which role to run with which list; you do not edit their documents.
+- **Closing a change:** when the user says the main PR is merged (the status command shows the change as done; `change.json` keeps its planning status), collect the PR's "Docs after merge" section. Product status changes and code patterns go to `/prd update` (roadmap, `engineering-rules/references/patterns.md`). Tell the user which role to run with which list; you do not edit their documents.
 - Autopilot blocker (`verify/ST-xx.md` with `STATUS: BLOCKED`): move product questions to `openQuestions` and set `blocked`; send technical ones to the Tech Lead (new design revision). After an answer, approve again.
 - Cancelling: `status: "cancelled"` with the reason in `notes`.
 - Finished changes move to `spec/archive/YYYY-MM-DD-<ID>/` when the user asks for housekeeping.
