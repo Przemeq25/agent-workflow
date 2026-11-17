@@ -18,6 +18,9 @@ permission:
     "head *": allow
     "tail *": allow
     "wc *": allow
+  "chrome-devtools_*": deny
+  "playwright_*": deny
+  "figma_*": deny
 ---
 
 

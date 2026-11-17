@@ -20,6 +20,11 @@ import { fileURLToPath } from "node:url";
 const PKG = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(PKG, "copy");
 const LOOP_ONLY = ["autopilot.md"];
+export const COPY_MCP = {
+	"chrome-devtools": ["qa"],
+	playwright: ["qa"],
+	figma: ["tech-lead", "qa"],
+};
 
 function walk(dir, out = []) {
 	for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -54,6 +59,20 @@ export function buildCopy(target) {
 		{ cwd: tmp, encoding: "utf8" },
 	);
 	if (r.status !== 0) throw new Error(`copy build: init failed\n${r.stderr}`);
+	// MCP servers per role for the copy: browser for qa, Figma for tech-lead and qa (names as in the MCP config).
+	const cfgPath = join(tmp, ".agents", "workflow.json");
+	const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
+	cfg.mcp = COPY_MCP;
+	writeFileSync(cfgPath, `${JSON.stringify(cfg, null, "\t")}\n`);
+	const s = spawnSync(
+		process.execPath,
+		[join(PKG, "bin", "agent-workflow.mjs"), "sync"],
+		{
+			cwd: tmp,
+			encoding: "utf8",
+		},
+	);
+	if (s.status !== 0) throw new Error(`copy build: sync failed\n${s.stderr}`);
 	for (const p of [
 		"package.json",
 		".git",

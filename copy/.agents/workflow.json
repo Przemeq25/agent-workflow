@@ -15,6 +15,18 @@
 		"opencode": {},
 		"kilo": {}
 	},
+	"mcp": {
+		"chrome-devtools": [
+			"qa"
+		],
+		"playwright": [
+			"qa"
+		],
+		"figma": [
+			"tech-lead",
+			"qa"
+		]
+	},
 	"guard": {
 		"defaultBranch": "main",
 		"forbiddenCommands": []

@@ -29,6 +29,17 @@ for changes that touch UI.
 
 Used only when the tool is in the agent's tool list; otherwise the step is skipped and reported.
 
+Which role may use which server is set in `.agents/workflow.json`; the adapters switch the server off for every
+other role, so its tool descriptions do not reach agents that never use it:
+
+```json
+"mcp": { "chrome-devtools": ["qa"], "playwright": ["qa"], "figma": ["tech-lead", "qa"] }
+```
+
+Kilo and OpenCode get `"<server>_*": allow|deny` in the agent's `permission`; Claude Code gets `disallowedTools:
+mcp__<server>` (read-only roles get the server in their `tools` list instead). The key must be the server name of the
+tool's MCP config. Servers not listed are left as they are. Codex is not covered. `copy/` ships with the mapping above.
+
 - **Browser** (Chrome DevTools MCP or Playwright MCP): `qa`, only for UI changes, once per subtask. It starts the app
   and signs in with the "Run the app" and "Test account" rows of `workflow-rules`, opens the changed screen at 390
   and 1440 px (text snapshots, a screenshot only for a visual comparison), reads console errors and failed requests,

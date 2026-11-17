@@ -30,6 +30,9 @@ permission:
     "git push *:master *": deny
     "git push */master": deny
     "git push */master *": deny
+  "chrome-devtools_*": allow
+  "playwright_*": allow
+  "figma_*": allow
 ---
 
 

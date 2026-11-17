@@ -548,3 +548,43 @@ test("opencode and kilo agents cannot push to the protected branches", () => {
 			assert.equal(opencodeBashDecision(tl, cmd), "allow", `${tool}: ${cmd}`);
 	}
 });
+
+test("mcp servers per role: allowed for listed roles, switched off for the others", () => {
+	const dir = project();
+	assert.equal(
+		run(dir, "init", "--yes", "--tools", "kilo,opencode,claude").status,
+		0,
+	);
+	const cfgPath = join(dir, ".agents", "workflow.json");
+	const cfg = JSON.parse(read(dir, ".agents/workflow.json"));
+	cfg.mcp = { "chrome-devtools": ["qa"], figma: ["tech-lead", "qa", "scout"] };
+	writeFileSync(cfgPath, JSON.stringify(cfg));
+	assert.equal(run(dir, "sync").status, 0);
+	for (const tool of ["kilo", "opencode"]) {
+		const qa = read(dir, `.${tool}/agents/qa.md`);
+		assert.match(qa, /"chrome-devtools_\*": allow/);
+		assert.match(qa, /"figma_\*": allow/);
+		const impl = read(dir, `.${tool}/agents/implementer.md`);
+		assert.match(impl, /"chrome-devtools_\*": deny/);
+		assert.match(impl, /"figma_\*": deny/);
+		assert.match(
+			read(dir, `.${tool}/agents/tech-lead.md`),
+			/"chrome-devtools_\*": deny/,
+		);
+	}
+	assert.match(
+		read(dir, ".claude/agents/implementer.md"),
+		/disallowedTools: mcp__chrome-devtools, mcp__figma/,
+	);
+	assert.match(
+		read(dir, ".claude/agents/qa.md"),
+		/^(?![\s\S]*disallowedTools)/,
+	);
+	assert.match(
+		read(dir, ".claude/agents/scout.md"),
+		/tools: Read, Glob, Grep, Bash, mcp__figma/,
+	);
+	cfg.mcp = { figma: "tech-lead" };
+	writeFileSync(cfgPath, JSON.stringify(cfg));
+	assert.notEqual(run(dir, "sync").status, 0);
+});
