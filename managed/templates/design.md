@@ -3,9 +3,9 @@
 > Revision: R1 · Author: tech-lead · Date: YYYY-MM-DD
 > Change: `spec/changes/<ID>/` (proposal.md, change.json) · Requirements: FR-…, US-…
 > Why: one sentence from the proposal: whose problem this solves and what changes for them.
-> After approval exactly this file is delivered. Any change after approval needs the user's approval again.
+> After approval exactly this file is delivered. A change of behaviour, contracts or data after approval needs the user's approval again; fixing stale documentation does not.
 > Describe sections 3, 4 and 9 per subtask (ST-01, ST-02…) when the change has several subtasks.
-> Write the content in the user language set by `business-rules`. Keep the numbered headings.
+> Write the content in the user language set by `business-rules`. Keep the numbered headings; a section that does not apply is one line `n/a: <reason>`. Keep it short: the implementer reads all of it.
 
 ## 1. Approach
 
@@ -15,7 +15,7 @@
 
 Every row verified in the repository (search or read). No row means we do not assume it exists.
 
-| File:line | What it is | How we use it (pattern / call / extension) |
+| File and symbol (no line numbers) | What it is | How we use it (pattern / call / extension) |
 |---|---|---|
 | | | |
 

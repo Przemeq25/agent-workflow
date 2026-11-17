@@ -467,3 +467,32 @@ test("role, command and doc texts never tell an agent to run the workflow CLI", 
 		assert.ok(!/agent-workflow|npx /.test(text), `${f} mentions the CLI`);
 	}
 });
+
+test("copy/ is up to date and never names the CLI, the installer or the loop-only role", () => {
+	const check = spawnSync(
+		"node",
+		[join(PKG, "scripts", "build-copy.mjs"), "--check"],
+		{ encoding: "utf8" },
+	);
+	assert.equal(check.status, 0, check.stderr);
+	const files = [];
+	const walk = (d) => {
+		for (const e of readdirSync(d, { withFileTypes: true })) {
+			const f = join(d, e.name);
+			if (e.isSymbolicLink()) continue;
+			if (e.isDirectory()) walk(f);
+			else if (f.endsWith(".md")) files.push(f);
+		}
+	};
+	walk(join(PKG, "copy"));
+	assert.ok(files.length > 20);
+	for (const f of files) {
+		const text = readFileSync(f, "utf8");
+		assert.ok(
+			!/agent-workflow|npx |autopilot|installer/.test(text),
+			`${f} mentions the package`,
+		);
+	}
+	assert.ok(existsSync(join(PKG, "copy", ".kilo", "agents", "pm.md")));
+	assert.ok(existsSync(join(PKG, "copy", "INSTRUKCJA.md")));
+});
