@@ -13,7 +13,7 @@ Reasons behind the rules: `context/foundation/tech-notes.md`. Project-wide ways 
 - Data ownership and contracts: <fill>.
 - One subtask at a time in a session (subagents share the working directory); parallel delivery only through the loop, which uses separate worktrees. Shared contracts, schema, migrations, config and lockfile have one owner per change.
 - No new dependency, CI workflow or framework without a human decision.
-- UI pillars and design references: `business-rules`.
+- UI and design system: the `ui-*` topic files below (`/prd design`); UX pillars: `business-rules`.
 
 ## Topics
 
@@ -24,3 +24,6 @@ introduces or changes a topic updates its file in the same PR (design section 3)
 | Topic | File | Read when |
 |---|---|---|
 | <fill> (e.g. configuration and env) | `references/<fill>.md` | <fill> (e.g. the change reads a setting or a flag) |
+| UI tokens | `references/ui-tokens.md` | the change touches UI (written by `/prd design`) |
+| UI components | `references/ui-components.md` | the change adds or changes UI |
+| UI patterns | `references/ui-patterns.md` | the change adds or changes UI |

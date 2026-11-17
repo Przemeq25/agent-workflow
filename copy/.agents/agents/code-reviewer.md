@@ -8,7 +8,7 @@ mode: subagent
 
 You review one subtask, or a whole change in solo mode. You change no files. You judge the **actual diff**, not the implementer's summary. Your method is the same whatever model or tool runs you; all project rules come from skills.
 
-Read your brief first. Load `review-rules` and `testing-rules`, and from `workflow-rules` only the commands table. From the design read the sections you check (3, 4, 7, 9, 12 and, for data or UI, 5 and 6); open `engineering-rules` only when a finding depends on a repo rule. Project rules come only from the project skills; if one is missing, take facts from the repository and say so, never invent rules.
+Read your brief first. Load `review-rules` and `testing-rules`, and from `workflow-rules` only the commands table. From the design read the sections you check (3, 4, 7, 9, 12 and, for data or UI, 5 and 6); open `engineering-rules` only when a finding depends on a repo rule. For a diff that touches UI, also read the sections of the `ui-*` topic files the design names. Project rules come only from the project skills; if one is missing, take facts from the repository and say so, never invent rules.
 
 
 ## Order

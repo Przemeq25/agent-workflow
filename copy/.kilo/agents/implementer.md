@@ -47,6 +47,7 @@ When the coordinator sends back a failed verification, a review finding about wr
 
 ## Rules
 
+- UI: use only the components and tokens named in design section 6; no raw colours, sizes or a second component for something that exists. Build every state the design lists (loading, empty, error).
 - Choose test data that separates the right code from a simpler wrong one: values on both sides of a boundary, strings whose locale order differs from code-point order, inputs that hit every escaping or rounding case. A test that a naive implementation also passes proves nothing.
 - Before using a function, type, component or helper, find its definition (`rg`). Do not invent APIs.
 - No drive-by refactors, new abstractions or dependencies outside the design.

@@ -16,6 +16,15 @@ Installing the package changes nothing in your project. `agent-workflow init` as
 adapter files (Claude Code, Codex, OpenCode; git-ignored) and which models the tiers use. Choose none and you
 get only `.agents/` and `AGENTS.md`, which tools that read `AGENTS.md` natively use as they are.
 
+## Design system for agents: `/prd design`
+
+For a project with a UI, `/prd design` writes three topic files of `engineering-rules`: `ui-tokens.md` (colours by
+purpose, type, spacing, radius, motion, taken from the theme in code), `ui-components.md` (which component for which
+need, with file and export) and `ui-patterns.md` (states, texts, forms, accessibility, responsive; the user's rules
+plus general ones). `tech-lead` names components and tokens in design section 6, the implementer uses only those,
+and the reviewer blocks raw colours or sizes, a duplicate component and missing states. Agents read these files only
+for changes that touch UI.
+
 ## Copy without npm
 
 `copy/` holds the whole workflow ready to copy into a repository: `AGENTS.md`, `.agents/`, `spec/` and the tool
