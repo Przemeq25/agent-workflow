@@ -20,12 +20,22 @@ spec/
 
 1. `pm` (from the PRD) or `tech-lead` (from a short description) creates the change: `change.json` + `proposal.md`.
 2. `tech-lead` writes `design.md` and may adjust the subtask split.
-3. The user approves: `agent-workflow approve <ID>`. It refuses when proposal or design are incomplete or have open questions, and stores a **fingerprint** of proposal, design and subtasks. Any change after approval needs approval again.
+3. The user approves in the chat ("ok"). Only then the role that asked (`pm` or `tech-lead`) goes through the **Approval checklist** below, and if every line holds sets `status: "approved"` and `approvedAt` (today) in `change.json`. Any change to proposal, design or subtasks after approval needs the user's approval again.
 4. The approved change reaches the default branch (commit or PR) or its own `task/<ID>` branch.
-5. The loop (`agent-workflow loop`) or `tech-lead` delivers the subtasks:
+5. `tech-lead` delivers the subtasks (the optional unattended loop does the same through `autopilot`):
    - a change with **one** subtask: commit straight to `task/<ID>`,
    - a change with **several** subtasks: each subtask is a PR `sub/<ID>/<ST>` → `task/<ID>`, merged by the loop when verification, review and QA passed; otherwise it stays a draft for the user.
 6. The main PR `task/<ID>` → default branch is opened as a draft after the first subtask and becomes ready when all subtasks are done. **Only a human merges it.**
+
+## Approval checklist (done by hand, before `approvedAt` is set)
+
+Go through every line and read the files; do not set `approved` while one fails. Report failures to the user as a short list.
+
+1. `change.json`: `id` equals the folder name; subtasks are `ST-01…`; every subtask has size `S` or `M`, risk `QUICK`/`STANDARD`/`COMPLEX` and at least one AC with `id`, `given`, `when`, `then`; dependencies exist and have no cycles; `openQuestions` is empty.
+2. `proposal.md`: the "Edge cases" table has every category E1–E9 filled with an AC id or `n/a: reason`; no section is left empty or as a placeholder.
+3. `design.md` (STANDARD and COMPLEX only): all 13 headings exist, each filled or `n/a: <reason>`; the open-questions section is empty; every AC in `change.json` has a row in section 9 (`ST-01 AC-1`); every section 7 row names a test or `not tested: <reason>`; every test named in section 9 exists in the test plan.
+4. QUICK-only changes need no design: only points 1 and 2 apply.
+5. After approval the change is frozen: a later edit of proposal, design or subtasks is a new revision and needs the user's approval again.
 
 ## Edge-case checklist
 
@@ -47,7 +57,7 @@ a design section 7 row, and a test) or it is marked "n/a" with a short reason in
 Who writes what: a category that changes **what the user sees or may do** is a product decision, so `pm` writes it
 as an AC (a negative AC is still Given/When/Then). A category that only changes **how the code behaves inside**
 (retries, error mapping, transactions) goes to design section 7 by `tech-lead`. Design section 9 then gives every AC
-and every section 7 row a test; `agent-workflow approve` refuses a design where an AC has no test row or a section 7
+and every section 7 row a test; the approval checklist fails a design where an AC has no test row or a section 7
 row has no test.
 
 ## Progress of a delivery `progress.md`
@@ -59,7 +69,7 @@ commit. A new session continues from this file and the change documents, not fro
 ## State
 
 `change.json` holds only the planning status: `draft`, `approved`, `blocked`, `cancelled`.
-`agent-workflow status` computes the delivery state from git:
+The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/<ST>`):
 
 | State | Change | Subtask |
 |---|---|---|
@@ -103,13 +113,17 @@ commit. A new session continues from this file and the change documents, not fro
 }
 ```
 
-Rules (`agent-workflow validate`):
+Rules (part of the approval checklist):
 - `id` equals the folder name: tracker key or slug, lower case and hyphens,
 - subtasks `ST-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
-- `approvedAt` and `approvalHash` are set only by `agent-workflow approve`.
+- `approvedAt` is set only after the user's explicit approval. `approvalHash` stays empty; only projects that use the optional loop fill it (the loop's `approve` command).
 
-Risk: **QUICK** (text, style, local fix without logic or contracts) needs no design. **STANDARD** and **COMPLEX** need an approved design with all 13 sections.
+Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks.
+
+Risk: **QUICK** (text, style, local fix without logic or contracts) needs no design. **STANDARD** and **COMPLEX** need an approved design with all 13 headings (a section that does not apply is one line `n/a: <reason>`).
+
+Delivery: **solo** (default, `tech-lead` implements; one `code-reviewer` pass for the whole change) or **team** (M or COMPLEX subtasks or a migration: `implementer` builds a batch of subtasks in one call, one review per batch, a batch ends after a COMPLEX subtask, `qa` only for COMPLEX or UI). A batch commit carries one `Subtask: <ID>/<ST>` line per subtask. See `tech-lead`.
 
 ## Delivery report `verify/<ST>.md`
 

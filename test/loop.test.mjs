@@ -6,8 +6,10 @@ import { test } from "node:test";
 import {
 	coverageProblems,
 	designProblems,
+	loadChanges,
 	proposalProblems,
 	reportFormat,
+	validate,
 } from "../loop/loop.mjs";
 
 const EDGE = `## Edge cases
@@ -153,4 +155,39 @@ test("the loop prompt takes the report format from spec-format.md", () => {
 	const f = reportFormat(root);
 	assert.match(f, /The first line is STATUS/);
 	assert.match(f, /\*\*Docs:\*\*/);
+});
+
+test("a change approved by hand (no fingerprint) validates with a warning, not an error", () => {
+	const root = mkdtempSync(join(tmpdir(), "aw-hand-"));
+	const dir = join(root, "spec", "changes", "demo-1");
+	mkdirSync(dir, { recursive: true });
+	writeFileSync(
+		join(dir, "change.json"),
+		JSON.stringify({
+			id: "demo-1",
+			title: "Demo",
+			status: "approved",
+			approvedAt: "2026-11-17",
+			approvalHash: "",
+			openQuestions: [],
+			subtasks: [
+				{
+					id: "ST-01",
+					title: "One",
+					goal: "g",
+					size: "S",
+					risk: "QUICK",
+					dependsOn: [],
+					acceptanceCriteria: [
+						// biome-ignore lint/suspicious/noThenProperty: field of the change.json schema
+						{ id: "AC-1", given: "a", when: "b", then: "c" },
+					],
+				},
+			],
+		}),
+	);
+	writeFileSync(join(dir, "proposal.md"), "# Demo\n");
+	const { errors, warnings } = validate(loadChanges(root), root);
+	assert.deepEqual(errors, []);
+	assert.ok(warnings.some((w) => w.includes("approved by hand")));
 });

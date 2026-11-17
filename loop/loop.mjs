@@ -397,7 +397,11 @@ export function validate(changes, root = ROOT) {
 		if (c.status === "approved") {
 			if ((c.openQuestions ?? []).length)
 				errors.push(`${w}: approved change has openQuestions`);
-			if (c.approvalHash !== approvalHash(c, root))
+			if (!c.approvalHash)
+				warnings.push(
+					`${w}: approved by hand (no fingerprint). Fine for work without the loop; before using the loop run: agent-workflow approve ${c.id}`,
+				);
+			else if (c.approvalHash !== approvalHash(c, root))
 				errors.push(
 					`${w}: proposal/design/subtasks changed after approval. Approve again: agent-workflow approve ${c.id}`,
 				);
@@ -1333,6 +1337,10 @@ async function runSubtask(change, st, { base, adapter, state, dryRun, entry }) {
 
 	try {
 		const inWt = loadChanges(wt).find((c) => c.id === change.id);
+		if (!change.approvalHash)
+			throw new Error(
+				`${change.id} was approved by hand (no fingerprint). The loop needs one: run agent-workflow approve ${change.id}`,
+			);
 		if (!inWt || approvalHash(inWt, wt) !== change.approvalHash)
 			throw new Error(
 				`proposal/design/subtasks of ${change.id} on ${target} differ from the approved ones (fingerprint ${change.approvalHash}). Commit the approved version to ${base}; if ${target} was created earlier, merge ${base} into ${target}.`,

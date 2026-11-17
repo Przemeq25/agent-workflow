@@ -1,0 +1,33 @@
+{
+	"tools": [
+		"kilo",
+		"opencode",
+		"claude"
+	],
+	"defaultAgent": "tech-lead",
+	"models": {
+		"claude": {
+			"high": "opus",
+			"standard": "sonnet",
+			"low": "haiku"
+		},
+		"codex": {},
+		"opencode": {},
+		"kilo": {}
+	},
+	"guard": {
+		"defaultBranch": "main",
+		"forbiddenCommands": []
+	},
+	"claude": {
+		"permissions": {
+			"deny": []
+		}
+	},
+	"opencode": {
+		"bashDeny": []
+	},
+	"loop": {
+		"verifyEnv": {}
+	}
+}

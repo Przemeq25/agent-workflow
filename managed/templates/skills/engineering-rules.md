@@ -18,7 +18,7 @@ Reasons behind the rules: `context/foundation/tech-notes.md`. Project-wide ways 
 ## Topics
 
 One file per project-wide way of doing something, at most about 40 lines each: where it lives, how to use it with a
-reference file (`path:line`), what not to do, the change that last touched it. `/prd` writes them; a change that
+reference file and symbol (path plus function or component name, never a line number), what not to do, the change that last touched it. `/prd` writes them; a change that
 introduces or changes a topic updates its file in the same PR (design section 3).
 
 | Topic | File | Read when |

@@ -14,14 +14,14 @@ The workflow roles are generic. Everything specific to this repository lives her
 | Lint / format check | <fill> |
 | Unit and integration tests | <fill> |
 | Targeted tests (one file or pattern) | <fill> |
+| Quiet tests (only failures and a summary) | <fill> (e.g. `node --test --test-reporter=dot`, `vitest run --reporter=dot`, `jest --silent`, `pytest -q`) |
 | End-to-end tests | <fill> |
 | Build | <fill> |
 | Generate migration | <fill> (or "none") |
-| Workflow validation | `npx agent-workflow validate` |
 | Update project context and these skills | `/prd` (Codex: `$prd`) |
-Default verification for a subtask: `<fill>`.
+Default verification for a subtask: `<fill>` (quiet: prints only failures and a summary; the same exit code).
 Setup (install dependencies in a fresh worktree): `<fill>`.
-The agent loop reads both lines above as its defaults; keep the exact wording `Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):`.
+Keep the exact wording `Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):` (the optional unattended loop reads both lines as its defaults).
 Commands that must never run (shared database, deploy): <fill>.
 
 ## Paths
@@ -47,7 +47,7 @@ Skills used when writing design guidance. `team-*` skills are workflow skills, n
 | `business-rules` | every role: user language, product and market constraints |
 | `engineering-rules` | always: code patterns of this repo |
 | `review-rules` | reviewer, always |
-| `testing-rules` | implementer, qa and code-reviewer always; tech-lead for the test plan |
+| `testing-rules` | implementer, qa and code-reviewer always; tech-lead for the test plan and in solo mode |
 | `team-task-handoffs` | tech-lead and autopilot, always |
-| `team-verification` | implementer and qa, always |
+| `team-verification` | implementer, qa and tech-lead in solo mode |
 | `team-systematic-debugging` | implementer, tech-lead, autopilot: when verification, review or QA shows a real defect |

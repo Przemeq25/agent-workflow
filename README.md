@@ -16,6 +16,14 @@ Installing the package changes nothing in your project. `agent-workflow init` as
 adapter files (Claude Code, Codex, OpenCode; git-ignored) and which models the tiers use. Choose none and you
 get only `.agents/` and `AGENTS.md`, which tools that read `AGENTS.md` natively use as they are.
 
+## Copy without npm
+
+`copy/` holds the whole workflow ready to copy into a repository: `AGENTS.md`, `.agents/`, `spec/` and the tool
+folders `.kilo/`, `.opencode/`, `.claude/`. It names no package, installer or script, so agents never look for a
+command they do not have. Instructions in Polish: `copy/INSTRUKCJA.md`. Download it from GitHub (Code → Download ZIP,
+then take the `copy/` folder) or `git clone` and copy it. Maintainers rebuild it with `npm run build:copy`; a test
+fails when it is out of date.
+
 ## Install
 
 ```bash
@@ -129,9 +137,9 @@ skills: [team-verification]             # preloaded where the tool supports it
 - One **edge-case checklist** (`.agents/docs/spec-format.md`: input, empty, limits, permissions, conflict, failure,
   states, texts, existing data). `pm` turns user-visible cases into AC and fills the "Edge cases" table of the
   proposal (every category: an AC or "n/a: reason"); `tech-lead` adds technical cases in design section 7.
-- Design section 9 has a row for every AC (`ST-01 AC-1`) and every section 7 row. **`agent-workflow approve`
-  refuses** a design where an AC has no test row, a section 7 row has no test (or `not tested: reason`), or the
-  proposal's edge-case table has gaps.
+- Design section 9 has a row for every AC (`ST-01 AC-1`) and every section 7 row. The **approval checklist**
+  (`.agents/docs/spec-format.md`, done by the role by hand after the user says "ok") fails a design where an AC has
+  no test row, a section 7 row has no test (or `not tested: reason`), or the proposal's edge-case table has gaps.
 - `code-reviewer` reviews the design before approval when a change has several subtasks, contracts or data.
 - `qa` checks every AC and every section 7 row of its subtask, running only the targeted tests.
 - Documentation the change makes true (feature line in the PRD, roadmap status, topic files in `engineering-rules`)
@@ -140,9 +148,34 @@ skills: [team-verification]             # preloaded where the tool supports it
 ## Sessions and tokens
 
 Roles hand over through files, not chat history: start a new session after `/prd`, after approval, after a merge,
-and during a long delivery once `spec/changes/<ID>/progress.md` is updated. The full verification runs on the
-`implementer` and once on `clerk` (cheap tier); the loop script runs it once more for free; `qa` runs only targeted
-tests. The loop prompt takes the report format from `spec-format.md`, so it exists in one place.
+and during a long delivery once `spec/changes/<ID>/progress.md` is updated.
+
+Every subagent call reloads the rules and the code (about 100k tokens on a strong model), so delivery uses as few
+calls as the change allows:
+
+- **solo** (default: one subtask or only S subtasks, nothing COMPLEX, no migration): `tech-lead` plans and implements
+  in its own session, then **one** `code-reviewer` pass for the whole change, which also checks every AC and edge case
+  against a test and runs the targeted tests. No `implementer`, `qa` or `clerk`.
+- **team** (M or COMPLEX subtasks, a migration, or on request): `implementer` builds a **batch** of subtasks in one
+  call (default: all of them; a batch ends after a COMPLEX subtask), one review per batch, `qa` only for COMPLEX or UI.
+  `tech-lead` does not read the code in team mode and commits each batch once with one `Subtask:` line per subtask.
+- **Fewer, bigger subtasks:** a subtask is a delivery unit (S up to ~5 files, M up to ~15, 2–10 AC); split only for a
+  migration or contract that must land first, a COMPLEX part, or a PR too big to review. Most changes have 1–3.
+- Design review only for COMPLEX changes or migrations; design sections that do not apply are one line `n/a: reason`.
+- **Commands run in the agent's own shell, quietly.** `workflow-rules` names quiet test commands (only failures and a
+  summary): a green run costs ~20 tokens, a failure a few hundred. Starting a subagent just to run a command costs
+  ~80k tokens, so `clerk` is only for multi-step mechanical work.
+- **Test strength:** the reviewer asks for each logic test whether a simpler wrong implementation would still pass
+  (locale order, one-sided boundaries, assertions on length) and blocks it with the one input that tells them apart.
+- **Small always-loaded context:** `AGENTS.md` (loaded into every agent) is ~650 tokens; the flow, sessions, delegation
+  and helper details live in `.agents/docs/workflow.md`, read only by coordinators. Each role names the few skills it
+  loads (implementer: design sections for its subtasks + commands + `testing-rules`), and every role reads sections,
+  not files (PRD by FR id, design by section, code by symbol). Same review, same model: ~19k fewer tokens per call.
+- Documentation names files and symbols, never line numbers. A stale doc is fixed in the same commit; it is a review
+  suggestion, not `SPEC_CONFLICT`, and needs no new approval.
+
+Benchmark (2 small changes, same model, hidden acceptance tests): the old per-subtask chain used ~1.63M tokens in 15
+calls; solo mode used ~0.44M in 4 calls with the same result (20/20 hidden tests) and no human interruptions.
 
 ## Questions to the user
 
@@ -196,6 +229,20 @@ enter a small model, otherwise the tool's default model runs these roles.
 
 Projects created before 0.2.0 keep changes in `work/`; the loop still reads it and `validate` suggests
 `git mv work spec`.
+
+## Skills only: no scripts at work time
+
+Roles and commands (`/prd`) never run `agent-workflow`. They work from the skills and documents: validation and
+approval are the checklists in `.agents/docs/spec-format.md`, delivery state is read from git. The CLI is only
+the installer (`init`, `sync`, run by a human) and, optionally, the unattended loop. A change approved by hand has no
+fingerprint (`approvalHash`); `validate` warns about it, and the loop asks you to run `agent-workflow approve <ID>`
+first.
+
+### Starting `pm` in Kilo (desktop, VS Code, CLI)
+
+`sync` writes the roles to `.kilo/agents/`; `pm` and `tech-lead` are primary agents. Reload the window (or restart
+the CLI), then pick the agent in the agent selector of the chat (CLI: `/agents` or Tab) and write what you need, or run
+`/prd` first. Models come from `models.kilo.<tier>` in `.agents/workflow.json` (names from `kilo models`).
 
 ## Commands
 
