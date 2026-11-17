@@ -18,7 +18,8 @@
 		"node": ">=20"
 	},
 	"scripts": {
-		"test": "node --test test/*.test.mjs"
+		"test": "node --test test/*.test.mjs",
+		"build:copy": "node scripts/build-copy.mjs"
 	},
 	"keywords": ["agents", "claude-code", "codex", "opencode", "agents-md", "skills", "workflow"],
 	"repository": {

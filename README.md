@@ -16,6 +16,14 @@ Installing the package changes nothing in your project. `agent-workflow init` as
 adapter files (Claude Code, Codex, OpenCode; git-ignored) and which models the tiers use. Choose none and you
 get only `.agents/` and `AGENTS.md`, which tools that read `AGENTS.md` natively use as they are.
 
+## Copy without npm
+
+`copy/` holds the whole workflow ready to copy into a repository: `AGENTS.md`, `.agents/`, `spec/` and the tool
+folders `.kilo/`, `.opencode/`, `.claude/`. It names no package, installer or script, so agents never look for a
+command they do not have. Instructions in Polish: `copy/INSTRUKCJA.md`. Download it from GitHub (Code → Download ZIP,
+then take the `copy/` folder) or `git clone` and copy it. Maintainers rebuild it with `npm run build:copy`; a test
+fails when it is out of date.
+
 ## Install
 
 ```bash
