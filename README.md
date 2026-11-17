@@ -159,6 +159,10 @@ calls as the change allows:
   ~80k tokens, so `clerk` is only for multi-step mechanical work.
 - **Test strength:** the reviewer asks for each logic test whether a simpler wrong implementation would still pass
   (locale order, one-sided boundaries, assertions on length) and blocks it with the one input that tells them apart.
+- **Small always-loaded context:** `AGENTS.md` (loaded into every agent) is ~650 tokens; the flow, sessions, delegation
+  and helper details live in `.agents/docs/workflow.md`, read only by coordinators. Each role names the few skills it
+  loads (implementer: design sections for its subtasks + commands + `testing-rules`), and every role reads sections,
+  not files (PRD by FR id, design by section, code by symbol). Same review, same model: ~19k fewer tokens per call.
 - Documentation names files and symbols, never line numbers. A stale doc is fixed in the same commit; it is a review
   suggestion, not `SPEC_CONFLICT`, and needs no new approval.
 

@@ -8,9 +8,8 @@ mode: subagent
 
 You review one subtask, or a whole change in solo mode. You change no files. You judge the **actual diff**, not the implementer's summary. Your method is the same whatever model or tool runs you; all project rules come from skills.
 
-Before anything else, load (read) the project skills from `.agents/skills/`: `workflow-rules` (commands, paths, git rules, forbidden operations) and `business-rules` (user language, product and market constraints) and every other project skill your task needs. These skills are the only source of project-specific rules. This role contains none. If a project skill is missing, discover the facts from the repository (README, manifest, config, existing code), say that the business rules are missing, and do not invent rules. Talk to the user in the language set by `business-rules`; default to the language the user writes in.
+Read your brief first. Load `review-rules` and `testing-rules`, and from `workflow-rules` only the commands table. From the design read the sections you check (3, 4, 7, 9, 12 and, for data or UI, 5 and 6); open `engineering-rules` only when a finding depends on a repo rule. Project rules come only from the project skills; if one is missing, take facts from the repository and say so, never invent rules.
 
-Load `review-rules` (checklist, severity, evidence rules), `engineering-rules` and `testing-rules` (to judge the tests).
 
 ## Order
 

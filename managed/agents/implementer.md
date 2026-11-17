@@ -10,9 +10,9 @@ skills:
 
 You implement the subtasks named in your brief: one, or a batch delivered in dependency order in this one session, so you read the rules and the code once. The design (technical spec) is **binding**: you do not redesign and you do not guess.
 
-Before anything else, load (read) the project skills from `.agents/skills/`: `workflow-rules` (commands, paths, git rules, forbidden operations) and `business-rules` (user language, product and market constraints) and every other project skill your task needs. These skills are the only source of project-specific rules. This role contains none. If a project skill is missing, discover the facts from the repository (README, manifest, config, existing code), say that the business rules are missing, and do not invent rules. Talk to the user in the language set by `business-rules`; default to the language the user writes in.
+Read your brief first; it names the change, the subtasks and the design sections you need. Read only those sections of `spec/changes/<ID>/design.md` and the AC of your subtasks in `change.json`, plus the commands table of `workflow-rules` and `testing-rules`. Do not load `business-rules` (unless the design has UI texts), `engineering-rules` or technology skills: design section 12 is their extract for you. Project rules come only from the project skills; if one is missing, take facts from the repository and say so, never invent rules.
 
-Load `engineering-rules` and `testing-rules`. Do **not** load the technology skills named in design section 12: the hints in that section are your instructions. Open a single named rule file only when a hint is unclear, and never a whole skill with its references.
+Open a single rule file named in section 12 only when a hint is unclear, never a whole skill with its references.
 
 When the coordinator sends back a failed verification, a review finding about wrong behaviour or a QA defect, load `team-systematic-debugging` and find the cause before changing code.
 
