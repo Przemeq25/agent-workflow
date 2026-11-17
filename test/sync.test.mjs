@@ -496,3 +496,55 @@ test("copy/ is up to date and never names the CLI, the installer or the loop-onl
 	assert.ok(existsSync(join(PKG, "copy", ".kilo", "agents", "pm.md")));
 	assert.ok(existsSync(join(PKG, "copy", "INSTRUKCJA.md")));
 });
+
+// OpenCode/Kilo permission matching: whole-value wildcards (`*` any characters, `?` one), last match wins.
+function opencodeBashDecision(agentFile, command) {
+	const rules = [
+		...agentFile.matchAll(/^ {4}("(?:[^"\\]|\\.)*"): (allow|deny|ask)$/gm),
+	].map(([, pattern, effect]) => [JSON.parse(pattern), effect]);
+	let decision = "ask";
+	for (const [pattern, effect] of rules) {
+		const re = new RegExp(
+			`^${pattern
+				.replace(/[.+^${}()|[\]\\]/g, "\\$&")
+				.replaceAll("*", ".*")
+				.replaceAll("?", ".")}$`,
+			"s",
+		);
+		if (re.test(command)) decision = effect;
+	}
+	return decision;
+}
+
+test("opencode and kilo agents cannot push to the protected branches", () => {
+	const dir = project();
+	run(dir, "init", "--yes", "--tools", "opencode,kilo");
+	writeFileSync(
+		join(dir, ".agents/workflow.json"),
+		JSON.stringify({
+			...JSON.parse(read(dir, ".agents/workflow.json")),
+			guard: { defaultBranch: "develop" },
+		}),
+	);
+	syncProject(dir, { quiet: true });
+	for (const tool of ["opencode", "kilo"]) {
+		const tl = read(dir, `.${tool}/agents/tech-lead.md`);
+		for (const cmd of [
+			"git push",
+			"git push origin main",
+			"git push -u origin main",
+			"git push origin HEAD:main",
+			"git push origin task/X:refs/heads/master",
+			"git push origin develop --tags",
+			"git push --force origin task/X",
+		])
+			assert.equal(opencodeBashDecision(tl, cmd), "deny", `${tool}: ${cmd}`);
+		for (const cmd of [
+			"git push -u origin task/PROJ-1",
+			"git push origin sub/PROJ-1/ST-2",
+			"git push origin task/maintenance",
+			"git status",
+		])
+			assert.equal(opencodeBashDecision(tl, cmd), "allow", `${tool}: ${cmd}`);
+	}
+});

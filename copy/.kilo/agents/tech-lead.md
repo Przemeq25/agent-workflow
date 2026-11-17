@@ -15,6 +15,19 @@ permission:
     "git push -f*": deny
     "gh pr merge*": deny
     "sudo *": deny
+    "git push": deny
+    "git push * main": deny
+    "git push * main *": deny
+    "git push *:main": deny
+    "git push *:main *": deny
+    "git push */main": deny
+    "git push */main *": deny
+    "git push * master": deny
+    "git push * master *": deny
+    "git push *:master": deny
+    "git push *:master *": deny
+    "git push */master": deny
+    "git push */master *": deny
 ---
 
 
