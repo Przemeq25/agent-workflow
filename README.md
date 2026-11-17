@@ -299,7 +299,11 @@ GitHub Actions step:
 ## Known limits
 
 - Hard enforcement (blocked commands and paths per role) exists only in Claude Code, through the guard hook.
-  Codex and OpenCode get their own sandbox or permission settings plus the same written rules.
+  Codex and OpenCode get their own sandbox or permission settings plus the same written rules. OpenCode and
+  Kilo agents also deny pushes to `guard.defaultBranch`, `main` and `master` (as a separate argument, after
+  `:` or `/`) and a bare `git push`; protected files are guarded only by the written rules there.
+- Provider keys for OpenCode belong in the global `~/.config/opencode/opencode.json` as `{file:...}` or
+  `{env:...}` references, never in the repository (example in `copy/INSTRUKCJA.md`).
 - Codex does not always start a custom agent by name; roles then fall back to a generic subagent with the role
   file (see "Delegation" in `AGENTS.md`).
 - With both Claude and OpenCode enabled, OpenCode sees the skills twice (`.claude/skills` and `.agents/skills`).

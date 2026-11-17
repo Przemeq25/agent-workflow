@@ -21,6 +21,24 @@ W `.kilo/agents/*.md` (tak samo w `.opencode/agents/*.md`) dopisz w nagłówku l
 
 W `.claude/agents/` modele są już wpisane (opus, sonnet, haiku).
 
+### Klucze do providerów (OpenCode)
+Klucze API i adresy własnych providerów (np. firmowego gatewaya) trzymaj poza repo, w globalnym `~/.config/opencode/opencode.json`, a w samym configu tylko odwołanie do pliku albo zmiennej:
+
+```jsonc
+{
+  "provider": {
+    "firma": {
+      "options": {
+        "apiKey": "{file:~/.config/opencode/secrets/firma-key}",
+        "baseURL": "{env:FIRMA_GATEWAY_URL}"
+      }
+    }
+  }
+}
+```
+
+Plik z kluczem ma jedną linię, bez końcowego entera: `printf '%s' 'KLUCZ' > ~/.config/opencode/secrets/firma-key`. Nigdy nie wpisuj klucza w `opencode.json` w repo ani w `.agents/`.
+
 ## 3. Start
 1. Zrestartuj narzędzie.
 2. Uruchom `/prd`: wywiad, PRD w `context/foundation/` i 5 skilli projektu (`workflow-rules`, `business-rules`, `engineering-rules`, `testing-rules`, `review-rules`), w tym ciche komendy testów.
