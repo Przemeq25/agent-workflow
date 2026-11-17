@@ -148,8 +148,11 @@ calls as the change allows:
 - **solo** (default: one subtask or only S subtasks, nothing COMPLEX, no migration): `tech-lead` plans and implements
   in its own session, then **one** `code-reviewer` pass for the whole change, which also checks every AC and edge case
   against a test and runs the targeted tests. No `implementer`, `qa` or `clerk`.
-- **team** (M or COMPLEX subtasks, a migration, or on request): `implementer` per subtask, review per subtask, `qa`
-  only for COMPLEX or UI.
+- **team** (M or COMPLEX subtasks, a migration, or on request): `implementer` builds a **batch** of subtasks in one
+  call (default: all of them; a batch ends after a COMPLEX subtask), one review per batch, `qa` only for COMPLEX or UI.
+  `tech-lead` does not read the code in team mode and commits each batch once with one `Subtask:` line per subtask.
+- **Fewer, bigger subtasks:** a subtask is a delivery unit (S up to ~5 files, M up to ~15, 2–10 AC); split only for a
+  migration or contract that must land first, a COMPLEX part, or a PR too big to review. Most changes have 1–3.
 - Design review only for COMPLEX changes or migrations; design sections that do not apply are one line `n/a: reason`.
 - Documentation names files and symbols, never line numbers. A stale doc is fixed in the same commit; it is a review
   suggestion, not `SPEC_CONFLICT`, and needs no new approval.

@@ -29,7 +29,7 @@ Cheap lookups: ask `scout` for searches across more than a few files and `clerk`
 ### 2. Change and subtasks
 Create `spec/changes/<ID>/`. ID is the tracker key if the user gave one, otherwise a short slug. Write:
 - `proposal.md` (short, following `.agents/templates/proposal.md`): why, what changes, AC of the whole change, out of scope,
-- `change.json` with subtasks: each ST-xx is a vertical slice of size S/M with 2–6 AC, dependencies and verification. A small change has one subtask.
+- `change.json` with subtasks, each with AC, dependencies and verification. Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks.
 - In both, go through the edge-case checklist in `.agents/docs/spec-format.md` for each subtask, exactly as `pm` does: user-visible cases become AC, the rest go to design section 7, every category is covered or "n/a" with a reason.
 
 **QUICK** (text, style, local fix without logic or contracts): skip design, design review and approval. One subtask, you implement it yourself, the default verification from `workflow-rules`, PR. No review subagent.
@@ -45,13 +45,19 @@ Show the user one block: approach in 2 sentences, subtasks, files (new/changed),
 1. **Change branch:** `git fetch origin`, `git switch -c task/<ID> origin/<default branch>` (the default branch is in `workflow-rules`). If `git status` shows uncommitted changes that are not yours, do not touch them: tell the user in one sentence and wait, because subagents work in the same directory. First commit: `docs(<ID>): proposal and design` with the whole `spec/changes/<ID>/`.
 2. **Choose the delivery mode** and write it in `progress.md`:
    - **solo** (default): one subtask, or only S subtasks, no COMPLEX subtask and no migration. You implement yourself, in this session.
-   - **team**: an M or COMPLEX subtask, a migration, or the user asks for it. `implementer` writes the code of each subtask.
-3. **Subtasks in dependency order, one at a time** (subagents share this working directory). If `progress.md` exists, continue from it. For each ST-xx:
+   - **team**: an M or COMPLEX subtask, a migration, or the user asks for it. `implementer` writes the code in **batches**: by default one batch with all subtasks; a batch ends after a COMPLEX subtask, so that subtask is reviewed before the rest is built on it. You do not read the code yourself in team mode: the design, the reports and the review are your evidence, which keeps your session small.
+3. **Solo delivery**, subtasks in dependency order. If `progress.md` exists, continue from it. For each ST-xx:
    1. Record the base: `git rev-parse HEAD`.
-   2. Implement it: **solo** you write the code and tests yourself (load `testing-rules` and `team-verification`); **team** ask `implementer`: "Deliver <ID>/<ST> per `spec/changes/<ID>/design.md`, section 3, 4, 9 and 12 for <ST>".
-   3. Run the default verification from `workflow-rules` yourself and read the result. Red goes back to the author with the error, at most 2 rounds; from the second round load `team-systematic-debugging` and give a hypothesis with evidence.
-   4. Write `spec/changes/<ID>/verify/<ST>.md` (format in `.agents/docs/spec-format.md`, short), update `progress.md`, and commit with the code as `feat(<ID>): <ST> <title>` with the line `Subtask: <ID>/<ST>` in the body.
-4. **One independent review.** **solo:** after the last subtask ask `code-reviewer` once for the whole change (base: the commit before the first subtask). **team:** ask it after each subtask (base: step 3.1). It checks the diff, every AC and section 7 row against a test, and runs the targeted tests. `CHANGES_REQUIRED`: fix the blocking items (or send them to `implementer`), verify, commit `fix(<ID>): review`, and ask for a re-review of the fixed items only; at most 2 rounds. Ask `qa` only for a COMPLEX subtask or a UI change; otherwise the review covers acceptance.
+   2. Write the code and tests yourself (load `testing-rules` and `team-verification`).
+   3. Run the default verification from `workflow-rules`. Red: fix, at most 2 rounds; from the second round load `team-systematic-debugging`.
+   4. Write `spec/changes/<ID>/verify/<ST>.md` (format in `.agents/docs/spec-format.md`, short), update `progress.md`, commit as `feat(<ID>): <ST> <title>` with the line `Subtask: <ID>/<ST>` in the body.
+
+   **Team delivery**, batch by batch:
+   1. Record the base: `git rev-parse HEAD`.
+   2. Ask `implementer` once for the batch: "Deliver <ID> <ST-01…ST-0n> in order per `spec/changes/<ID>/design.md`; targeted tests after each subtask, the default verification at the end; report per subtask". One call builds the whole batch, so the rules and the code are read once.
+   3. Run the default verification yourself and read the result. Red goes back to the implementer with the error, at most 2 rounds (from the second round with a hypothesis, `team-systematic-debugging`).
+   4. Write `verify/<ST>.md` for each subtask from the report (short), update `progress.md`, and commit the batch once as `feat(<ID>): <ST-01…ST-0n> <short title>` with one line `Subtask: <ID>/<ST>` per subtask in the body.
+4. **Independent review.** Ask `code-reviewer` once per batch (solo: one batch is the whole change; base: step 1). It checks the diff, every AC and section 7 row against a test, and runs the targeted tests. `CHANGES_REQUIRED`: fix the blocking items (team: send only those items to `implementer`, in the same session if your tool can resume a subagent), verify, commit `fix(<ID>): review`, and ask for a re-review of the fixed items only; at most 2 rounds. Ask `qa` once per batch only when the batch has a COMPLEX subtask or a UI change; otherwise the review covers acceptance.
    - **Stale documentation** found anywhere (a wrong path or name in a topic file or the PRD): fix it in the same commit. It is not a design revision and needs no approval.
    - `SPEC_CONFLICT` is only about behaviour, a contract or data: a new design revision, and a question to the user when behaviour changes.
 5. If this session has grown long (several subtasks or review rounds behind you), stop after a commit and tell the user: "Next: new session, `tech-lead`, continue <ID>".

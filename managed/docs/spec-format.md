@@ -119,9 +119,11 @@ Rules (part of the approval checklist):
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
 - `approvedAt` is set only after the user's explicit approval. `approvalHash` stays empty; only projects that use the optional loop fill it (the loop's `approve` command).
 
+Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks.
+
 Risk: **QUICK** (text, style, local fix without logic or contracts) needs no design. **STANDARD** and **COMPLEX** need an approved design with all 13 headings (a section that does not apply is one line `n/a: <reason>`).
 
-Delivery: **solo** (default, `tech-lead` implements; one `code-reviewer` pass for the whole change) or **team** (M or COMPLEX subtasks or a migration: `implementer` per subtask, review per subtask, `qa` only for COMPLEX or UI). See `tech-lead`.
+Delivery: **solo** (default, `tech-lead` implements; one `code-reviewer` pass for the whole change) or **team** (M or COMPLEX subtasks or a migration: `implementer` builds a batch of subtasks in one call, one review per batch, a batch ends after a COMPLEX subtask, `qa` only for COMPLEX or UI). A batch commit carries one `Subtask: <ID>/<ST>` line per subtask. See `tech-lead`.
 
 ## Delivery report `verify/<ST>.md`
 
