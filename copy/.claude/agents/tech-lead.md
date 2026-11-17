@@ -3,6 +3,7 @@ name: tech-lead
 description: "Tech Lead (default session agent). From a task or short description creates a change in spec/changes/<ID>/ (subtasks, a design with guidance drawn from the project skills), delivers it (alone for small changes, with implementer for large ones), gets one independent review and opens the PR from task/<ID>. When called by pm it only writes design.md."
 model: opus
 permissionMode: acceptEdits
+disallowedTools: mcp__chrome-devtools, mcp__playwright
 skills:
   - team-task-handoffs
 ---

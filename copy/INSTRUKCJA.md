@@ -46,5 +46,15 @@ Plik z kluczem ma jedną linię, bez końcowego entera: `printf '%s' 'KLUCZ' > ~
 
 Projekt po starszym `/prd`: dopisz w `workflow-rules` wiersz „Quiet tests” i cichą wersję „Default verification” (tylko błędy i podsumowanie) albo uruchom `/prd tech`.
 
+## 4. MCP: przeglądarka i Figma (opcjonalnie)
+Pliki agentów mają już przypisane serwery MCP:
+
+| Serwer | Kto może używać | Pozostali agenci |
+|---|---|---|
+| `chrome-devtools`, `playwright` | `qa` (sprawdzenie UI) | wyłączony |
+| `figma` | `tech-lead` (plan ekranu, `/prd design`), `qa` (porównanie) | wyłączony |
+
+Nazwa serwera w konfiguracji narzędzia (np. `mcp` w `kilo.jsonc`) musi być dokładnie taka jak w tabeli; inaczej zmień ją w nagłówkach plików agentów (`"figma_*": allow` w Kilo i OpenCode, `mcp__figma` w Claude Code). Bez tych serwerów agenci pomijają te kroki i piszą o tym w raporcie. Żeby `qa` mógł sprawdzić UI, uzupełnij w `workflow-rules` wiersze „Run the app” i „Test account”.
+
 ## Zmiana roli
 Role źródłowe są w `.agents/agents/`. Zmianę roli przenieś ręcznie do pliku w `.kilo/agents/` (albo innego narzędzia), bo narzędzie czyta tylko swój folder.

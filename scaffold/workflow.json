@@ -1,7 +1,8 @@
 {
 	"tools": [],
 	"defaultAgent": "tech-lead",
-	"models": { "claude": {}, "codex": {}, "opencode": {} },
+	"models": { "claude": {}, "codex": {}, "opencode": {}, "kilo": {} },
+	"mcp": {},
 	"guard": {
 		"defaultBranch": "main",
 		"forbiddenCommands": []
