@@ -23,7 +23,7 @@ Technical (phase B):
 - `.agents/skills/workflow-rules/SKILL.md`, `engineering-rules/SKILL.md`, `testing-rules/SKILL.md`, `review-rules/SKILL.md`.
 - `.agents/skills/engineering-rules/references/<topic>.md`: one file per project-wide way of doing something
   (configuration and env, translations, auth and permissions, data access, errors and logging, forms, storage,
-  background jobs…), each at most about 40 lines: where it lives, how to use it with a reference file (`path:line`),
+  background jobs…), each at most about 40 lines: where it lives, how to use it with a reference file and symbol (path plus function or component name, no line numbers),
   what not to do. Listed in the topic table of `engineering-rules`; roles open only the topics their task touches.
 - `context/foundation/tech-notes.md`: technical decisions with their reasons and date, rejected options, open
   technical decisions, changelog.

@@ -46,7 +46,7 @@ Skills used when writing design guidance. `team-*` skills are workflow skills, n
 | `business-rules` | every role: user language, product and market constraints |
 | `engineering-rules` | always: code patterns of this repo |
 | `review-rules` | reviewer, always |
-| `testing-rules` | implementer, qa and code-reviewer always; tech-lead for the test plan |
+| `testing-rules` | implementer, qa and code-reviewer always; tech-lead for the test plan and in solo mode |
 | `team-task-handoffs` | tech-lead and autopilot, always |
-| `team-verification` | implementer and qa, always |
+| `team-verification` | implementer, qa and tech-lead in solo mode |
 | `team-systematic-debugging` | implementer, tech-lead, autopilot: when verification, review or QA shows a real defect |

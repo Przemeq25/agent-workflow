@@ -140,9 +140,22 @@ skills: [team-verification]             # preloaded where the tool supports it
 ## Sessions and tokens
 
 Roles hand over through files, not chat history: start a new session after `/prd`, after approval, after a merge,
-and during a long delivery once `spec/changes/<ID>/progress.md` is updated. The full verification runs on the
-`implementer` and once on `clerk` (cheap tier); the loop script runs it once more for free; `qa` runs only targeted
-tests. The loop prompt takes the report format from `spec-format.md`, so it exists in one place.
+and during a long delivery once `spec/changes/<ID>/progress.md` is updated.
+
+Every subagent call reloads the rules and the code (about 100k tokens on a strong model), so delivery uses as few
+calls as the change allows:
+
+- **solo** (default: one subtask or only S subtasks, nothing COMPLEX, no migration): `tech-lead` plans and implements
+  in its own session, then **one** `code-reviewer` pass for the whole change, which also checks every AC and edge case
+  against a test and runs the targeted tests. No `implementer`, `qa` or `clerk`.
+- **team** (M or COMPLEX subtasks, a migration, or on request): `implementer` per subtask, review per subtask, `qa`
+  only for COMPLEX or UI.
+- Design review only for COMPLEX changes or migrations; design sections that do not apply are one line `n/a: reason`.
+- Documentation names files and symbols, never line numbers. A stale doc is fixed in the same commit; it is a review
+  suggestion, not `SPEC_CONFLICT`, and needs no new approval.
+
+Benchmark (2 small changes, same model, hidden acceptance tests): the old per-subtask chain used ~1.63M tokens in 15
+calls; solo mode used ~0.44M in 4 calls with the same result (20/20 hidden tests) and no human interruptions.
 
 ## Questions to the user
 
