@@ -1,7 +1,7 @@
 ---
 name: prd
 description: Create or update the product and technical context of this project and write the project skills every role reads (business-rules, workflow-rules, engineering-rules, testing-rules, review-rules). Run first in a new or existing repository, and again when the product or the technology changes.
-argument-hint: "[all|product|tech] [what changed]"
+argument-hint: "[all|product|tech|sync] [what changed]"
 tier: high
 ---
 
@@ -9,7 +9,7 @@ tier: high
 
 You set up and maintain everything project-specific that the workflow roles need. The roles in `.agents/agents/`
 are generic; they learn this project only from what you write. Arguments: `$ARGUMENTS`
-(`product`, `tech` or `all`, default `all`, optionally followed by what changed).
+(`product`, `tech`, `all` or `sync`, default `all`, optionally followed by what changed).
 
 ## What you write
 
@@ -21,8 +21,10 @@ Product (phase A):
 
 Technical (phase B):
 - `.agents/skills/workflow-rules/SKILL.md`, `engineering-rules/SKILL.md`, `testing-rules/SKILL.md`, `review-rules/SKILL.md`.
-- `.agents/skills/engineering-rules/references/patterns.md`: verified code patterns with reference files
-  (`path:line`), contracts and warnings. Load-on-demand detail, so the skill itself stays short.
+- `.agents/skills/engineering-rules/references/<topic>.md`: one file per project-wide way of doing something
+  (configuration and env, translations, auth and permissions, data access, errors and logging, forms, storage,
+  background jobs…), each at most about 40 lines: where it lives, how to use it with a reference file (`path:line`),
+  what not to do. Listed in the topic table of `engineering-rules`; roles open only the topics their task touches.
 - `context/foundation/tech-notes.md`: technical decisions with their reasons and date, rejected options, open
   technical decisions, changelog.
 
@@ -42,8 +44,10 @@ You write nothing else: no application code, no configuration, no dependencies, 
   in code, so ask for them or list them as open decisions.
 - **Update** (documents exist): read them and the code state (`git log` since the PRD `updated` date), then work
   only on what changed. Bump `version`, set `updated`, add a changelog entry (added, changed, withdrawn).
-- **Older layout:** if `context/foundation/tech-prd.md` or `context/engineering.md` exist, move their rules into the
-  skills, patterns into `references/patterns.md` and reasons into `tech-notes.md`. Delete the old files only after
+- **Sync** (`/prd sync`): documents drifted from the code (work done outside this workflow, a hotfix). Compare the
+  feature map, roadmap statuses and topic files with the code and `git log`; propose only the corrections.
+- **Older layout:** if `context/foundation/tech-prd.md`, `context/engineering.md` or `references/patterns.md`
+  exist, move their rules into the skills, patterns into topic files and reasons into `tech-notes.md`. Delete the old files only after
   the user agrees.
 
 ## Rules
@@ -76,8 +80,13 @@ You write nothing else: no application code, no configuration, no dependencies, 
    constraints, UX pillars and design references, data and privacy, decision rules).
 
 `prd.md` frontmatter: `project`, `version`, `status` (draft | approved), `created`, `updated`, `market`,
-`language`, `currency`. Sections: goal and problem, users and flow, functional requirements, scenarios with
-Given/When/Then AC, measurable NFRs, success metrics, out of scope, open decisions, changelog.
+`language`, `currency`. Sections: goal and problem, users and flow, **features** (the feature map below), functional
+requirements, scenarios with Given/When/Then AC, measurable NFRs, success metrics, out of scope, open decisions,
+changelog.
+
+Feature map: one line per feature, so changes in parallel rarely conflict:
+`F-07 Room photos · FR-21, FR-22 · done | partial | planned · code: src/rooms/photos/ · changes: PROJ-12, PROJ-31`.
+Changes keep it current in their own PR (design section 3).
 
 ## Phase B: technical
 
@@ -94,9 +103,11 @@ Given/When/Then AC, measurable NFRs, success metrics, out of scope, open decisio
      paths, branches and PR commands for the hosting in use, evidence rules, and the **skill routing table**
      listing every skill in `.agents/skills/` (the validation fails otherwise).
    - `engineering-rules`: stack and versions, reference slice, layers and dependency direction, data ownership and
-     contracts, forms and state, UI and design system, allowed and forbidden dependencies, parallel-work limit;
-     details in `references/patterns.md`.
-   - `testing-rules`: test types with an example file each, locations, test data and databases, what is never
+     contracts, forms and state, UI and design system, allowed and forbidden dependencies, and the topic table with
+     one `references/<topic>.md` per project-wide way of doing something found in the code (sample at least 3
+     usages per topic; contradictions go to open decisions).
+   - `testing-rules`: test types with an example file each, locations, the targeted test command, test data and
+     databases, what is never
      mocked, the patterns of test files QA may edit (keep them equal to `guard.testFiles` in
      `.agents/workflow.json`; if they differ, tell the user to update that file, you do not edit it).
    - `review-rules`: the checklist with the project-specific checks, severity levels and verdict rules.

@@ -58,7 +58,7 @@ After `init`, run **`/prd`** in your tool (Codex: **`$prd`**). One command, new 
    `roadmap.md`, `prd-notes.md` and the `business-rules` skill.
 2. **Technical:** reads manifests, configs, CI, written rules, code patterns and tests, asks only about what the
    repository does not settle, and writes `workflow-rules`, `engineering-rules` (with
-   `references/patterns.md`), `testing-rules`, `review-rules` and `context/foundation/tech-notes.md` (reasons and
+   topic files `references/<topic>.md` such as configuration or translations), `testing-rules`, `review-rules` and `context/foundation/tech-notes.md` (reasons and
    history). It proposes well-known technology skills for the stack and installs them only after you agree.
 
 Every skill and document is shown as a draft and written after you approve it. `/prd product`, `/prd tech` or
@@ -123,6 +123,26 @@ access: full | no-commit | qa | read-only | prd | prd-tech
 mode: primary | subagent | all
 skills: [team-verification]             # preloaded where the tool supports it
 ```
+
+## Precise planning
+
+- One **edge-case checklist** (`.agents/docs/spec-format.md`: input, empty, limits, permissions, conflict, failure,
+  states, texts, existing data). `pm` turns user-visible cases into AC and fills the "Edge cases" table of the
+  proposal (every category: an AC or "n/a: reason"); `tech-lead` adds technical cases in design section 7.
+- Design section 9 has a row for every AC (`ST-01 AC-1`) and every section 7 row. **`agent-workflow approve`
+  refuses** a design where an AC has no test row, a section 7 row has no test (or `not tested: reason`), or the
+  proposal's edge-case table has gaps.
+- `code-reviewer` reviews the design before approval when a change has several subtasks, contracts or data.
+- `qa` checks every AC and every section 7 row of its subtask, running only the targeted tests.
+- Documentation the change makes true (feature line in the PRD, roadmap status, topic files in `engineering-rules`)
+  is listed in design section 3 and ships in the same PR as the code.
+
+## Sessions and tokens
+
+Roles hand over through files, not chat history: start a new session after `/prd`, after approval, after a merge,
+and during a long delivery once `spec/changes/<ID>/progress.md` is updated. The full verification runs on the
+`implementer` and once on `clerk` (cheap tier); the loop script runs it once more for free; `qa` runs only targeted
+tests. The loop prompt takes the report format from `spec-format.md`, so it exists in one place.
 
 ## Questions to the user
 

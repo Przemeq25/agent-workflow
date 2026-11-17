@@ -27,6 +27,35 @@ spec/
    - a change with **several** subtasks: each subtask is a PR `sub/<ID>/<ST>` → `task/<ID>`, merged by the loop when verification, review and QA passed; otherwise it stays a draft for the user.
 6. The main PR `task/<ID>` → default branch is opened as a draft after the first subtask and becomes ready when all subtasks are done. **Only a human merges it.**
 
+## Edge-case checklist
+
+The single list both `pm` and `tech-lead` go through for every subtask. A category either applies (it gets an AC or
+a design section 7 row, and a test) or it is marked "n/a" with a short reason in the proposal.
+
+| # | Category | Typical questions |
+|---|---|---|
+| E1 | Invalid input | wrong format, missing or extra field, too long, wrong type, injection |
+| E2 | Empty and first use | no data yet, nothing selected, empty result, first visit |
+| E3 | Limits | maximum count or size, pagination, rate limits, very long text |
+| E4 | Permissions and ownership | signed out, another user's data, role without rights, shared links |
+| E5 | Conflict and repetition | stale edit, double submit, idempotency, two tabs or devices |
+| E6 | Failure of a dependency | network, timeout, external API, storage or database error, offline |
+| E7 | State transitions | allowed and forbidden transitions, cancel, retry, undo, partial save |
+| E8 | Texts and locale | user language, number, date and currency formats, plurals (only with UI or messages) |
+| E9 | Existing data | data created before this change, migration, deletion and archiving |
+
+Who writes what: a category that changes **what the user sees or may do** is a product decision, so `pm` writes it
+as an AC (a negative AC is still Given/When/Then). A category that only changes **how the code behaves inside**
+(retries, error mapping, transactions) goes to design section 7 by `tech-lead`. Design section 9 then gives every AC
+and every section 7 row a test; `agent-workflow approve` refuses a design where an AC has no test row or a section 7
+row has no test.
+
+## Progress of a delivery `progress.md`
+
+`tech-lead` keeps `spec/changes/<ID>/progress.md` while it delivers a change in an interactive session, at most about
+20 lines: subtasks done (with commit), the current step, open issues, the next step. It is updated in each subtask
+commit. A new session continues from this file and the change documents, not from a chat history.
+
 ## State
 
 `change.json` holds only the planning status: `draft`, `approved`, `blocked`, `cancelled`.
@@ -95,7 +124,7 @@ The first line is exactly `STATUS: DONE` or `STATUS: BLOCKED`. Then:
 - **Deviations from the design:** list (allowed) or the reason for the block
 - **Files:** changed and new
 - **Blocker** (BLOCKED only): problem, evidence, proposed design change or a product question with a recommendation
-- **Docs after merge:** requirement IDs whose status changes, new code patterns (or "none")
+- **Docs:** documentation files updated in this subtask (feature line, roadmap status, topic files) or "none"
 - **Next steps:** things outside the scope
 
 A delivery done by `tech-lead` in an interactive session uses the same format, and its commit carries the line `Subtask: <ID>/<ST>`.

@@ -16,7 +16,7 @@ You act as **autopilot** (the Tech Lead in loop mode, with no human) for one sub
 ## Sources of truth (in this order)
 
 1. The subtask (AC, scope) and the design (files, contracts, data, UI, test plan, **section 12: skill guidance**). You deliver only the part of the design assigned to {{SUBTASK_ID}}.
-2. The project skills (`workflow-rules`, `engineering-rules`, `testing-rules`, `review-rules`) and the patterns document `engineering-rules` points to, for everything the design does not specify.
+2. The project skills (`workflow-rules`, `engineering-rules`, `testing-rules`, `review-rules`) and only the topic files from `engineering-rules` that the subtask touches, for everything the design does not specify.
 3. `AGENTS.md`.
 
 Do not read `spec/archive/` as requirements (it is history).
@@ -24,10 +24,10 @@ Do not read `spec/archive/` as requirements (it is history).
 ## Procedure
 
 1. **Preparation.** Read the proposal, the design and the files from design sections 2 and 3 that concern {{SUBTASK_ID}}. Run `git status`.
-2. **Implementation.** Ask `implementer`: "Deliver {{CHANGE_ID}}/{{SUBTASK_ID}} per `{{DESIGN_PATH}}`. Files only from section 3 for this subtask. Guidance from section 12. Tests from section 9 for the AC of this subtask. Finally run `{{VERIFY_CMD}}`." Receive the report.
-3. **Verification.** Run `{{VERIFY_CMD}}` yourself. Red goes back to the implementer with the full error, at most 2 rounds, then `BLOCKED`. From the second round on, load `team-systematic-debugging` and send a hypothesis with evidence.
+2. **Implementation.** Ask `implementer`: "Deliver {{CHANGE_ID}}/{{SUBTASK_ID}} per `{{DESIGN_PATH}}`. Files only from section 3 for this subtask, including any documentation listed there. Guidance from section 12. Tests from section 9 for the AC and section 7 rows of this subtask. Finally run `{{VERIFY_CMD}}`." Receive the report.
+3. **Verification.** Ask `clerk` to run `{{VERIFY_CMD}}` and report the result (the cheap independent check; the loop runs it once more after you). Red goes back to the implementer with the error from the report, at most 2 rounds, then `BLOCKED`. From the second round on, load `team-systematic-debugging` and send a hypothesis with evidence.
 4. **Review.** Ask `code-reviewer`: "Review {{CHANGE_ID}}/{{SUBTASK_ID}}: design `{{DESIGN_PATH}}`, base `origin/{{TARGET_BRANCH}}`". `CHANGES_REQUIRED`: only blocking items go back to the implementer, then repeat step 3 and review of the touched code. At most 2 rounds, then `BLOCKED`. `SPEC_CONFLICT`: `BLOCKED`.
-5. **QA.** Ask `qa`: "Accept {{CHANGE_ID}}/{{SUBTASK_ID}} against the subtask AC and the test plan in `{{DESIGN_PATH}}`". A defect goes back to the implementer (1 round), then step 3 again.
+5. **QA.** Ask `qa`: "Accept {{CHANGE_ID}}/{{SUBTASK_ID}} against the subtask AC and design sections 7 and 9 in `{{DESIGN_PATH}}`". A defect goes back to the implementer (1 round), then step 3 again.
 6. **Report.** Write `{{DELIVERY_PATH}}` (format below).
 
 If the runtime does not support subagents, perform the roles one after another yourself and say so in the report. Then do review and QA critically, as someone other than the author.
@@ -45,18 +45,6 @@ You do not commit, push, switch branches or use `gh`. You do not run the shared-
 
 ## Report `{{DELIVERY_PATH}}`
 
-The first line is exactly `STATUS: DONE` or `STATUS: BLOCKED`. Then:
-
-- **Summary** (3–6 sentences)
-- **AC:** table AC → PASS / FAIL / NOT VERIFIED → evidence (test file and case, or a command with its result)
-- **Verification:** commands and actual results
-- **Review:** final verdict, number of rounds, what was fixed
-- **QA:** verdict, tests added
-- **Skill guidance:** which hints from section 12 were applied, which did not concern this subtask
-- **Deviations from the design:** list (allowed) or the reason for the block
-- **Files:** changed and new
-- **Blocker** (BLOCKED only): problem, evidence, proposed design change or a product question with a recommendation
-- **Docs after merge:** requirement IDs whose status changes, new code patterns (or "none")
-- **Next steps:** things outside the scope
+{{REPORT_FORMAT}}
 
 PASS only with executed evidence. An unexecuted check is NOT VERIFIED.

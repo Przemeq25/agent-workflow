@@ -2,6 +2,7 @@
 
 > Revision: R1 · Author: tech-lead · Date: YYYY-MM-DD
 > Change: `spec/changes/<ID>/` (proposal.md, change.json) · Requirements: FR-…, US-…
+> Why: one sentence from the proposal: whose problem this solves and what changes for them.
 > After approval the loop delivers exactly this file. Any change after approval needs `agent-workflow approve <ID>` again.
 > Describe sections 3, 4 and 9 per subtask (ST-01, ST-02…) when the change has several subtasks.
 > Write the content in the user language set by `business-rules`. Keep the numbered headings.
@@ -26,6 +27,11 @@ Every row verified in the repository (search or read). No row means we do not as
 
 Files outside this list: only trivial wiring (an import, registration in an index). Anything else is a blocker.
 
+Documentation is listed here too, in the subtask that makes it true, so it ships in the same PR as the code:
+the feature line in `context/foundation/prd.md` and the status in `roadmap.md` (usually the last subtask), and
+`.agents/skills/engineering-rules/references/<topic>.md` plus its row in the topic table when this change introduces
+or changes a project-wide way of doing something (configuration, translations, auth, data access…).
+
 ## 4. Contracts
 
 Sketch in the project language: validation schemas, domain types, use-case and repository signatures, API procedures (input, output, errors). Names are binding.
@@ -44,18 +50,23 @@ Entry file and composition, owner of state, saving, states: loading, empty, erro
 
 ## 7. Errors and edge cases
 
-| Situation | Domain error | API error | Message / UI behaviour |
-|---|---|---|---|
+Start from the proposal's "Edge cases" table and add the technical cases (error mapping, retries, transactions,
+timeouts). Every row names its test (a section 9 row) or `not tested: <reason>`; `agent-workflow approve` refuses an
+empty Test cell.
+
+| Situation | Category | Domain / API error | Message / UI behaviour | Test |
+|---|---|---|---|---|
 
 ## 8. Security and ownership
 
 Where the owner comes from, which checks run on the server, what the client may not send.
 
-## 9. Test plan → AC
+## 9. Test plan
 
-Every AC has at least one test. Test types from `testing-rules`.
+One row per AC (written `ST-01 AC-1`) and per section 7 row (written `§7 <situation>`). Test types from
+`testing-rules`. `agent-workflow approve` refuses a design where an AC of `change.json` has no row here.
 
-| AC | Test file | Case | Type |
+| Covers | Test file | Case (Given/When/Then in short) | Type |
 |---|---|---|---|
 
 ## 10. Out of scope
@@ -69,7 +80,9 @@ What we do not touch (files, behaviour, refactors), even if tempting.
 
 ## 12. Implementation guidance (from the project skills)
 
-Only rules that concern the files in section 3. The implementer does not read whole skills, only this.
+Only rules that concern the files in section 3, taken from the project's topic files
+(`engineering-rules/references/<topic>.md`) and from technology skills. The implementer does not read whole skills
+or topic files, only this.
 
 | # | Rule (imperative) | Where in this task | Source |
 |---|---|---|---|

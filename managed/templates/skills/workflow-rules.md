@@ -13,6 +13,7 @@ The workflow roles are generic. Everything specific to this repository lives her
 | Typecheck | <fill> |
 | Lint / format check | <fill> |
 | Unit and integration tests | <fill> |
+| Targeted tests (one file or pattern) | <fill> |
 | End-to-end tests | <fill> |
 | Build | <fill> |
 | Generate migration | <fill> (or "none") |
@@ -24,7 +25,7 @@ The agent loop reads both lines above as its defaults; keep the exact wording `D
 Commands that must never run (shared database, deploy): <fill>.
 
 ## Paths
-- Product: `context/foundation/prd.md`, `roadmap.md`, `prd-notes.md`. Technical decisions and reasons: `context/foundation/tech-notes.md`. Code patterns: `.agents/skills/engineering-rules/references/patterns.md`.
+- Product: `context/foundation/prd.md`, `roadmap.md`, `prd-notes.md`. Technical decisions and reasons: `context/foundation/tech-notes.md`. Project-wide ways of doing things: the topic table in `engineering-rules`.
 - Changes: `spec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/<ST>.md`), templates in `.agents/templates/`, format in `.agents/docs/spec-format.md`.
 - Source: <fill>. Tests: <fill>.
 

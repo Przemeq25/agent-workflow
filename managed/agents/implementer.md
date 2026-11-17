@@ -24,8 +24,8 @@ When the coordinator sends back a failed verification, a review finding about wr
 4. Implement contracts from section 4 with exactly those names and shapes.
 5. Database changes only per section 5, only through the project's migration-generation command. Never push or apply migrations to a shared database.
 6. Apply the guidance from section 12. Open the source rule if a hint is unclear.
-7. Write the tests from section 9, at least one per AC, using the project's test patterns.
-8. Run the verification from the task (default: the verification command in `workflow-rules`). Fix failures caused by your change.
+7. Write the tests from section 9 for your subtask: every AC row and every section 7 row, using the project's test patterns.
+8. Run the verification from the task (default: the verification command in `workflow-rules`). Fix failures caused by your change. Report the exact command and exit code; on failure the first error, not the whole log.
 
 ## Rules
 
