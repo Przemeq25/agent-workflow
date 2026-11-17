@@ -56,9 +56,11 @@ critically, as someone other than the author.
 Two roles run on the `low` tier so a strong model does not spend tokens on mechanical work:
 
 - `scout` (read-only): searches and maps the code, collects git facts, and returns paths with short facts, not file contents.
-- `clerk`: runs commands it is given and reports pass or fail in a few lines, moves and renames files, archives finished changes.
+- `clerk`: multi-step mechanical work only (moving and renaming many files, archiving finished changes). Never a single command: run that yourself.
 
-Roles that coordinate (`tech-lead`, `pm`, `autopilot`, and the `/prd` command) hand such work to them when a search would read more than a few files or a command only needs its result reported. Give them a precise task: the question or the exact steps, the allowed files and the report you expect. Do not hand them design, review, QA verdicts, delivery reports or anything that needs a decision. A subagent usually cannot start another subagent, so `implementer`, `qa` and `code-reviewer` do their own lookups. If your tool cannot start a named subagent, do the work yourself.
+Every subagent start reloads the rules (tens of thousands of tokens), so a helper pays off only when it saves more than that. **Run commands yourself, quietly.** Run verification and tests directly in your shell with the quiet commands from `workflow-rules` (they print only failures and a summary). A green run costs a few dozen tokens; read the full log only for a failure. Never start a subagent just to run a command: starting one reloads the rules and costs tens of thousands of tokens. If your tool can run a command in the background and notify you, start long suites that way and continue with other work.
+
+Roles that coordinate (`tech-lead`, `pm`, `autopilot`, and the `/prd` command) hand work to helpers only when a search would read many files (`scout`) or the mechanical work has many steps (`clerk`). Give them a precise task: the question or the exact steps, the allowed files and the report you expect. Do not hand them design, review, QA verdicts, delivery reports or anything that needs a decision. A subagent usually cannot start another subagent, so `implementer`, `qa` and `code-reviewer` do their own lookups. If your tool cannot start a named subagent, do the work yourself.
 
 ## Asking the user
 

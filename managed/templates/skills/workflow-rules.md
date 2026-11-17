@@ -14,11 +14,12 @@ The workflow roles are generic. Everything specific to this repository lives her
 | Lint / format check | <fill> |
 | Unit and integration tests | <fill> |
 | Targeted tests (one file or pattern) | <fill> |
+| Quiet tests (only failures and a summary) | <fill> (e.g. `node --test --test-reporter=dot`, `vitest run --reporter=dot`, `jest --silent`, `pytest -q`) |
 | End-to-end tests | <fill> |
 | Build | <fill> |
 | Generate migration | <fill> (or "none") |
 | Update project context and these skills | `/prd` (Codex: `$prd`) |
-Default verification for a subtask: `<fill>`.
+Default verification for a subtask: `<fill>` (quiet: prints only failures and a summary; the same exit code).
 Setup (install dependencies in a fresh worktree): `<fill>`.
 Keep the exact wording `Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):` (the optional unattended loop reads both lines as its defaults).
 Commands that must never run (shared database, deploy): <fill>.

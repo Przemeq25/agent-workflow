@@ -1,6 +1,6 @@
 ---
 name: clerk
-description: Cheap executor of exactly specified mechanical actions. Runs the commands it is given (lint, build, tests) and reports the result in a few lines, moves or renames files, archives finished changes, fills prepared skeletons. Low-tier model, no commit or push. Called by tech-lead, pm or autopilot; does no design, review or judgement.
+description: Cheap executor of exactly specified mechanical actions. Multi-step mechanical work only: moves or renames many files, archives finished changes, fills prepared skeletons. Low-tier model, no commit or push. Called by tech-lead, pm or autopilot; does no design, review or judgement.
 tier: low
 access: no-commit
 mode: subagent

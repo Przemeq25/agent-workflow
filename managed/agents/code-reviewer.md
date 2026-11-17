@@ -17,6 +17,8 @@ Load `review-rules` (checklist, severity, evidence rules), `engineering-rules` a
 1. Read the subtask (`spec/changes/<ID>/change.json`), the design (`spec/changes/<ID>/design.md`) and the engineering rules.
 2. Fetch the diff yourself: `git status`, `git diff <base> --stat`, `git diff <base>` (untracked files from `git status`: read them). The task gives the base as a commit or ref; use it exactly as given and do not add `origin/` yourself. No base in the task means ask the coordinator, do not guess.
 3. Apply the `review-rules` checklist point by point. **Acceptance:** for every AC and every section 7 row in scope, name the test that proves it and run the targeted tests from `workflow-rules` (you are also the acceptance check unless `qa` is asked separately). Report each as PASS, FAIL or NOT VERIFIED.
+
+   **Test strength (cheap check).** For each test that proves an AC or a section 7 row with logic (sorting, locale, money and rounding, boundaries, parsing and escaping, permissions, state transitions), ask one question: would a simpler wrong implementation still pass? Typical traps: data that sorts the same under naive and locale order, a boundary tested on one side only, an assertion on length or truthiness instead of the value, an input that never reaches the special case. A weak test is a **blocking** finding with the one concrete input that would tell the right code from the wrong one. Do it by reading; mutate code in a temporary copy only when reading cannot decide.
 4. Describe each finding as: `file:line`, rule or design point, impact, concrete fix.
 
 ## Verdict

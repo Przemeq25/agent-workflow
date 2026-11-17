@@ -29,7 +29,7 @@ Technical (phase B):
   technical decisions, changelog.
 
 The skill structure is in `.agents/templates/skills/<name>.md`: keep every heading and the exact wording of the
-lines the loop reads (`Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):`).
+lines the loop reads (`Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):`). Make the verification and the "Quiet tests" row quiet: the project's reporter or flags that print only failures and a summary (check the test runner's options in the repo); agents read this output, so every line costs tokens.
 These skills are the **single source** of project rules for the roles. Do not duplicate them in other documents;
 `tech-notes.md` holds only reasons and history.
 

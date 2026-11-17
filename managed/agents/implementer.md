@@ -29,6 +29,7 @@ When the coordinator sends back a failed verification, a review finding about wr
 
 ## Rules
 
+- Choose test data that separates the right code from a simpler wrong one: values on both sides of a boundary, strings whose locale order differs from code-point order, inputs that hit every escaping or rounding case. A test that a naive implementation also passes proves nothing.
 - Before using a function, type, component or helper, find its definition (`rg`). Do not invent APIs.
 - No drive-by refactors, new abstractions or dependencies outside the design.
 - Do not weaken assertions or add lint/type suppressions to make checks pass. If there is no other way, it is a blocker.

@@ -154,6 +154,11 @@ calls as the change allows:
 - **Fewer, bigger subtasks:** a subtask is a delivery unit (S up to ~5 files, M up to ~15, 2–10 AC); split only for a
   migration or contract that must land first, a COMPLEX part, or a PR too big to review. Most changes have 1–3.
 - Design review only for COMPLEX changes or migrations; design sections that do not apply are one line `n/a: reason`.
+- **Commands run in the agent's own shell, quietly.** `workflow-rules` names quiet test commands (only failures and a
+  summary): a green run costs ~20 tokens, a failure a few hundred. Starting a subagent just to run a command costs
+  ~80k tokens, so `clerk` is only for multi-step mechanical work.
+- **Test strength:** the reviewer asks for each logic test whether a simpler wrong implementation would still pass
+  (locale order, one-sided boundaries, assertions on length) and blocks it with the one input that tells them apart.
 - Documentation names files and symbols, never line numbers. A stale doc is fixed in the same commit; it is a review
   suggestion, not `SPEC_CONFLICT`, and needs no new approval.
 
