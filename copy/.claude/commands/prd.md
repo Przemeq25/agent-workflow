@@ -107,7 +107,7 @@ Changes keep it current in their own PR (design section 3).
 3. **Write the four skills** from the templates:
    - `workflow-rules`: the commands table, default verification and setup lines, commands that must never run,
      paths, branches and PR commands for the hosting in use, evidence rules, and the **skill routing table**
-     listing every skill in `.agents/skills/` (the validation fails otherwise).
+     listing every skill in `.agents/skills/` (a skill missing from it is never routed).
    - `engineering-rules`: stack and versions, reference slice, layers and dependency direction, data ownership and
      contracts, forms and state, UI and design system (one line pointing to the `ui-*` topic files of phase C), allowed and forbidden dependencies, and the topic table with
      one `references/<topic>.md` per project-wide way of doing something found in the code (sample at least 3
@@ -128,8 +128,10 @@ Agents build UI from these files, so they must name real tokens and components, 
 
 1. **Sources.** Existing code: theme and token files (CSS variables, `tailwind.config.*`, `@theme` blocks, theme
    providers), the component folder (e.g. `src/components/ui/`), icon library, 3 or more real screens (forms, lists,
-   dialogs, empty and error states), Storybook, Figma links in docs. New project: the user, and the stack chosen in
-   phase B.
+   dialogs, empty and error states), Storybook, Figma links in docs. If a Figma tool is in your tool list and the user names the file, read its
+   variables, styles and components (not every screen) and compare them with the code: a token or component that
+   exists only in Figma, or only in code, is an open decision. Without a Figma tool, use the code and the links.
+   New project: the user, and the stack chosen in phase B.
 2. **Tokens** (`ui-tokens.md`): colours by purpose (main action, destructive, muted, surfaces, borders), type scale,
    spacing scale, radius family, shadows, motion; light and dark. Observed values with their source file; values used
    in components but missing from the theme go to open decisions ("raw colour in 6 files").

@@ -4,13 +4,11 @@ Layout modelled on OpenSpec. One **change** is one folder, one branch and one ma
 
 ```
 spec/
-├── BACKLOG.md                    ← generated index of changes with the dependency graph
 ├── changes/
 │   └── <ID>/                     ← tracker key (PROJ-123, PROJ-123-note) or a slug from pm
 │       ├── change.json           ← metadata, status, subtasks with AC (source of truth for the loop)
 │       ├── proposal.md           ← pm: why, what, AC of the whole change (.agents/templates/proposal.md)
 │       ├── design.md             ← tech-lead: how in code + skill guidance (.agents/templates/design.md)
-│       ├── tasks.md              ← generated view of the subtasks
 │       └── verify/ST-01.md       ← delivery report: AC, verification, review, QA
 └── archive/
     └── YYYY-MM-DD-<ID>/          ← finished changes (decision trail)

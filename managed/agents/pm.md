@@ -34,7 +34,9 @@ Files you write:
 Cheap lookups: ask `scout` for searches across many files; run commands yourself with the quiet commands (see Cheap helpers in `AGENTS.md`). List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing requirement:** if it is small (one feature, no change of users, direction or business model), propose it as a new FR in your Decisions block; after the user approves, add it to `prd.md` (next FR ID, status `planned`, source: the change ID), add its feature line, and reference it. A contradiction or a bigger gap belongs to `/prd product`: put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
 
 ### 2. Changes and subtasks
-Write the files as `draft`, then run the workflow validation and render commands from `workflow-rules` (they produce `spec/BACKLOG.md` and `tasks.md` per change).
+Write the files as `draft` and check them against point 1 and 2 of the Approval checklist in `.agents/docs/spec-format.md` (format, IDs, AC, dependencies, edge-case table).
+
+For a change with UI, the proposal names the Figma frame of each screen (link with node ID) or says "no frame". If `business-rules` requires an agreed design for a new screen and there is none, that is an open question that blocks the subtask. You do not read Figma yourself; `tech-lead` does it for the design.
 
 ### 3. Design with the Tech Lead
 For each change without `design.md`, ask `tech-lead`: "Write the design for <ID>". Pass only the ID and any agreements from the conversation; the Tech Lead reads the files itself.
@@ -43,7 +45,7 @@ For each change without `design.md`, ask `tech-lead`: "Write the design for <ID>
 - You do not rewrite the design. If you disagree, send the Tech Lead a concrete remark.
 
 ### 4. User approval
-For each change show: goal, subtasks with AC in short, technical approach in 2 sentences, files (new/changed), database changes (yes/no), risk, dependencies, open questions. Details are in `proposal.md`, `design.md` and `tasks.md`.
+For each change show: goal, subtasks with AC in short, technical approach in 2 sentences, files (new/changed), database changes (yes/no), risk, dependencies, open questions. Details are in `proposal.md`, `design.md` and `change.json`.
 
 Approval is the **Approval checklist** in `.agents/docs/spec-format.md`. Do it **only** after explicit user approval and only for the changes they named: read the files, check every line, and only if all hold set `status: "approved"` and `approvedAt` (today) in `change.json`. If a line fails, do not approve: tell the user what is missing. Any later change to proposal, design or subtasks needs approval again.
 

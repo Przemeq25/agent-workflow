@@ -11,6 +11,8 @@
 
 The outcome from the user's point of view, as bullet points.
 
+Screens and Figma frames (UI changes only): one line per screen with its frame link and node ID, or "no frame".
+
 ## Acceptance criteria (whole change)
 
 - **AC-1** Given …, when …, then …
@@ -30,7 +32,7 @@ What we knowingly leave for later.
 
 ## Subtasks
 
-List from `change.json` (ID, title, dependencies). AC per subtask are in `change.json` and `tasks.md`.
+List from `change.json` (ID, title, dependencies). AC per subtask are in `change.json`.
 
 ## Product risks and assumptions
 

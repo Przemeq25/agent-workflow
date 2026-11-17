@@ -25,6 +25,19 @@ plus general ones). `tech-lead` names components and tokens in design section 6,
 and the reviewer blocks raw colours or sizes, a duplicate component and missing states. Agents read these files only
 for changes that touch UI.
 
+## Optional MCP tools: browser and Figma
+
+Used only when the tool is in the agent's tool list; otherwise the step is skipped and reported.
+
+- **Browser** (Chrome DevTools MCP or Playwright MCP): `qa`, only for UI changes, once per subtask. It starts the app
+  and signs in with the "Run the app" and "Test account" rows of `workflow-rules`, opens the changed screen at 390
+  and 1440 px (text snapshots, a screenshot only for a visual comparison), reads console errors and failed requests,
+  walks the states of design section 6 and compares with its Figma frame.
+- **Figma:** `/prd design` reads the file's variables, styles and components into the `ui-*` topic files; `pm` names
+  the frame of each screen in the proposal; `tech-lead` reads only those frames and writes layout, texts, states,
+  components and tokens into design section 6; `qa` compares the result with the frame. The implementer never opens
+  Figma: section 6 is its extract.
+
 ## Copy without npm
 
 `copy/` holds the whole workflow ready to copy into a repository: `AGENTS.md`, `.agents/`, `spec/` and the tool
