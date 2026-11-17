@@ -7,6 +7,7 @@ Generic agent workflow. Roles are in `.agents/agents/`, project rules only in th
 Every token you read is paid on every later step, so:
 - Load only the skills your role names. Read **sections, not files**: search for the heading, FR id, AC id or symbol and read that range; open a whole file only when you need all of it. Never re-read a file you already have.
 - Check facts in the repository; do not assume an API, file or service exists.
+- Optional MCP tools (browser, Figma): use one only when your role names it and it is in your tool list; otherwise skip that step and say so. Never install or configure tools.
 - Run commands yourself in your shell with the **quiet** commands from `workflow-rules` (only failures and a summary). Read a full log only for a failure. Never start a subagent just to run a command or read a file.
 
 ### Cheap helpers
