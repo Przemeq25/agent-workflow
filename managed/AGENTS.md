@@ -1,4 +1,4 @@
-<!-- Managed by @przemeq25/agent-workflow. Do not edit: changes are overwritten by `agent-workflow sync`. Project rules live in .agents/skills/*-rules. -->
+<!-- Managed by @przemeq25/agent-workflow. Do not edit: changes are overwritten when the installer syncs. Project rules live in .agents/skills/*-rules. -->
 # Agent instructions
 
 This repository uses a generic, tool-independent agent workflow. Roles, skills and templates live in `.agents/`.
@@ -9,7 +9,7 @@ project skills in `.agents/skills/`. This file contains no project rules.
 
 | Path | What it is | Who changes it |
 |---|---|---|
-| `.agents/agents/*.md` | roles: `tech-lead` (default), `pm`, `autopilot`, `implementer`, `code-reviewer`, `qa`, `scout` and `clerk` (cheap helpers) | the package (`agent-workflow sync`) |
+| `.agents/agents/*.md` | roles: `tech-lead` (default), `pm`, `autopilot`, `implementer`, `code-reviewer`, `qa`, `scout` and `clerk` (cheap helpers) | the package installer (run by a human) |
 | `.agents/skills/team-*` | generic workflow skills | the package |
 | `.agents/commands/*.md` | commands: `/prd` (Codex: `$prd`) | the package |
 | `.agents/skills/*-rules` | **project rules**: `workflow-rules`, `business-rules`, `engineering-rules`, `review-rules`, `testing-rules` | `/prd`, approved by a human |
@@ -20,8 +20,7 @@ project skills in `.agents/skills/`. This file contains no project rules.
 | `context/foundation/` | PRD, roadmap, interview notes, technical decisions (`tech-notes.md`) | `/prd` |
 | `spec/changes/<ID>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
 
-Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/`, `.opencode/`, `.kilo/`, and the Codex command skill `.agents/skills/prd/`) are generated from `.agents/` by
-`agent-workflow sync` for the tools each developer uses, and are not committed. Never edit them.
+Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/`, `.opencode/`, `.kilo/`, and the Codex command skill `.agents/skills/prd/`) are generated from `.agents/` by the package installer (a human runs it) for the tools each developer uses, and are not committed. Never edit them. Roles never run the installer or any workflow script: they work from the skills and documents.
 
 ## Start
 
@@ -33,8 +32,8 @@ Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/`, `.opencode/`, `.kilo/`, and t
 ## Flow
 
 `/prd` (product and technical context, writes the project skills; new or existing code) → `pm`
-(`change.json`, `proposal.md`) ⇄ `tech-lead` (`design.md`) → user approval (`agent-workflow approve <ID>`)
-→ `tech-lead` or the loop (`autopilot`) → subtasks land on `task/<ID>` → main PR `task/<ID>` → default branch,
+(`change.json`, `proposal.md`) ⇄ `tech-lead` (`design.md`) → user approval (the approval checklist in `.agents/docs/spec-format.md`, done by hand)
+→ `tech-lead` (the optional unattended loop uses `autopilot`) → subtasks land on `task/<ID>` → main PR `task/<ID>` → default branch,
 merged only by a human. A single task goes straight to `tech-lead`. Fixes after PR review are done by
 `tech-lead` on the same branch.
 

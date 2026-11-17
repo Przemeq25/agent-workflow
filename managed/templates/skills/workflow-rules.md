@@ -17,11 +17,10 @@ The workflow roles are generic. Everything specific to this repository lives her
 | End-to-end tests | <fill> |
 | Build | <fill> |
 | Generate migration | <fill> (or "none") |
-| Workflow validation | `npx agent-workflow validate` |
 | Update project context and these skills | `/prd` (Codex: `$prd`) |
 Default verification for a subtask: `<fill>`.
 Setup (install dependencies in a fresh worktree): `<fill>`.
-The agent loop reads both lines above as its defaults; keep the exact wording `Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):`.
+Keep the exact wording `Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):` (the optional unattended loop reads both lines as its defaults).
 Commands that must never run (shared database, deploy): <fill>.
 
 ## Paths

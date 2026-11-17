@@ -118,7 +118,7 @@ Changes keep it current in their own PR (design section 3).
 
 ## Finish
 
-1. Run the workflow validation (`npx agent-workflow validate`). It must pass without errors; fix what you wrote.
+1. Check by hand what you wrote: the five project skills exist and have a valid frontmatter (`name` equals the folder, one-line `description`); no `<fill>` is left (unknown facts are marked as open questions); every path and command you named exists in the repository; the topic table in `engineering-rules` points to existing `references/<topic>.md` files. Fix what fails.
 2. Summarise in at most 10 lines: what you wrote or changed per file, open decisions that block work, and the next
    step (`pm` to plan changes from the roadmap, or `tech-lead` for a single task).
 3. Do not commit unless the user asks.

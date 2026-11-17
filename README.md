@@ -129,9 +129,9 @@ skills: [team-verification]             # preloaded where the tool supports it
 - One **edge-case checklist** (`.agents/docs/spec-format.md`: input, empty, limits, permissions, conflict, failure,
   states, texts, existing data). `pm` turns user-visible cases into AC and fills the "Edge cases" table of the
   proposal (every category: an AC or "n/a: reason"); `tech-lead` adds technical cases in design section 7.
-- Design section 9 has a row for every AC (`ST-01 AC-1`) and every section 7 row. **`agent-workflow approve`
-  refuses** a design where an AC has no test row, a section 7 row has no test (or `not tested: reason`), or the
-  proposal's edge-case table has gaps.
+- Design section 9 has a row for every AC (`ST-01 AC-1`) and every section 7 row. The **approval checklist**
+  (`.agents/docs/spec-format.md`, done by the role by hand after the user says "ok") fails a design where an AC has
+  no test row, a section 7 row has no test (or `not tested: reason`), or the proposal's edge-case table has gaps.
 - `code-reviewer` reviews the design before approval when a change has several subtasks, contracts or data.
 - `qa` checks every AC and every section 7 row of its subtask, running only the targeted tests.
 - Documentation the change makes true (feature line in the PRD, roadmap status, topic files in `engineering-rules`)
@@ -196,6 +196,20 @@ enter a small model, otherwise the tool's default model runs these roles.
 
 Projects created before 0.2.0 keep changes in `work/`; the loop still reads it and `validate` suggests
 `git mv work spec`.
+
+## Skills only: no scripts at work time
+
+Roles and commands (`/prd`) never run `agent-workflow`. They work from the skills and documents: validation and
+approval are the checklists in `.agents/docs/spec-format.md`, delivery state is read from git. The CLI is only
+the installer (`init`, `sync`, run by a human) and, optionally, the unattended loop. A change approved by hand has no
+fingerprint (`approvalHash`); `validate` warns about it, and the loop asks you to run `agent-workflow approve <ID>`
+first.
+
+### Starting `pm` in Kilo (desktop, VS Code, CLI)
+
+`sync` writes the roles to `.kilo/agents/`; `pm` and `tech-lead` are primary agents. Reload the window (or restart
+the CLI), then pick the agent in the agent selector of the chat (CLI: `/agents` or Tab) and write what you need, or run
+`/prd` first. Models come from `models.kilo.<tier>` in `.agents/workflow.json` (names from `kilo models`).
 
 ## Commands
 

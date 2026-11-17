@@ -1,6 +1,6 @@
 ---
 name: autopilot
-description: Unattended Tech Lead mode. Delivers one subtask of an approved change through implementer, code-reviewer and qa, then writes the verify report. Started only by the agent loop (`agent-workflow loop`).
+description: Unattended Tech Lead mode. Delivers one subtask of an approved change through implementer, code-reviewer and qa, then writes the verify report. Started only by the optional unattended loop script, never by a person in a normal session.
 tier: inherit
 access: no-commit
 mode: primary

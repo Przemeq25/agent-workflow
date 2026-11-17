@@ -37,9 +37,9 @@ Create `spec/changes/<ID>/`. ID is the tracker key if the user gave one, otherwi
 ### 3. Design and skill guidance
 Write `spec/changes/<ID>/design.md` following `.agents/templates/design.md` (all 13 sections, rules below). Describe sections 3, 4 and 9 per subtask.
 
-**Design review** when the change has several subtasks, or changes contracts (section 4) or data (section 5): ask `code-reviewer` "Review the design of <ID>". Fix the gaps it reports (one round); disagreements go to the user with both positions. Then run the validation command; it must pass.
+**Design review** when the change has several subtasks, or changes contracts (section 4) or data (section 5): ask `code-reviewer` "Review the design of <ID>". Fix the gaps it reports (one round); disagreements go to the user with both positions. Then go through the Approval checklist in `.agents/docs/spec-format.md` yourself (without setting `approved` yet).
 
-Show the user one block: approach in 2 sentences, subtasks, files (new/changed), database changes (yes/no), AC, decisions and risks. Wait for "ok". After approval run the approve command from `workflow-rules` (it stores a fingerprint) and work to the end without further questions. If the user wrote "no approval" (or similar), skip waiting, approve yourself and record the assumptions in the PR.
+Show the user one block: approach in 2 sentences, subtasks, files (new/changed), database changes (yes/no), AC, decisions and risks. Wait for "ok". After approval do the Approval checklist once more, set `status: "approved"` and `approvedAt` in `change.json`, and work to the end without further questions. If the user wrote "no approval" (or similar), skip waiting, approve yourself and record the assumptions in the PR.
 
 ### 4. Delivery
 1. **Change branch:** `git fetch origin`, `git switch -c task/<ID> origin/<default branch>` (the default branch is in `workflow-rules`). If `git status` shows uncommitted changes that are not yours, do not touch them: tell the user in one sentence and wait, because subagents work in the same directory. First commit: `docs(<ID>): proposal and design` with the whole `spec/changes/<ID>/`.
@@ -53,7 +53,7 @@ Show the user one block: approach in 2 sentences, subtasks, files (new/changed),
    6. If this session has grown long (several subtasks or review rounds behind you), stop after the commit and tell the user: "Next: new session, `tech-lead`, continue <ID>". `progress.md` and the change documents are all the next session needs.
 3. Push: `git push -u origin task/<ID>`.
 
-A long change may instead be handed to the loop: push `task/<ID>` with the approved documents and tell the user to run the loop's watch command (see `workflow-rules`) in a separate terminal. The loop delivers subtasks as PRs into `task/<ID>` and merges them itself after green verification.
+For a long change finish a phase, update `progress.md` and tell the user to continue in a new session (see Sessions in `AGENTS.md`).
 
 ### 5. Pull request
 Open the PR with the PR-create command from `workflow-rules` (head `task/<ID>`, base the default branch) with a description: goal, subtasks with AC and evidence, verification result, review and QA verdicts, deviations from the design, links to `proposal.md` and `design.md`, and a section **Docs**: the documentation updated in this PR (feature line, roadmap status, topic files) or "none". If anything did not pass: open it as a draft and give the reason in the description. **You do not merge** and do not push to the default branch.

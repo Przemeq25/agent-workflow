@@ -3,7 +3,7 @@
 > Revision: R1 · Author: tech-lead · Date: YYYY-MM-DD
 > Change: `spec/changes/<ID>/` (proposal.md, change.json) · Requirements: FR-…, US-…
 > Why: one sentence from the proposal: whose problem this solves and what changes for them.
-> After approval the loop delivers exactly this file. Any change after approval needs `agent-workflow approve <ID>` again.
+> After approval exactly this file is delivered. Any change after approval needs the user's approval again.
 > Describe sections 3, 4 and 9 per subtask (ST-01, ST-02…) when the change has several subtasks.
 > Write the content in the user language set by `business-rules`. Keep the numbered headings.
 
@@ -51,7 +51,7 @@ Entry file and composition, owner of state, saving, states: loading, empty, erro
 ## 7. Errors and edge cases
 
 Start from the proposal's "Edge cases" table and add the technical cases (error mapping, retries, transactions,
-timeouts). Every row names its test (a section 9 row) or `not tested: <reason>`; `agent-workflow approve` refuses an
+timeouts). Every row names its test (a section 9 row) or `not tested: <reason>`; the approval checklist fails an
 empty Test cell.
 
 | Situation | Category | Domain / API error | Message / UI behaviour | Test |
@@ -64,7 +64,7 @@ Where the owner comes from, which checks run on the server, what the client may 
 ## 9. Test plan
 
 One row per AC (written `ST-01 AC-1`) and per section 7 row (written `§7 <situation>`). Test types from
-`testing-rules`. `agent-workflow approve` refuses a design where an AC of `change.json` has no row here.
+`testing-rules`. the approval checklist fails a design where an AC of `change.json` has no row here.
 
 | Covers | Test file | Case (Given/When/Then in short) | Type |
 |---|---|---|---|
@@ -97,4 +97,4 @@ Do / don't examples for non-obvious rules:
 
 ## 13. Open questions
 
-Empty before approval. Every question blocks `agent-workflow approve`.
+Empty before approval. Every question blocks approval.
