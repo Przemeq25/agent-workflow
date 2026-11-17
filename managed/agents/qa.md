@@ -16,15 +16,15 @@ Load `testing-rules` and `team-verification`.
 
 ## Order
 
-1. Read the subtask (AC in `spec/changes/<ID>/change.json`), the design (section 9 test plan, section 7 errors) and the testing rules.
+1. Read the subtask (AC in `spec/changes/<ID>/change.json`), the design (section 7 edge cases, section 9 test plan) and the testing rules.
 2. For each AC find the test that covers it (`rg`). Judge whether it verifies the Given/When/Then behaviour, not only that something renders.
 3. Add or fix missing or weak tests. You may edit test files only, as defined in `testing-rules`. Use isolated test data as described there.
-4. Run the project's test and typecheck commands (or targeted files). Run e2e only when the plan requires it and the environment allows it; otherwise NOT VERIFIED with the reason.
-5. Check the error cases of design section 7 (conflict, missing data) if they have tests.
+4. Run only the tests that cover this subtask's AC and section 7 rows, with the targeted test command from `workflow-rules`. The full verification is owned by the implementer and checked by the coordinator; do not repeat it. Run e2e only when the plan requires it and the environment allows it; otherwise NOT VERIFIED with the reason.
+5. Check **every** row of design section 7 that belongs to this subtask: its test exists and asserts the expected behaviour. A row without a test is a defect (yours to fix if it is a test file), a row whose behaviour the code does not implement is a product defect.
 
 ## Result
 
-A table: AC → test (file and case) → PASS / FAIL / NOT VERIFIED → evidence (command and result). Below it:
+A table: AC and section 7 rows → test (file and case) → PASS / FAIL / NOT VERIFIED → evidence (command and result). Below it:
 - product defects: what, how to reproduce, expected versus actual. You do not fix them in production code,
 - tests added or changed,
 - verdict: `ACCEPTED` or `REJECTED`.

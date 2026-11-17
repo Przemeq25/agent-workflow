@@ -203,7 +203,54 @@ function sectionBody(text, headingRegex) {
 	return (parts[1] ?? "").split(/^## /m)[0] ?? "";
 }
 
-export function designProblems(text) {
+// Rows of the first markdown table in a section (header and separator skipped), as arrays of trimmed cells.
+function tableRows(body) {
+	const lines = (body ?? "").split("\n").filter((l) => /^\s*\|/.test(l));
+	return lines
+		.slice(1)
+		.filter((l) => !/^\s*\|[\s:|-]+\|\s*$/.test(l))
+		.map((l) =>
+			l
+				.trim()
+				.replace(/^\||\|$/g, "")
+				.split("|")
+				.map((c) => c.trim()),
+		)
+		.filter((cells) => cells.some(Boolean));
+}
+
+// Precision checks run by `approve`: every AC has a test row in section 9, every section 7 row names a test.
+export function coverageProblems(text, change) {
+	const problems = [];
+	const s7 = sectionBody(text, /^## 7\. .*$/m);
+	const s9 = sectionBody(text, /^## 9\. .*$/m) ?? "";
+	const rows7 = tableRows(s7);
+	if (rows7.length === 0 && !/no edge cases|brak przypadków/i.test(s7 ?? ""))
+		problems.push(
+			'design.md: section 7 lists no edge cases (add rows, or write "No edge cases: <reason>")',
+		);
+	for (const [i, cells] of rows7.entries())
+		if (!cells.at(-1))
+			problems.push(
+				`design.md: section 7 row ${i + 1} (${cells[0] || "?"}) has no test (name a section 9 row or write "not tested: <reason>")`,
+			);
+	const subs = change?.subtasks ?? [];
+	for (const st of subs)
+		for (const ac of st.acceptanceCriteria ?? []) {
+			const acRe = ac.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+			const re =
+				subs.length === 1
+					? new RegExp(`(${st.id}\\W+)?\\b${acRe}\\b`)
+					: new RegExp(`\\b${st.id}\\W+${acRe}\\b`);
+			if (!re.test(s9))
+				problems.push(
+					`design.md: section 9 has no test row for ${st.id} ${ac.id}`,
+				);
+		}
+	return problems;
+}
+
+export function designProblems(text, change) {
 	if (text === null) return ["missing design.md (tech-lead)"];
 	const problems = [];
 	if (PLACEHOLDERS.test(text))
@@ -215,6 +262,7 @@ export function designProblems(text) {
 	const open = text.split(/^## 13\. .*$/m)[1] ?? "";
 	if (/^\s*(-|\d+\.)\s+\S/m.test(open))
 		problems.push("design.md: section 13 has open questions");
+	if (change) problems.push(...coverageProblems(text, change));
 	return problems;
 }
 
@@ -223,6 +271,14 @@ export function proposalProblems(text) {
 	const problems = [];
 	if (PLACEHOLDERS.test(text))
 		problems.push("proposal.md has unfilled template placeholders");
+	const edge = sectionBody(text, /^## (?:Edge cases|Przypadki brzegowe).*$/m);
+	if (edge === null) problems.push('proposal.md: missing section "Edge cases"');
+	else
+		for (const cells of tableRows(edge))
+			if (cells.slice(1).some((c) => !c))
+				problems.push(
+					`proposal.md: edge cases of ${cells[0] || "?"} are incomplete (every category: an AC or "n/a: <reason>")`,
+				);
 	const open = sectionBody(text, /^## (?:Open questions|Otwarte pytania).*$/m);
 	if (open === null)
 		problems.push('proposal.md: missing section "Open questions"');
@@ -1147,7 +1203,18 @@ function buildPrompt(change, st, deliveryRel) {
 		.replaceAll("{{DELIVERY_PATH}}", deliveryRel)
 		.replaceAll("{{TARGET_BRANCH}}", taskBranch(change))
 		.replaceAll("{{VERIFY_CMD}}", cfg.verifyCmd)
-		.replaceAll("{{SUBTASK_JSON}}", JSON.stringify(st, null, 2));
+		.replaceAll("{{SUBTASK_JSON}}", JSON.stringify(st, null, 2))
+		.replaceAll("{{REPORT_FORMAT}}", reportFormat());
+}
+
+// The delivery report format has one source: the "Delivery report" section of .agents/docs/spec-format.md.
+export function reportFormat(root = ROOT) {
+	const text = readText(join(root, ".agents", "docs", "spec-format.md")) ?? "";
+	const body = sectionBody(text, /^## Delivery report.*$/m);
+	return (
+		body?.trim() ||
+		"See the delivery report format in `.agents/docs/spec-format.md`."
+	);
 }
 
 function parseDelivery(path) {
@@ -1464,7 +1531,9 @@ function cmdApprove(ids) {
 				problems.push("change.json has openQuestions");
 			const dir = changeDir(c._dir);
 			problems.push(...proposalProblems(readText(join(dir, "proposal.md"))));
-			problems.push(...designProblems(readText(join(dir, "design.md"))));
+			const quick = c.subtasks.every((st) => st.risk === "QUICK");
+			if (!quick)
+				problems.push(...designProblems(readText(join(dir, "design.md")), c));
 			problems.push(
 				...validate([{ ...c, status: "draft" }]).errors.filter(
 					(e) => !e.includes("depends on change"),

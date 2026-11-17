@@ -207,7 +207,7 @@ test("/prd becomes a command in claude, opencode and kilo and an explicit-only s
 	const cc = read(dir, ".claude/commands/prd.md");
 	assert.match(cc, /^model: opus$/m);
 	assert.match(cc, /disable-model-invocation: true/);
-	assert.match(cc, /argument-hint: "\[all\|product\|tech\] \[what changed\]"/);
+	assert.match(cc, /argument-hint: "\[all\|product\|tech\|sync\] \[what changed\]"/);
 	assert.match(cc, /`\$ARGUMENTS`/);
 	assert.match(cc, /`AskUserQuestion`/);
 	const oc = read(dir, ".opencode/commands/prd.md");

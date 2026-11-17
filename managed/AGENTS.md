@@ -38,6 +38,13 @@ Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/`, `.opencode/`, `.kilo/`, and t
 merged only by a human. A single task goes straight to `tech-lead`. Fixes after PR review are done by
 `tech-lead` on the same branch.
 
+## Sessions
+
+Everything a role needs is in files: the project skills, the PRD, the change documents, `progress.md` and git. A
+chat history is not needed and only costs tokens. Start a **new session** at the end of a phase: after `/prd`, after
+a change is approved, after a merge, and during a long delivery once `progress.md` is updated. End such a phase with
+one line: `Next: new session, <role or command>, <change ID>`. Do not split an interview or a design discussion.
+
 ## Delegation
 
 Roles ask other roles by name ("ask `implementer`"). Use your tool's subagent mechanism with that role. If your
@@ -75,7 +82,8 @@ Questions and decisions must be easy to find, never buried in a long answer.
 - Giving `tech-lead` a task, or starting the loop, is consent to commit and push `task/<ID>` and `sub/<ID>/<ST>`,
   to open PRs and (the loop only) to merge green subtask PRs into `task/<ID>`.
 - Do not change roles, commands, permissions, hooks, `.agents/workflow.json`, this file, the tool adapters or `.env`.
-  The five project skills change only through `/prd` or on the user's request.
+  The five project skills change through `/prd`, through an approved design (its topic files and topic table), or
+  on the user's request.
 - Do not turn proposals into approved decisions. An unanswered product decision blocks the dependent code.
 - PASS only with executed evidence; an unexecuted check is NOT VERIFIED. Never reveal or commit secrets,
   production data or credentials.

@@ -22,6 +22,7 @@ One change = one folder `spec/changes/<ID>/` = one branch `task/<ID>` = one main
 - **ID:** the tracker key if there is one (`PROJ-123` or `PROJ-123-short-note`), otherwise a short slug.
 - **Size:** as much as the user wants to review in one PR (usually 1–6 subtasks). Split larger scope into several changes linked by `dependsOn`.
 - **Subtasks** (`ST-01`, `ST-02`…) are the loop's units of work. Each is a vertical slice of size S or M with 2–6 Given/When/Then AC that a test can check, `refs` to the PRD, scope in/out, a verification method and real dependencies on other subtasks.
+- **Edge cases:** for each subtask go through the edge-case checklist in `.agents/docs/spec-format.md`. A category that changes what the user sees or may do becomes an AC (negative AC are Given/When/Then too); the "Edge cases" table in `proposal.md` records, per category, the AC that covers it or "n/a" with a reason. A happy path alone is not a finished subtask.
 
 Files you write:
 - `change.json`: `id`, `title`, `jira` (optional), `status: "draft"`, `refs`, `dependsOn`, `openQuestions`, `subtasks[]`,
@@ -30,7 +31,7 @@ Files you write:
 ## Process
 
 ### 1. Assumptions and gaps
-Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing or contradictory product requirement belongs to `/prd`**: do not write it into a change; put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
+Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). List briefly: release goal, key assumptions, contradictions (PRD ↔ roadmap ↔ code), and product decisions needed for testable AC. **A missing requirement:** if it is small (one feature, no change of users, direction or business model), propose it as a new FR in your Decisions block; after the user approves, add it to `prd.md` (next FR ID, status `planned`, source: the change ID), add its feature line, and reference it. A contradiction or a bigger gap belongs to `/prd product`: put it in `openQuestions` and tell the user. Ask at most 3 questions per round, each with a recommendation. Answer yourself what the repository answers. A change that depends on an unresolved decision gets `status: "blocked"` and an `openQuestions` entry.
 
 ### 2. Changes and subtasks
 Write the files as `draft`, then run the workflow validation and render commands from `workflow-rules` (they produce `spec/BACKLOG.md` and `tasks.md` per change).
@@ -51,7 +52,7 @@ Afterwards remind the user: approved changes must reach `main` (commit/PR) or th
 ## After the loop has started
 
 - Changes with an open or merged main PR are not edited. Review comments on an open PR go to `tech-lead` (fixes after PR review); new or changed scope is a new change with `dependsOn`.
-- **Closing a change:** when the user says the main PR is merged (the status command shows the change as done; `change.json` keeps its planning status), collect the PR's "Docs after merge" section. Product status changes and code patterns go to `/prd update` (roadmap, `engineering-rules/references/patterns.md`). Tell the user which role to run with which list; you do not edit their documents.
+- **Documentation** is updated inside the change, in the subtask the design assigns it to (feature line, roadmap status, topic files), so it is reviewed and merged with the code. After a merge there is nothing to update; if the documents ever drift from the code (a change done outside this workflow), tell the user to run `/prd sync`.
 - Autopilot blocker (`verify/ST-xx.md` with `STATUS: BLOCKED`): move product questions to `openQuestions` and set `blocked`; send technical ones to the Tech Lead (new design revision). After an answer, approve again.
 - Cancelling: `status: "cancelled"` with the reason in `notes`.
 - Finished changes move to `spec/archive/YYYY-MM-DD-<ID>/` when the user asks for housekeeping.

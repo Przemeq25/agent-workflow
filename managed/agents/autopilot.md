@@ -14,6 +14,7 @@ Before anything else, load (read) the project skills from `.agents/skills/`: `wo
 
 - Commit, push, subtask PR and its merge into `task/<ID>` are done by the script. Merging into `main` is done by a human. You do none of this.
 - Install no dependency the design does not list.
+- Verification is run by `clerk` (cheap tier) and once more by the loop script after you; you do not run the full command yourself.
 - When verification fails a second time, or QA finds a defect, load `team-systematic-debugging` and send the implementer a hypothesis with evidence.
 - Ask no questions. Missing information that changes a contract, data, files or behaviour ends the work with status `BLOCKED` and a concrete proposal.
 - Cheap lookups: ask `scout` for searches across more than a few files and `clerk` for commands that only need a result reported (see Cheap helpers in `AGENTS.md`). Subtask code is still written only by `implementer`; verdicts only by `code-reviewer` and `qa`.
