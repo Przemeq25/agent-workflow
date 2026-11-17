@@ -1,6 +1,6 @@
 {
 	"name": "@przemeq25/agent-workflow",
-	"version": "0.10.0",
+	"version": "0.11.0",
 	"description": "Tool-independent agent workflow (PRD → PM → Tech Lead → implementer, reviewer, QA → PR) with roles and skills in .agents/ and generated adapters for Claude Code, Codex, OpenCode and Kilo.",
 	"type": "module",
 	"bin": {

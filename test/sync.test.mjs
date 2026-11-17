@@ -210,7 +210,7 @@ test("/prd becomes a command in claude, opencode and kilo and an explicit-only s
 	assert.match(cc, /disable-model-invocation: true/);
 	assert.match(
 		cc,
-		/argument-hint: "\[all\|product\|tech\|sync\] \[what changed\]"/,
+		/argument-hint: "\[all\|product\|tech\|design\|sync\] \[what changed\]"/,
 	);
 	assert.match(cc, /`\$ARGUMENTS`/);
 	assert.match(cc, /`AskUserQuestion`/);

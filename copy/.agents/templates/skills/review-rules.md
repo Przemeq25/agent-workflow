@@ -11,8 +11,9 @@ Check in this order. Cite every finding as `file:line`, the rule or design point
 2. **Acceptance criteria and edge cases:** each AC and each design section 7 row has a test that verifies behaviour, not just rendering; the code handles every section 7 row as specified.
 3. **Skill guidance:** rules from design section 12 are applied in code.
 4. **Repo patterns** (`engineering-rules`): <fill> (the project-specific checks).
-5. **Correctness:** async and error paths, edge cases, types, security and data ownership, UI accessibility.
-6. **Scope:** no drive-by refactors, needless abstractions or new dependencies; no secrets.
+5. **UI** (only when the diff touches UI): tokens from `ui-tokens.md`, not raw colours or sizes; existing components from `ui-components.md`, not a new one for the same need; every state from design section 6; texts and accessibility per `ui-patterns.md`. A breach is blocking.
+6. **Correctness:** async and error paths, edge cases, types, security and data ownership, UI accessibility.
+7. **Scope:** no drive-by refactors, needless abstractions or new dependencies; no secrets.
 
 Severity: **blocking** (breaks design, AC, data ownership, security, correctness) versus **suggestion** (style preference; never blocks).
 

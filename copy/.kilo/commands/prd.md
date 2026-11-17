@@ -7,7 +7,8 @@ description: "Create or update the product and technical context of this project
 
 You set up and maintain everything project-specific that the workflow roles need. The roles in `.agents/agents/`
 are generic; they learn this project only from what you write. Arguments: `$ARGUMENTS`
-(`product`, `tech`, `all` or `sync`, default `all`, optionally followed by what changed).
+(`product`, `tech`, `design`, `all` or `sync`, default `all`, optionally followed by what changed). `all` runs
+phase C only when the project has a UI.
 
 ## What you write
 
@@ -26,13 +27,17 @@ Technical (phase B):
 - `context/foundation/tech-notes.md`: technical decisions with their reasons and date, rejected options, open
   technical decisions, changelog.
 
+Design system (phase C, `/prd design`, only for a project with a UI):
+- `.agents/skills/engineering-rules/references/ui-tokens.md`, `ui-components.md`, `ui-patterns.md` from
+  `.agents/templates/skills/references/`, with their rows in the topic table of `engineering-rules`.
+
 The skill structure is in `.agents/templates/skills/<name>.md`: keep every heading and the exact wording of the
 lines the loop reads (`Default verification for a subtask:` and `Setup (install dependencies in a fresh worktree):`). Make the verification and the "Quiet tests" row quiet: the project's reporter or flags that print only failures and a summary (check the test runner's options in the repo); agents read this output, so every line costs tokens.
 These skills are the **single source** of project rules for the roles. Do not duplicate them in other documents;
 `tech-notes.md` holds only reasons and history.
 
 You write nothing else: no application code, no configuration, no dependencies, no `spec/` changes, nothing in
-`.agents/` outside the five project skills.
+`.agents/` outside the five project skills and their topic files.
 
 ## Modes (choose from the repository, say which one you took)
 
@@ -101,7 +106,7 @@ Changes keep it current in their own PR (design section 3).
      paths, branches and PR commands for the hosting in use, evidence rules, and the **skill routing table**
      listing every skill in `.agents/skills/` (the validation fails otherwise).
    - `engineering-rules`: stack and versions, reference slice, layers and dependency direction, data ownership and
-     contracts, forms and state, UI and design system, allowed and forbidden dependencies, and the topic table with
+     contracts, forms and state, UI and design system (one line pointing to the `ui-*` topic files of phase C), allowed and forbidden dependencies, and the topic table with
      one `references/<topic>.md` per project-wide way of doing something found in the code (sample at least 3
      usages per topic; contradictions go to open decisions).
    - `testing-rules`: test types with an example file each, locations, the targeted test command, test data and
@@ -114,9 +119,32 @@ Changes keep it current in their own PR (design section 3).
    it to the routing table.
 5. **Write** `tech-notes.md`.
 
+## Phase C: design system
+
+Agents build UI from these files, so they must name real tokens and components, not taste.
+
+1. **Sources.** Existing code: theme and token files (CSS variables, `tailwind.config.*`, `@theme` blocks, theme
+   providers), the component folder (e.g. `src/components/ui/`), icon library, 3 or more real screens (forms, lists,
+   dialogs, empty and error states), Storybook, Figma links in docs. New project: the user, and the stack chosen in
+   phase B.
+2. **Tokens** (`ui-tokens.md`): colours by purpose (main action, destructive, muted, surfaces, borders), type scale,
+   spacing scale, radius family, shadows, motion; light and dark. Observed values with their source file; values used
+   in components but missing from the theme go to open decisions ("raw colour in 6 files").
+3. **Components** (`ui-components.md`): one row per need (main action, secondary action, destructive confirm, form
+   field, select, dialog, toast, table or list, empty state, loading), with file and export, and what not to use
+   instead. Name duplicates (two button components) as open decisions.
+4. **Patterns** (`ui-patterns.md`): ask the user at most 3-4 questions the code cannot answer (tone and form of
+   address, visual references, what agents must avoid, accessibility level), each with a recommendation. Keep the
+   general rules of the template unless the user removes one.
+5. **New project:** propose a small token set and component list for the chosen stack, show it, write after the
+   user agrees. Never pick colours by taste without a reason: tie them to the brand, the product or the user's words.
+6. Add the three rows to the topic table of `engineering-rules` ("Read when: the change touches UI") and point the
+   "UI and design system" line there.
+
 ## Finish
 
-1. Check by hand what you wrote: the five project skills exist and have a valid frontmatter (`name` equals the folder, one-line `description`); no `<fill>` is left (unknown facts are marked as open questions); every path and command you named exists in the repository; the topic table in `engineering-rules` points to existing `references/<topic>.md` files. Fix what fails.
+1. Check by hand what you wrote: the five project skills exist and have a valid frontmatter (`name` equals the folder, one-line `description`); no `<fill>` is left (unknown facts are marked as open questions); every path and command you named exists in the repository; the topic table in `engineering-rules` points to existing `references/<topic>.md` files; after phase C every token
+   and component you named exists in the code (or is marked as proposed). Fix what fails.
 2. Summarise in at most 10 lines: what you wrote or changed per file, open decisions that block work, and the next
    step (`pm` to plan changes from the roadmap, or `tech-lead` for a single task).
 3. Do not commit unless the user asks.
