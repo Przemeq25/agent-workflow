@@ -106,8 +106,15 @@ Changes keep it current in their own PR (design section 3).
    recommendation.
 3. **Write the four skills** from the templates:
    - `workflow-rules`: the commands table, default verification and setup lines, commands that must never run,
-     paths, branches and PR commands for the hosting in use, the **Tracker** line (ask the user: Jira or another tracker and its key, e.g. `PROJ`; `none` only when the user says so), evidence rules, and the **skill routing table**
+     paths, branches and PR commands for the hosting in use, the **Tracker** line (ask the user: Jira or another tracker and its key, e.g. `PROJ`; `none` only when the user says so), the **Visual check** row (see below), evidence rules, and the **skill routing table**
      listing every skill in `.agents/skills/` (a skill missing from it is never routed).
+   - **Visual check** row: if the project already has Playwright (`@playwright/test` in the manifest, a `playwright.config.*`),
+     write its command. If it has none, ask once whether the user wants screen-vs-image checks; "no" writes `none`.
+     "Yes" means you set it up now, with the smallest change: `@playwright/test` as a dev dependency (show the install
+     command, run it only with the user's consent), `playwright.config.ts` (`testDir: 'tests/visual'`, `webServer` from the
+     "Run the app" row, `snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}'`, projects for 390 and 1440 px
+     widths, `expect.toHaveScreenshot.maxDiffPixelRatio: 0.02`), an empty `tests/visual/`, and the command in the row.
+     Do not write tests for screens; `implementer` does that when a design asks for "visual check: yes".
    - `engineering-rules`: stack and versions, reference slice, layers and dependency direction, data ownership and
      contracts, forms and state, UI and design system (one line pointing to the `ui-*` topic files of phase C), allowed and forbidden dependencies, and the topic table with
      one `references/<topic>.md` per project-wide way of doing something found in the code (sample at least 3
