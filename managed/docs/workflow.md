@@ -15,7 +15,7 @@ Read by `tech-lead`, `pm`, `autopilot` and `/prd`. Other roles do not need it: e
 | `.agents/hooks/guard.mjs` | guard that blocks forbidden operations (used by tools with hooks) | the package |
 | `.agents/workflow.json` | project configuration: tools, models, guard rules, loop | a human |
 | `context/foundation/` | PRD, roadmap, interview notes, technical decisions (`tech-notes.md`) | `/prd` |
-| `spec/changes/<ID>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
+| `<change folder>/` | changes: `change.json`, `proposal.md`, `design.md`, `verify/` | `pm`, `tech-lead`, the loop |
 
 Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/`, `.opencode/`, `.kilo/`, and the Codex command skill `.agents/skills/prd/`) are generated from `.agents/` by the package installer (a human runs it) for the tools each developer uses, and are not committed. Never edit them. Roles never run the installer or any workflow script: they work from the skills and documents.
 

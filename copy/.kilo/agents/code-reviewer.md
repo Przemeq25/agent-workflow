@@ -37,7 +37,7 @@ Read your brief first. Load `review-rules` and `testing-rules`, and from `workfl
 
 ## Order
 
-1. Read the subtask (`spec/changes/<ID>/change.json`), the design (`spec/changes/<ID>/design.md`) and the engineering rules.
+1. Read the subtask (`<change folder>/change.json`), the design (`<change folder>/design.md`) and the engineering rules.
 2. Fetch the diff yourself: `git status`, `git diff <base> --stat`, `git diff <base>` (untracked files from `git status`: read them). The task gives the base as a commit or ref; use it exactly as given and do not add `origin/` yourself. No base in the task means ask the coordinator, do not guess.
 3. Apply the `review-rules` checklist point by point. **Acceptance:** for every AC and every section 7 row in scope, name the test that proves it and run the targeted tests from `workflow-rules` (you are also the acceptance check unless `qa` is asked separately). Report each as PASS, FAIL or NOT VERIFIED.
 

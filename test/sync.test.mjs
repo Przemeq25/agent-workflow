@@ -53,7 +53,7 @@ test("init creates spec/, and a project with the old work/ still validates with 
 	run(dir, "init");
 	assert.ok(existsSync(join(dir, "spec/changes/.gitkeep")));
 	assert.ok(!existsSync(join(dir, "work")));
-	assert.match(read(dir, "AGENTS.md"), /spec\/changes\/<ID>\//);
+	assert.match(read(dir, "AGENTS.md"), /spec\/changes\/\[<group>\/\]<ID>\//);
 	const legacy = project();
 	run(legacy, "init");
 	spawnSync("git", ["mv", "spec", "work"], { cwd: legacy });

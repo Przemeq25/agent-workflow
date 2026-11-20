@@ -51,7 +51,7 @@ Load `team-verification` when you judge evidence you did not produce.
 
 ## Order
 
-1. Read the subtask (AC in `spec/changes/<ID>/change.json`), the design (section 7 edge cases, section 9 test plan) and the testing rules.
+1. Read the subtask (AC in `<change folder>/change.json`), the design (section 7 edge cases, section 9 test plan) and the testing rules.
 2. For each AC find the test that covers it (`rg`). Judge whether it verifies the Given/When/Then behaviour, not only that something renders.
 3. Add or fix missing or weak tests. You may edit test files only, as defined in `testing-rules`. Use isolated test data as described there.
 4. Run only the tests that cover this subtask's AC and section 7 rows, with the targeted test command from `workflow-rules`. The full verification is owned by the implementer and checked by the coordinator; do not repeat it. Run e2e only when the plan requires it and the environment allows it; otherwise NOT VERIFIED with the reason.

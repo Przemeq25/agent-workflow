@@ -5,7 +5,7 @@ description: Prepare or receive a short brief, result or review package for a su
 
 # Task hand-off
 
-The coordinator sends a brief: change ID and subtask, design path (`spec/changes/<ID>/design.md`) and revision, goal, files it may write and what is forbidden, contracts and dependencies, the base commit or worktree, who owns which check, and the mode (standard or no-tests).
+The coordinator sends a brief: change ID and subtask, design path (`<change folder>/design.md`) and revision, goal, files it may write and what is forbidden, contracts and dependencies, the base commit or worktree, who owns which check, and the mode (standard or no-tests).
 Pass paths to the current documents and the differences that matter, not the whole history or the reports of all earlier subtasks.
 Keep a short progress log. After losing context, do not redo finished work: check the log and the code state first.
 The receiver reads the files it needs; it does not scan the whole repository without a reason and does not start other agents.

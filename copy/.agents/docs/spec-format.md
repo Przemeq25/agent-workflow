@@ -14,6 +14,10 @@ spec/
     └── YYYY-MM-DD-<ID>/          ← finished changes (decision trail)
 ```
 
+## Groups: one feature, several changes
+
+A feature split into several changes (e.g. `quick-link`: API, assets, UI) lives in one **group** folder. `change.json` gets the optional field `"group": "quick-link"` (lower case and hyphens, in Jira usually the epic) and the change folder is `spec/changes/<group>/<ID>/`; without `group` it is `spec/changes/<ID>/`. In this documentation `<change folder>` means that path. The group folder also holds `README.md` written by `pm`: the feature goal, a table of its changes (ID, title, status, `dependsOn`) in delivery order, and the group-wide open decisions. IDs stay unique across all groups (branches, `dependsOn` and commits use only the ID, never the group). To find a change by ID: `rg -l '"id": "<ID>"' spec/changes --glob change.json`. Finished groups move as a whole to `spec/archive/YYYY-MM-DD-<group>/` once every change is merged. The optional unattended loop reads only flat `spec/changes/<ID>/` folders: do not use groups with it.
+
 ## Flow
 
 1. `pm` (from the PRD) or `tech-lead` (from a short description) creates the change: `change.json` + `proposal.md`.
@@ -85,6 +89,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
   "id": "PROJ-123-rooms",
   "title": "Customer saves rooms with dimensions",
   "jira": "PROJ-123",
+  "group": "",
   "status": "draft",
   "refs": ["FR-003", "US-01"],
   "dependsOn": [],
@@ -112,6 +117,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 ```
 
 Rules (part of the approval checklist):
+- `group` is empty or a lower-case slug equal to the parent folder name under `spec/changes/`,
 - `id` equals the folder name: the tracker key in upper case with an optional lower-case note (`PROJ-123`, `PROJ-123-rooms`); a lower-case slug only when `workflow-rules` sets no tracker,
 - subtasks `ST-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
