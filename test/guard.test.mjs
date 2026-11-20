@@ -36,6 +36,12 @@ test("common prohibitions", () => {
 	assert.equal(bash(d, null, "git push origin main"), 2);
 	assert.equal(bash(d, null, "git push origin master"), 2);
 	assert.equal(bash(d, null, "git push --force origin task/x"), 2);
+	assert.equal(bash(d, null, "git push -f origin PROJ-1-x"), 2);
+	assert.equal(bash(d, null, "git push origin +PROJ-1-x"), 2);
+	assert.equal(bash(d, null, "git push origin +main"), 2);
+	assert.equal(bash(d, null, "git push --force-with-lease origin main"), 2);
+	assert.equal(bash(d, null, "git push --force-with-lease"), 2);
+	assert.equal(bash(d, null, "git push --force-with-lease origin PROJ-1-x"), 0);
 	assert.equal(bash(d, null, "git push"), 2);
 	assert.equal(bash(d, null, "git push -u origin task/x"), 0);
 	assert.equal(bash(d, null, "gh pr merge 3"), 2);
