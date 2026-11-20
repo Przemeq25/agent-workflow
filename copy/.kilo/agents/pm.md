@@ -6,8 +6,8 @@ permission:
   glob: allow
   grep: allow
   list: allow
-  question: allow
   task: allow
+  question: allow
   edit: allow
   bash:
     "*": allow

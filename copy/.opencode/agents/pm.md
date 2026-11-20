@@ -2,6 +2,7 @@
 description: "Product Manager. Turns the PRD into changes in spec/changes/<ID>/ (proposal.md plus subtasks with acceptance criteria in change.json), agrees the design with tech-lead and runs user approval. Use for larger scope."
 mode: primary
 permission:
+  question: allow
   edit: allow
   bash:
     "*": allow

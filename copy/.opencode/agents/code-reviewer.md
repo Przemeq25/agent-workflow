@@ -2,6 +2,7 @@
 description: "Independent review of a subtask diff against its design, acceptance criteria and the project's review rules (verdict APPROVE, CHANGES_REQUIRED or SPEC_CONFLICT), and review of a design before approval (verdict READY or GAPS). Read-only, high-tier model. Called by tech-lead."
 mode: subagent
 permission:
+  question: deny
   edit: deny
   bash:
     "*": deny

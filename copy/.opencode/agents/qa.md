@@ -2,6 +2,7 @@
 description: "Acceptance of a subtask against its acceptance criteria and the design test plan. Runs tests, adds missing tests, never changes production code. Called by tech-lead."
 mode: subagent
 permission:
+  question: deny
   edit: allow
   bash:
     "*": allow

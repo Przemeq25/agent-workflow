@@ -2,6 +2,7 @@
 description: "Tech Lead (default session agent). From a task or short description creates a change in spec/changes/<ID>/ (subtasks, a design with guidance drawn from the project skills), delivers it (alone for small changes, with implementer for large ones), gets one independent review and opens the PR from <change branch>. When called by pm it only writes design.md."
 mode: all
 permission:
+  question: allow
   edit: allow
   bash:
     "*": allow

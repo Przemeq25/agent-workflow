@@ -2,6 +2,7 @@
 description: "Implements one subtask or a batch of subtasks of one change, in order, according to the approved design (spec/changes/<ID>/design.md), with the tests from the test plan. Called by tech-lead."
 mode: subagent
 permission:
+  question: deny
   edit: allow
   bash:
     "*": allow
