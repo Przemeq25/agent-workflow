@@ -9,7 +9,7 @@ spec/
 │       ├── change.json           ← metadata, status, subtasks with AC (source of truth for the loop)
 │       ├── proposal.md           ← pm: why, what, AC of the whole change (.agents/templates/proposal.md)
 │       ├── design.md             ← tech-lead: how in code + skill guidance (.agents/templates/design.md)
-│       └── verify/ST-01.md       ← delivery report: AC, verification, review, QA
+│       └── verify/STEP-01.md       ← delivery report: AC, verification, review, QA
 └── archive/
     └── YYYY-MM-DD-<ID>/          ← finished changes (decision trail)
 ```
@@ -26,16 +26,16 @@ A feature split into several changes (e.g. `quick-link`: API, assets, UI) lives 
 4. The approved change reaches the default branch (commit or PR) or its own `<change branch>` branch.
 5. `tech-lead` delivers the subtasks:
    - a change with **one** subtask: commit straight to `<change branch>`,
-   - a change with **several** subtasks: each subtask is a PR `sub/<ID>/<ST>` → `<change branch>`, merged by the loop when verification, review and QA passed; otherwise it stays a draft for the user.
+   - a change with **several** subtasks: each subtask is a PR `sub/<ID>/<STEP>` → `<change branch>`, merged by the loop when verification, review and QA passed; otherwise it stays a draft for the user.
 6. The main PR `<change branch>` → default branch is opened as a draft after the first subtask and becomes ready when all subtasks are done. **Only a human merges it.**
 
 ## Approval checklist (done by hand, before `approvedAt` is set)
 
 Go through every line and read the files; do not set `approved` while one fails. Report failures to the user as a short list.
 
-1. `change.json`: `id` equals the folder name; subtasks are `ST-01…`; every subtask has size `S` or `M`, risk `QUICK`/`STANDARD`/`COMPLEX` and at least one AC with `id`, `given`, `when`, `then`; dependencies exist and have no cycles; `openQuestions` is empty.
+1. `change.json`: `id` equals the folder name; subtasks are `STEP-01…`; every subtask has size `S` or `M`, risk `QUICK`/`STANDARD`/`COMPLEX` and at least one AC with `id`, `given`, `when`, `then`; dependencies exist and have no cycles; `openQuestions` is empty.
 2. `proposal.md`: the "Edge cases" table has every category E1–E9 filled with an AC id or `n/a: reason`; no section is left empty or as a placeholder.
-3. `design.md` (STANDARD and COMPLEX only): all 13 headings exist, each filled or `n/a: <reason>`; the open-questions section is empty; every AC in `change.json` has a row in section 9 (`ST-01 AC-1`); every section 7 row names a test or `not tested: <reason>`; every test named in section 9 exists in the test plan.
+3. `design.md` (STANDARD and COMPLEX only): all 13 headings exist, each filled or `n/a: <reason>`; the open-questions section is empty; every AC in `change.json` has a row in section 9 (`STEP-01 AC-1`); every section 7 row names a test or `not tested: <reason>`; every test named in section 9 exists in the test plan.
 4. QUICK-only changes need no design: only points 1 and 2 apply.
 5. After approval the change is frozen: a later edit of proposal, design or subtasks is a new revision and needs the user's approval again.
 
@@ -71,14 +71,14 @@ commit. A new session continues from this file and the change documents, not fro
 ## State
 
 `change.json` holds only the planning status: `draft`, `approved`, `blocked`, `cancelled`.
-The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/<ST>`):
+The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/<STEP>`):
 
 | State | Change | Subtask |
 |---|---|---|
 | todo / in_progress | approved, in progress | ready to deliver |
 | waiting | waits for changes in `dependsOn` to be merged | waits for subtasks in `dependsOn` |
 | in_review | all subtasks done, main PR waits for the user | subtask PR open (e.g. draft after failed verification) |
-| done | main PR merged | commit with `Subtask: <ID>/<ST>` is on `<change branch>` |
+| done | main PR merged | commit with `Subtask: <ID>/<STEP>` is on `<change branch>` |
 | rejected | main PR closed without merge | subtask PR closed without merge |
 | agent_blocked | `agent-blocked` label on the issue | the loop reported a blocker or changed nothing twice |
 
@@ -97,7 +97,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
   "notes": "",
   "subtasks": [
     {
-      "id": "ST-01",
+      "id": "STEP-01",
       "title": "Rooms domain and API",
       "goal": "The server saves and returns the owner's rooms.",
       "risk": "COMPLEX",
@@ -119,7 +119,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 Rules (part of the approval checklist):
 - `group` is empty or a lower-case slug equal to the parent folder name under `spec/changes/`,
 - `id` equals the folder name: the tracker key in upper case with an optional lower-case note (`PROJ-123`, `PROJ-123-rooms`); a lower-case slug only when `workflow-rules` sets no tracker,
-- subtasks `ST-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
+- subtasks `STEP-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
 - `approvedAt` is set only after the user's explicit approval. `approvalHash` stays empty; only projects that use the optional loop fill it (the loop's `approve` command).
 
@@ -127,9 +127,9 @@ Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is
 
 Risk: **QUICK** (text, style, local fix without logic or contracts) needs no design. **STANDARD** and **COMPLEX** need an approved design with all 13 headings (a section that does not apply is one line `n/a: <reason>`).
 
-Delivery: **solo** (default, `tech-lead` implements; one `code-reviewer` pass for the whole change) or **team** (M or COMPLEX subtasks or a migration: `implementer` builds a batch of subtasks in one call, one review per batch, a batch ends after a COMPLEX subtask, `qa` only for COMPLEX or UI). A batch commit carries one `Subtask: <ID>/<ST>` line per subtask. See `tech-lead`.
+Delivery: **solo** (default, `tech-lead` implements; one `code-reviewer` pass for the whole change) or **team** (M or COMPLEX subtasks or a migration: `implementer` builds a batch of subtasks in one call, one review per batch, a batch ends after a COMPLEX subtask, `qa` only for COMPLEX or UI). A batch commit carries one `Subtask: <ID>/<STEP>` line per subtask. See `tech-lead`.
 
-## Delivery report `verify/<ST>.md`
+## Delivery report `verify/<STEP>.md`
 
 The first line is exactly `STATUS: DONE` or `STATUS: BLOCKED`. Then:
 
@@ -145,4 +145,4 @@ The first line is exactly `STATUS: DONE` or `STATUS: BLOCKED`. Then:
 - **Docs:** documentation files updated in this subtask (feature line, roadmap status, topic files) or "none"
 - **Next steps:** things outside the scope
 
-A delivery done by `tech-lead` in an interactive session uses the same format, and its commit carries the line `Subtask: <ID>/<ST>`.
+A delivery done by `tech-lead` in an interactive session uses the same format, and its commit carries the line `Subtask: <ID>/<STEP>`.

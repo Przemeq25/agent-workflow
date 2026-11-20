@@ -29,11 +29,11 @@ Commands that must never run (shared database, deploy): <fill>.
 
 ## Paths
 - Product: `context/foundation/prd.md`, `roadmap.md`, `prd-notes.md`. Technical decisions and reasons: `context/foundation/tech-notes.md`. Project-wide ways of doing things: the topic table in `engineering-rules`.
-- Changes: `spec/changes/[<group>/]<ID>/`, written `<change folder>` (`change.json`, `proposal.md`, `design.md`, `verify/<ST>.md`), templates in `.agents/templates/`, format in `.agents/docs/spec-format.md`.
+- Changes: `spec/changes/[<group>/]<ID>/`, written `<change folder>` (`change.json`, `proposal.md`, `design.md`, `verify/<STEP>.md`), templates in `.agents/templates/`, format in `.agents/docs/spec-format.md`.
 - Source: <fill>. Tests: <fill>.
 
 ## Git and delivery
-- Default branch: `main`. **Change branch** (one per change): `<ID>` itself when a Tracker is set below (e.g. `PROJ-123-rooms`, no prefix), otherwise `task/<ID>`. Roles write it as `<change branch>`. Commit trailer `Subtask: <ID>/<ST>`. (The optional loop keeps its own `task/<ID>` and `sub/<ID>/<ST>` names.)
+- Default branch: `main`. **Change branch** (one per change): `<ID>` itself when a Tracker is set below (e.g. `PROJ-123-rooms`, no prefix), otherwise `task/<ID>`. Roles write it as `<change branch>`. Commit trailer `Subtask: <ID>/<STEP>`. (The optional loop keeps its own `task/<ID>` and `sub/<ID>/<STEP>` names.)
 - Tracker: <fill> (e.g. `Jira, key PROJ`, or `none`). With a tracker, every change ID starts with the issue key in upper case (`PROJ-123` or `PROJ-123-short-note`), so every branch name, every commit subject (`feat(PROJ-123-rooms): …`, also `fix`, `docs`, `chore` outside a change: `chore(PROJ-123): …`) and every PR title (`PROJ-123 <title>`) contains the key. No key given: ask the user; never invent or reuse one.
 - Merge: the agent leaves the change branch rebased on the default branch and squashed into one commit (see `tech-lead`, "Prepare for merge"). Squash merge: <fill> (how the human merges, e.g. GitHub "Rebase and merge" or "Squash and merge" using the PR's **Squash message**; the agent never merges).
 - Hosting: <fill> (GitHub or Bitbucket). PR-create: <fill> (e.g. `gh pr create --base main --head <change branch>`, `--draft` when something did not pass). PR-read with review comments: <fill>. PR-reply: <fill>.

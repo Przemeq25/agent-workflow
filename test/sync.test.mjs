@@ -544,7 +544,7 @@ test("opencode and kilo agents cannot push to the protected branches", () => {
 			assert.equal(opencodeBashDecision(tl, cmd), "deny", `${tool}: ${cmd}`);
 		for (const cmd of [
 			"git push -u origin task/PROJ-1",
-			"git push origin sub/PROJ-1/ST-2",
+			"git push origin sub/PROJ-1/STEP-2",
 			"git push origin task/maintenance",
 			"git push --force-with-lease origin PROJ-1-x",
 			"git status",

@@ -24,7 +24,7 @@ Every category of the edge-case checklist (`.agents/docs/spec-format.md`) per su
 
 | Subtask | E1 input | E2 empty | E3 limits | E4 permissions | E5 conflict | E6 failure | E7 states | E8 texts | E9 data |
 |---|---|---|---|---|---|---|---|---|---|
-| ST-01 | AC-2 | n/a: no list | | | | | | | |
+| STEP-01 | AC-2 | n/a: no list | | | | | | | |
 
 ## Out of scope
 

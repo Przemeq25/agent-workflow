@@ -16,7 +16,7 @@ const EDGE = `## Edge cases
 
 | Subtask | E1 | E2 |
 |---|---|---|
-| ST-01 | AC-2 | n/a: no list |
+| STEP-01 | AC-2 | n/a: no list |
 `;
 
 const design = (lang) =>
@@ -67,10 +67,10 @@ test("proposal open questions in English and Polish", () => {
 const change = {
 	subtasks: [
 		{
-			id: "ST-01",
+			id: "STEP-01",
 			acceptanceCriteria: [{ id: "AC-1" }, { id: "AC-2" }],
 		},
-		{ id: "ST-02", acceptanceCriteria: [{ id: "AC-1" }] },
+		{ id: "STEP-02", acceptanceCriteria: [{ id: "AC-1" }] },
 	],
 };
 const sections = (s7, s9) =>
@@ -85,25 +85,25 @@ const S7 = `| Situation | Category | Error | UI | Test |
 | storage down | E6 | Unavailable | retry banner | not tested: covered by platform |`;
 const S9 = `| Covers | Test file | Case | Type |
 |---|---|---|---|
-| ST-01 AC-1 | rooms.test.ts | creates | integration |
-| ST-01 AC-2 | rooms.test.ts | rejects | integration |
-| ST-02 AC-1 | room-form.test.tsx | shows | component |
+| STEP-01 AC-1 | rooms.test.ts | creates | integration |
+| STEP-01 AC-2 | rooms.test.ts | rejects | integration |
+| STEP-02 AC-1 | room-form.test.tsx | shows | component |
 | §7 room name taken | rooms.test.ts | name taken | integration |`;
 
 test("approve: every AC needs a section 9 row and every section 7 row a test", () => {
 	assert.deepEqual(coverageProblems(sections(S7, S9), change), []);
 	const missingAc = coverageProblems(
-		sections(S7, S9.replace("| ST-01 AC-2 |", "| ST-01 AC-9 |")),
+		sections(S7, S9.replace("| STEP-01 AC-2 |", "| STEP-01 AC-9 |")),
 		change,
 	);
-	assert.ok(missingAc.some((p) => p.includes("no test row for ST-01 AC-2")));
-	// AC-1 of ST-02 is not satisfied by ST-01 AC-1
+	assert.ok(missingAc.some((p) => p.includes("no test row for STEP-01 AC-2")));
+	// AC-1 of STEP-02 is not satisfied by STEP-01 AC-1
 	const wrongSt = coverageProblems(
-		sections(S7, S9.replace("| ST-02 AC-1 |", "| ST-01 AC-10 |")),
+		sections(S7, S9.replace("| STEP-02 AC-1 |", "| STEP-01 AC-10 |")),
 		change,
 	);
-	assert.ok(wrongSt.some((p) => p.includes("ST-02 AC-1")));
-	assert.ok(!wrongSt.some((p) => p.includes("ST-01 AC-1")));
+	assert.ok(wrongSt.some((p) => p.includes("STEP-02 AC-1")));
+	assert.ok(!wrongSt.some((p) => p.includes("STEP-01 AC-1")));
 	const noTest = coverageProblems(
 		sections(S7.replace("not tested: covered by platform", ""), S9),
 		change,
@@ -141,7 +141,7 @@ test("proposal needs a complete edge-case table", () => {
 	assert.ok(
 		proposalProblems(
 			`${EDGE.replace("n/a: no list", "")}\n## Open questions\n\n`,
-		).some((p) => p.includes("edge cases of ST-01 are incomplete")),
+		).some((p) => p.includes("edge cases of STEP-01 are incomplete")),
 	);
 });
 
@@ -150,7 +150,7 @@ test("the loop prompt takes the report format from spec-format.md", () => {
 	mkdirSync(join(root, ".agents", "docs"), { recursive: true });
 	writeFileSync(
 		join(root, ".agents", "docs", "spec-format.md"),
-		"# x\n\n## Delivery report `verify/<ST>.md`\n\nThe first line is STATUS.\n- **Docs:** files\n",
+		"# x\n\n## Delivery report `verify/<STEP>.md`\n\nThe first line is STATUS.\n- **Docs:** files\n",
 	);
 	const f = reportFormat(root);
 	assert.match(f, /The first line is STATUS/);
@@ -172,7 +172,7 @@ test("a change approved by hand (no fingerprint) validates with a warning, not a
 			openQuestions: [],
 			subtasks: [
 				{
-					id: "ST-01",
+					id: "STEP-01",
 					title: "One",
 					goal: "g",
 					size: "S",
