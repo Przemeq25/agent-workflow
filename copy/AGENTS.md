@@ -20,7 +20,7 @@ Only coordinators ask; subagents put open questions at the top of their report. 
 
 ## Hard boundaries
 
-- Never push to or merge into the default branch, force push or deploy. A human merges. A task for `tech-lead` is consent to commit and push `<change branch>` and open PRs.
+- Never push to or merge into the default branch, plain force push (`--force`, `-f`, `+ref`) or deploy. A human merges. A task for `tech-lead` is consent to commit and push `<change branch>`, to rewrite it with `git push --force-with-lease origin <change branch>` after a rebase or squash (never any other branch) and to open PRs.
 - Do not change roles, commands, permissions, hooks, `.agents/workflow.json`, this file, the tool folders (`.claude/`, `.opencode/`, `.kilo/`, `CLAUDE.md`; copies of the roles, kept in step by a human) or `.env`. Project skills change through `/prd`, an approved design or the user.
 - A proposal is not a decision; an unanswered product decision blocks the dependent code.
 - PASS only with executed evidence; an unexecuted check is NOT VERIFIED. Never reveal or commit secrets, production data or credentials. Talk to the user in the language set by `business-rules`.

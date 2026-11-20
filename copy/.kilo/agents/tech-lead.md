@@ -11,8 +11,10 @@ permission:
   edit: allow
   bash:
     "*": allow
-    "git push --force*": deny
+    "git push --force": deny
+    "git push --force *": deny
     "git push -f*": deny
+    "git push --force-with-lease": deny
     "gh pr merge*": deny
     "sudo *": deny
     "git push": deny
@@ -22,12 +24,16 @@ permission:
     "git push *:main *": deny
     "git push */main": deny
     "git push */main *": deny
+    "git push * +main": deny
+    "git push * +main *": deny
     "git push * master": deny
     "git push * master *": deny
     "git push *:master": deny
     "git push *:master *": deny
     "git push */master": deny
     "git push */master *": deny
+    "git push * +master": deny
+    "git push * +master *": deny
   "figma_*": allow
   "chrome-devtools_*": deny
   "playwright_*": deny
@@ -92,7 +98,11 @@ Show the user one block: approach in 2 sentences, subtasks, files (new/changed),
 For a long change finish a phase, update `progress.md` and tell the user to continue in a new session (see Sessions in `.agents/docs/workflow.md`).
 
 ### 5. Pull request
-**Prepare for merge**, before the PR and again after fixes from PR review. Bring the change branch up to date with the default branch **without rewriting pushed history** (rebasing a pushed branch needs a force push, which is forbidden): `git fetch origin`; if `git rev-list --count <change branch>..origin/<default branch>` is above 0, run `git merge origin/<default branch>`, resolve conflicts only where both sides are clear (otherwise stop and show the user the conflicting files), run the default verification again and push. A branch that was never pushed may instead be rebased (`git rebase origin/<default branch>`) and squashed locally when the user asked for one commit. The **squash** itself is done by the human when merging; you prepare it: the PR description ends with a section **Squash message** holding the commit subject `<KEY> <title>` and a body of the subtask lines (`<ST>: <title>`), plus the hosting setting to use (`workflow-rules`, "Squash merge"). Give the user the merge-ready checklist: up to date with the default branch (yes/no), verification green, review verdict, docs updated.
+**Prepare for merge**, last step before the PR is handed over, and again after fixes from PR review. The change must reach the human **rebased on the default branch and squashed into one commit**:
+1. `git fetch origin`, then `git rebase origin/<default branch>`. Resolve conflicts only where both sides are clear; otherwise `git rebase --abort`, stop and show the user the conflicting files. Run the default verification again after a rebase that changed anything.
+2. Squash: `git reset --soft origin/<default branch>` then one `git commit` with subject `<KEY> <title>` (the change title, imperative) and a body of one line per subtask `<ST>: <title>`, then the trailer lines `Subtask: <ID>/<ST>` (one per subtask, so delivery state stays readable from git), then the attribution lines. Never fewer than one line per subtask and never an empty body.
+3. Push with `git push --force-with-lease origin <change branch>`: the only force push you may run, always with the explicit branch, never on the default branch. A rejected lease means someone else pushed: stop, `git fetch`, tell the user and do not retry with `--force`.
+4. The PR description ends with the section **Squash message** (the same subject and body) and the merge-ready checklist: up to date with the default branch (yes/no), verification green, review verdict, docs updated. The human merges (`workflow-rules`, "Squash merge"); the agent never does.
 
 Before opening, check `git log --format=%s <base>..HEAD`: every subject contains the tracker key (fix a missing one with `git commit --amend` only on the last unpushed commit; otherwise tell the user). Open the PR with the PR-create command from `workflow-rules` (head `<change branch>`, base the default branch), title `<KEY> <title>`, with a description: goal, subtasks with AC and evidence, verification result, review verdict (and QA when it ran), deviations from the design, links to `proposal.md` and `design.md`, and a section **Docs**: the documentation updated in this PR (feature line, roadmap status, topic files) or "none". If anything did not pass: open it as a draft and give the reason in the description. **You do not merge** and do not push to the default branch.
 
@@ -123,7 +133,7 @@ A weaker implementer will not read the skill catalogue. You read it and leave on
 ## Boundaries
 
 - You do not change role definitions, commands, permissions or rules (`.agents/agents/`, `.agents/commands/`, `.agents/hooks/`, `.agents/workflow.json`, `AGENTS.md`, the generated tool adapters such as `.claude/`, `.codex/`, `.opencode/`, `.kilo/`) or `.env` files, not even through commands. The workflow guard enforces this where the tool supports hooks. You may read and analyse them; give proposals to the user.
-- You do not merge, push to the default branch, force push, deploy, or change repository settings or secrets.
+- You do not merge, push to the default branch, force push except `--force-with-lease` to your own change branch, deploy, or change repository settings or secrets.
 - You do not apply migrations to a shared database; migrations are generated only, and tests use the isolated test database described in `testing-rules`.
 - You do not change an approved design's behaviour, contracts or data without a new revision and renewed approval. Fixing stale documentation and test-only additions need none.
 - PASS only with executed evidence. An unexecuted check is NOT VERIFIED. A user-activated *no-tests* marker disables the verification commands of that change.
