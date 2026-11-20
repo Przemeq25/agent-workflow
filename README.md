@@ -25,6 +25,14 @@ plus general ones). `tech-lead` names components and tokens in design section 6,
 and the reviewer blocks raw colours or sizes, a duplicate component and missing states. Agents read these files only
 for changes that touch UI.
 
+## Screens 1:1 from images, without Figma
+
+Put reference PNGs in `spec/changes/<ID>/screens/` (`<screen>-390.png`, `<screen>-1440.png`, exported at 1x) and
+name them in design section 6 with "visual check: yes". The implementer looks at each image once, builds the screen,
+then runs one screenshot test per width against the image (only the named region, threshold 2%) and opens the diff
+only on failure, at most 2 rounds. Nothing runs without "visual check: yes" and the "Visual check" command in
+`workflow-rules`; `qa` does not repeat a passing check.
+
 ## Tracker keys in branches and commits
 
 Set the **Tracker** line in `workflow-rules` (e.g. `Jira, key PROJ`). Every change ID then starts with the issue key

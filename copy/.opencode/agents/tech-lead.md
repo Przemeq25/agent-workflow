@@ -68,7 +68,7 @@ Show the user one block: approach in 2 sentences, subtasks, files (new/changed),
    - **team**: an M or COMPLEX subtask, a migration, or the user asks for it. `implementer` writes the code in **batches**: by default one batch with all subtasks; a batch ends after a COMPLEX subtask, so that subtask is reviewed before the rest is built on it. You do not read the code yourself in team mode: the design, the reports and the review are your evidence, which keeps your session small.
 3. **Solo delivery**, subtasks in dependency order. If `progress.md` exists, continue from it. For each ST-xx:
    1. Record the base: `git rev-parse HEAD`.
-   2. Write the code and tests yourself (load `testing-rules` and `team-verification`).
+   2. Write the code and tests yourself (load `testing-rules` and `team-verification`); for UI follow the UI and visual check rules of `implementer`.
    3. Run the default verification from `workflow-rules`. Red: fix, at most 2 rounds; from the second round load `team-systematic-debugging`.
    4. Write `spec/changes/<ID>/verify/<ST>.md` (format in `.agents/docs/spec-format.md`, short), update `progress.md`, commit as `feat(<ID>): <ST> <title>` with the line `Subtask: <ID>/<ST>` in the body.
 

@@ -17,6 +17,7 @@ The workflow roles are generic. Everything specific to this repository lives her
 | Quiet tests (only failures and a summary) | <fill> (e.g. `node --test --test-reporter=dot`, `vitest run --reporter=dot`, `jest --silent`, `pytest -q`) |
 | End-to-end tests | <fill> |
 | Run the app (for a browser check by `qa`) | <fill> (e.g. `npm run dev`, URL `http://localhost:3000`) or "none" |
+| Visual check (screen vs reference image) | <fill> (e.g. `playwright test tests/visual --reporter=dot`; baselines in `tests/visual/__screenshots__/`, `snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}'`) or "none" |
 | Test account (for a browser check) | <fill> (how to get one, e.g. a seed command; never a real password here) or "none" |
 | Build | <fill> |
 | Generate migration | <fill> (or "none") |

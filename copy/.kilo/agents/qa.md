@@ -63,6 +63,8 @@ Load `team-verification` when you judge evidence you did not produce.
    errors and failed requests; walk the states the design lists (empty, error, saving, success). Compare with the
    Figma frame named in design section 6: through a Figma tool if you have one, otherwise from the frame link only by
    structure and texts. A visual mismatch with the frame, a console error or a missing state is a product defect.
+   When the report shows a passing visual check on the same commit, do not compare the screen again: check only
+   states, console and requests. Never run the visual check yourself unless the report has none and section 6 asks for it.
    Stop the app when done.
 
 ## Result
