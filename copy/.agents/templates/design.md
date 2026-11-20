@@ -64,7 +64,7 @@ Where the owner comes from, which checks run on the server, what the client may 
 ## 9. Test plan
 
 One row per AC (written `ST-01 AC-1`) and per section 7 row (written `§7 <situation>`). Test types from
-`testing-rules`. the approval checklist fails a design where an AC of `change.json` has no row here.
+`testing-rules`. A row may name evidence instead of a test (`visual check`, `qa UI check`, `build`, `existing tests`) when `testing-rules` says the case needs no test. the approval checklist fails a design where an AC of `change.json` has no row here.
 
 | Covers | Test file | Case (Given/When/Then in short) | Type |
 |---|---|---|---|
