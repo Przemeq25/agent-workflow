@@ -31,7 +31,7 @@ merged only by a human. A single task goes straight to `tech-lead`. Fixes after 
 
 Everything a role needs is in files: the project skills, the PRD, the change documents, `progress.md` and git. A
 chat history is not needed and only costs tokens. Start a **new session** at the end of a phase: after `/prd`, after
-a change is approved, after a merge, and during a long delivery once `progress.md` is updated. End such a phase with
+a change is approved (**always** for a STANDARD or COMPLEX change: the role commits the approved documents and stops), after a merge, and during a long delivery once `progress.md` is updated. End such a phase with
 one line: `Next: new session, <role or command>, <change ID>`. Do not split an interview or a design discussion.
 
 ## Delegation
