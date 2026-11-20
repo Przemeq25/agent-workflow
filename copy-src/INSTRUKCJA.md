@@ -46,7 +46,7 @@ Plik z kluczem ma jedną linię, bez końcowego entera: `printf '%s' 'KLUCZ' > ~
 
 Projekt po starszym `/prd`: dopisz w `workflow-rules` wiersz „Quiet tests” i cichą wersję „Default verification” (tylko błędy i podsumowanie) albo uruchom `/prd tech`.
 
-Numer taska z Jiry: w `workflow-rules` wiersz „Tracker” (np. `Jira, key REM`). Wtedy ID zmiany zaczyna się od klucza (`REM-123-pokoje`), więc gałąź `task/REM-123-pokoje`, każdy commit `feat(REM-123-pokoje): …` i tytuł PR `REM-123 …` mają numer. Bez klucza agent pyta i nic nie wymyśla.
+Numer taska z Jiry: w `workflow-rules` wiersz „Tracker” (np. `Jira, key REM`). Wtedy ID zmiany zaczyna się od klucza (`REM-123-pokoje`), więc gałąź `REM-123-pokoje` (bez prefiksu `task/`), każdy commit `feat(REM-123-pokoje): …` i tytuł PR `REM-123 …` mają numer. Bez klucza agent pyta i nic nie wymyśla.
 
 Ekrany 1:1 z obrazków (bez Figma MCP): wrzuć PNG do plików, nie do czatu: `spec/changes/<ID>/screens/<ekran>-390.png` i `-1440.png` (eksport 1x, dokładnie ta szerokość). W `workflow-rules` uzupełnij wiersz „Visual check”. `tech-lead` wpisuje w designie „visual check: yes” tylko dla nowego ekranu albo zmiany układu; wtedy implementer porównuje zrzut z obrazkiem raz po zbudowaniu ekranu, najwyżej 2 poprawki.
 

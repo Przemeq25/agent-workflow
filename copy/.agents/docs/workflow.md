@@ -23,7 +23,7 @@ Tool adapters (`.claude/`, `CLAUDE.md`, `.codex/`, `.opencode/`, `.kilo/`, and t
 
 `/prd` (product and technical context, writes the project skills; new or existing code) → `pm`
 (`change.json`, `proposal.md`) ⇄ `tech-lead` (`design.md`) → user approval (the approval checklist in `.agents/docs/spec-format.md`, done by hand)
-→ `tech-lead` → subtasks land on `task/<ID>` → main PR `task/<ID>` → default branch,
+→ `tech-lead` → subtasks land on `<change branch>` → main PR `<change branch>` → default branch,
 merged only by a human. A single task goes straight to `tech-lead`. Fixes after PR review are done by
 `tech-lead` on the same branch.
 

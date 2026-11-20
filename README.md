@@ -4,7 +4,7 @@ A tool-independent agent workflow for software projects:
 
 ```
 /prd (context + project skills) ─► pm (change + subtasks + AC) ⇄ tech-lead (design) ─► user approves
-   ─► tech-lead or the loop: implementer → code-reviewer → qa ─► PR task/<ID> → main (a human merges)
+   ─► tech-lead or the loop: implementer → code-reviewer → qa ─► PR <change branch> → main (a human merges)
 ```
 
 Roles, skills and templates live in **`.agents/`** of your project and contain **no project rules**. Everything
@@ -36,7 +36,7 @@ only on failure, at most 2 rounds. Nothing runs without "visual check: yes" and 
 ## Tracker keys in branches and commits
 
 Set the **Tracker** line in `workflow-rules` (e.g. `Jira, key PROJ`). Every change ID then starts with the issue key
-(`PROJ-123-rooms`), so the branch `task/PROJ-123-rooms`, every commit subject (`feat(PROJ-123-rooms): …`) and the PR
+(`PROJ-123-rooms`), so the branch `PROJ-123-rooms` (no `task/` prefix), every commit subject (`feat(PROJ-123-rooms): …`) and the PR
 title (`PROJ-123 …`) carry it and Jira links them. `pm` and `tech-lead` ask for a missing key and never invent one;
 `tech-lead` checks all commit subjects before opening the PR.
 
