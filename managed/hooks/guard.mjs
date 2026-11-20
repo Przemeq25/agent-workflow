@@ -107,9 +107,18 @@ const branches = [...new Set([defaultBranch, "main", "master"])]
 const COMMON = [
 	[/\bsudo\b/, "sudo"],
 	[/\bch(mod|own)\b/, "changing file permissions"],
-	[/\bgit\s+push\b[^\n]*(\s-f\b|--force)/, "force push"],
+	// Only --force-with-lease is allowed (rewriting your own change branch after a rebase or squash); plain
+	// --force, -f and a `+refspec` are blocked, and the protected-branch rule below still applies to all of them.
 	[
-		new RegExp(`\\bgit\\s+push\\b[^\\n]*(\\s|:|/)(${branches})\\b`),
+		/\bgit\s+push\b[^\n]*(\s-f\b|--force(?!-with-lease)|\s\+\S)/,
+		"force push (only --force-with-lease to the change branch is allowed)",
+	],
+	[
+		/\bgit\s+push\b(\s+-u|\s+--set-upstream)*\s+--force-with-lease\S*\s*$/m,
+		"force push without a named branch (use --force-with-lease origin <change branch>)",
+	],
+	[
+		new RegExp(`\\bgit\\s+push\\b[^\\n]*(\\s|:|/|\\+)(${branches})\\b`),
 		`push to a protected branch (${[...new Set([defaultBranch, "main", "master"])].join("/")})`,
 	],
 	[/\bgit\s+push\b\s*$/m, "push without a branch (name the change branch)"],

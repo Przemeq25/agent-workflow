@@ -11,8 +11,10 @@ permission:
   edit: allow
   bash:
     "*": allow
-    "git push --force*": deny
+    "git push --force": deny
+    "git push --force *": deny
     "git push -f*": deny
+    "git push --force-with-lease": deny
     "gh pr merge*": deny
     "sudo *": deny
     "git push": deny
@@ -22,12 +24,16 @@ permission:
     "git push *:main *": deny
     "git push */main": deny
     "git push */main *": deny
+    "git push * +main": deny
+    "git push * +main *": deny
     "git push * master": deny
     "git push * master *": deny
     "git push *:master": deny
     "git push *:master *": deny
     "git push */master": deny
     "git push */master *": deny
+    "git push * +master": deny
+    "git push * +master *": deny
   "chrome-devtools_*": deny
   "playwright_*": deny
   "figma_*": deny

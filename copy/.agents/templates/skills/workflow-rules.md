@@ -35,6 +35,7 @@ Commands that must never run (shared database, deploy): <fill>.
 ## Git and delivery
 - Default branch: `main`. **Change branch** (one per change): `<ID>` itself when a Tracker is set below (e.g. `PROJ-123-rooms`, no prefix), otherwise `task/<ID>`. Roles write it as `<change branch>`. Commit trailer `Subtask: <ID>/<ST>`. (The optional loop keeps its own `task/<ID>` and `sub/<ID>/<ST>` names.)
 - Tracker: <fill> (e.g. `Jira, key PROJ`, or `none`). With a tracker, every change ID starts with the issue key in upper case (`PROJ-123` or `PROJ-123-short-note`), so every branch name, every commit subject (`feat(PROJ-123-rooms): …`, also `fix`, `docs`, `chore` outside a change: `chore(PROJ-123): …`) and every PR title (`PROJ-123 <title>`) contains the key. No key given: ask the user; never invent or reuse one.
+- Merge: the agent leaves the change branch rebased on the default branch and squashed into one commit (see `tech-lead`, "Prepare for merge"). Squash merge: <fill> (how the human merges, e.g. GitHub "Rebase and merge" or "Squash and merge" using the PR's **Squash message**; the agent never merges).
 - Hosting: <fill> (GitHub or Bitbucket). PR-create: <fill> (e.g. `gh pr create --base main --head <change branch>`, `--draft` when something did not pass). PR-read with review comments: <fill>. PR-reply: <fill>.
 - Only a human merges to the default branch, pushes to it, deploys, or changes repo settings and secrets.
 - Roles, permissions, hooks, `.agents/workflow.json`, `AGENTS.md` and `.env` are changed only by a human.
