@@ -21,11 +21,11 @@ spec/
 1. `pm` (from the PRD) or `tech-lead` (from a short description) creates the change: `change.json` + `proposal.md`.
 2. `tech-lead` writes `design.md` and may adjust the subtask split.
 3. The user approves in the chat ("ok"). Only then the role that asked (`pm` or `tech-lead`) goes through the **Approval checklist** below, and if every line holds sets `status: "approved"` and `approvedAt` (today) in `change.json`. Any change to proposal, design or subtasks after approval needs the user's approval again.
-4. The approved change reaches the default branch (commit or PR) or its own `task/<ID>` branch.
+4. The approved change reaches the default branch (commit or PR) or its own `<change branch>` branch.
 5. `tech-lead` delivers the subtasks (the optional unattended loop does the same through `autopilot`):
-   - a change with **one** subtask: commit straight to `task/<ID>`,
-   - a change with **several** subtasks: each subtask is a PR `sub/<ID>/<ST>` → `task/<ID>`, merged by the loop when verification, review and QA passed; otherwise it stays a draft for the user.
-6. The main PR `task/<ID>` → default branch is opened as a draft after the first subtask and becomes ready when all subtasks are done. **Only a human merges it.**
+   - a change with **one** subtask: commit straight to `<change branch>`,
+   - a change with **several** subtasks: each subtask is a PR `sub/<ID>/<ST>` → `<change branch>`, merged by the loop when verification, review and QA passed; otherwise it stays a draft for the user.
+6. The main PR `<change branch>` → default branch is opened as a draft after the first subtask and becomes ready when all subtasks are done. **Only a human merges it.**
 
 ## Approval checklist (done by hand, before `approvedAt` is set)
 
@@ -76,7 +76,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 | todo / in_progress | approved, in progress | ready to deliver |
 | waiting | waits for changes in `dependsOn` to be merged | waits for subtasks in `dependsOn` |
 | in_review | all subtasks done, main PR waits for the user | subtask PR open (e.g. draft after failed verification) |
-| done | main PR merged | commit with `Subtask: <ID>/<ST>` is on `task/<ID>` |
+| done | main PR merged | commit with `Subtask: <ID>/<ST>` is on `<change branch>` |
 | rejected | main PR closed without merge | subtask PR closed without merge |
 | agent_blocked | `agent-blocked` label on the issue | autopilot reported a blocker or changed nothing twice |
 
@@ -114,7 +114,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 ```
 
 Rules (part of the approval checklist):
-- `id` equals the folder name: tracker key or slug, lower case and hyphens,
+- `id` equals the folder name: the tracker key in upper case with an optional lower-case note (`PROJ-123`, `PROJ-123-rooms`); a lower-case slug only when `workflow-rules` sets no tracker,
 - subtasks `ST-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
 - `approvedAt` is set only after the user's explicit approval. `approvalHash` stays empty; only projects that use the optional loop fill it (the loop's `approve` command).

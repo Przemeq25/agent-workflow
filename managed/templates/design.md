@@ -46,7 +46,7 @@ Schema changes: tables, columns (type, null, default), keys and cascades, indexe
 
 ## 6. UI and flow
 
-Entry file and composition, owner of state, saving, states: loading, empty, error, conflict, offline. User-facing texts in the user language. Accessibility. Figma frame per screen (link with node ID) or "no frame". Name the components (`ui-components.md`) and tokens (`ui-tokens.md`) each part uses; a new component only as a decision D… with a reason. "No UI" is an answer too.
+Entry file and composition, owner of state, saving, states: loading, empty, error, conflict, offline. User-facing texts in the user language. Accessibility. Figma frame per screen (link with node ID) or "no frame". Reference image per screen and width (`spec/changes/<ID>/screens/<screen>-390.png`, `-1440.png`) with the compared region (e.g. `main`) and "visual check: yes", only for a new screen or a layout change; otherwise "visual check: no". Name the components (`ui-components.md`) and tokens (`ui-tokens.md`) each part uses; a new component only as a decision D… with a reason. "No UI" is an answer too.
 
 ## 7. Errors and edge cases
 

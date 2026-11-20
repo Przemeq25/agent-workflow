@@ -112,7 +112,7 @@ const COMMON = [
 		new RegExp(`\\bgit\\s+push\\b[^\\n]*(\\s|:|/)(${branches})\\b`),
 		`push to a protected branch (${[...new Set([defaultBranch, "main", "master"])].join("/")})`,
 	],
-	[/\bgit\s+push\b\s*$/m, "push without a branch (use origin task/<ID>)"],
+	[/\bgit\s+push\b\s*$/m, "push without a branch (name the change branch)"],
 	[/\bgit\s+reset\s+--hard\b/, "git reset --hard"],
 	[/\bgit\s+clean\s+-[a-z]*f/, "git clean -f"],
 	[/\bgh\s+pr\s+merge\b/, "merging a PR (a human or the loop script merges)"],

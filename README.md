@@ -4,7 +4,7 @@ A tool-independent agent workflow for software projects:
 
 ```
 /prd (context + project skills) ─► pm (change + subtasks + AC) ⇄ tech-lead (design) ─► user approves
-   ─► tech-lead or the loop: implementer → code-reviewer → qa ─► PR task/<ID> → main (a human merges)
+   ─► tech-lead or the loop: implementer → code-reviewer → qa ─► PR <change branch> → main (a human merges)
 ```
 
 Roles, skills and templates live in **`.agents/`** of your project and contain **no project rules**. Everything
@@ -24,6 +24,21 @@ need, with file and export) and `ui-patterns.md` (states, texts, forms, accessib
 plus general ones). `tech-lead` names components and tokens in design section 6, the implementer uses only those,
 and the reviewer blocks raw colours or sizes, a duplicate component and missing states. Agents read these files only
 for changes that touch UI.
+
+## Screens 1:1 from images, without Figma
+
+Put reference PNGs in `spec/changes/<ID>/screens/` (`<screen>-390.png`, `<screen>-1440.png`, exported at 1x) and
+name them in design section 6 with "visual check: yes". The implementer looks at each image once, builds the screen,
+then runs one screenshot test per width against the image (only the named region, threshold 2%) and opens the diff
+only on failure, at most 2 rounds. Nothing runs without "visual check: yes" and the "Visual check" command in
+`workflow-rules`; `qa` does not repeat a passing check.
+
+## Tracker keys in branches and commits
+
+Set the **Tracker** line in `workflow-rules` (e.g. `Jira, key PROJ`). Every change ID then starts with the issue key
+(`PROJ-123-rooms`), so the branch `PROJ-123-rooms` (no `task/` prefix), every commit subject (`feat(PROJ-123-rooms): …`) and the PR
+title (`PROJ-123 …`) carry it and Jira links them. `pm` and `tech-lead` ask for a missing key and never invent one;
+`tech-lead` checks all commit subjects before opening the PR.
 
 ## Optional MCP tools: browser and Figma
 

@@ -2,6 +2,7 @@
 description: "Cheap read-only lookup. Finds files, symbols and usages, maps an area of the code, collects git facts (log, diff --stat, blame) and returns paths plus short facts, never file contents. Low-tier model. Called by tech-lead, pm or the /prd command when a search would otherwise pull many files into their context."
 mode: subagent
 permission:
+  question: deny
   edit: deny
   bash:
     "*": deny

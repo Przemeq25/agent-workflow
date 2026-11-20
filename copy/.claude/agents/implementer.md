@@ -42,6 +42,7 @@ When the coordinator sends back a failed verification, a review finding about wr
 - No drive-by refactors, new abstractions or dependencies outside the design.
 - Do not weaken assertions or add lint/type suppressions to make checks pass. If there is no other way, it is a blocker.
 - UI texts follow the design and the project language from `business-rules`.
+- **Visual check** only when design section 6 says "visual check: yes" and `workflow-rules` has a "Visual check" command; otherwise skip it. Look at each reference image once, before building. Write one screenshot test per screen and width that compares only the named region with the reference as baseline (`maxDiffPixelRatio: 0.02`, the design's texts and data, animations off). Run it once, after the screen is built, never after each edit. Open the diff image only when it fails; at most 2 fix rounds, then report the remaining difference. Never update the baseline to make it pass.
 - Do not commit, push or switch branches.
 
 ## Report

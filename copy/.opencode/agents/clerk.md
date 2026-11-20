@@ -2,6 +2,7 @@
 description: "Cheap executor of exactly specified mechanical actions. Multi-step mechanical work only: moves or renames many files, archives finished changes, fills prepared skeletons. Low-tier model, no commit or push. Called by tech-lead or pm; does no design, review or judgement."
 mode: subagent
 permission:
+  question: deny
   edit: allow
   bash:
     "*": allow

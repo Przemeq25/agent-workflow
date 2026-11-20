@@ -46,6 +46,12 @@ Plik z kluczem ma jedną linię, bez końcowego entera: `printf '%s' 'KLUCZ' > ~
 
 Projekt po starszym `/prd`: dopisz w `workflow-rules` wiersz „Quiet tests” i cichą wersję „Default verification” (tylko błędy i podsumowanie) albo uruchom `/prd tech`.
 
+Numer taska z Jiry: w `workflow-rules` wiersz „Tracker” (np. `Jira, key REM`). Wtedy ID zmiany zaczyna się od klucza (`REM-123-pokoje`), więc gałąź `REM-123-pokoje` (bez prefiksu `task/`), każdy commit `feat(REM-123-pokoje): …` i tytuł PR `REM-123 …` mają numer. Bez klucza agent pyta i nic nie wymyśla.
+
+Ekrany 1:1 z obrazków (bez Figma MCP): wrzuć PNG do plików, nie do czatu: `spec/changes/<ID>/screens/<ekran>-390.png` i `-1440.png` (eksport 1x, dokładnie ta szerokość). W `workflow-rules` uzupełnij wiersz „Visual check”. `tech-lead` wpisuje w designie „visual check: yes” tylko dla nowego ekranu albo zmiany układu; wtedy implementer porównuje zrzut z obrazkiem raz po zbudowaniu ekranu, najwyżej 2 poprawki.
+
+Projekt bez Playwrighta, a chcesz porównywać ekrany z obrazkami: `/prd` zapyta o to raz i przygotuje konfigurację. Ręcznie to cztery kroki: `npm i -D @playwright/test` i `playwright install chromium`; plik `playwright.config.ts` z `testDir: 'tests/visual'`, `webServer` (komenda startu aplikacji), projektami o szerokości 390 i 1440 px oraz `expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.02 } }`; pusty katalog `tests/visual`; w `workflow-rules` wiersz „Visual check” z komendą `playwright test tests/visual --reporter=dot`. Testy ekranów pisze potem implementer, tylko gdy design ma „visual check: yes”. Nie chcesz tego: wpisz w wierszu `none`.
+
 ## 4. MCP: przeglądarka i Figma (opcjonalnie)
 Pliki agentów mają już przypisane serwery MCP:
 
