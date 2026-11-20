@@ -29,7 +29,7 @@ Commands that must never run (shared database, deploy): <fill>.
 
 ## Paths
 - Product: `context/foundation/prd.md`, `roadmap.md`, `prd-notes.md`. Technical decisions and reasons: `context/foundation/tech-notes.md`. Project-wide ways of doing things: the topic table in `engineering-rules`.
-- Changes: `spec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/<ST>.md`), templates in `.agents/templates/`, format in `.agents/docs/spec-format.md`.
+- Changes: `spec/changes/[<group>/]<ID>/`, written `<change folder>` (`change.json`, `proposal.md`, `design.md`, `verify/<ST>.md`), templates in `.agents/templates/`, format in `.agents/docs/spec-format.md`.
 - Source: <fill>. Tests: <fill>.
 
 ## Git and delivery

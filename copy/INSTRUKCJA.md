@@ -52,6 +52,8 @@ Ekrany 1:1 z obrazków (bez Figma MCP): wrzuć PNG do plików, nie do czatu: `sp
 
 Projekt bez Playwrighta, a chcesz porównywać ekrany z obrazkami: `/prd` zapyta o to raz i przygotuje konfigurację. Ręcznie to cztery kroki: `npm i -D @playwright/test` i `playwright install chromium`; plik `playwright.config.ts` z `testDir: 'tests/visual'`, `webServer` (komenda startu aplikacji), projektami o szerokości 390 i 1440 px oraz `expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.02 } }`; pusty katalog `tests/visual`; w `workflow-rules` wiersz „Visual check” z komendą `playwright test tests/visual --reporter=dot`. Testy ekranów pisze potem implementer, tylko gdy design ma „visual check: yes”. Nie chcesz tego: wpisz w wierszu `none`.
 
+Jedna funkcja w kilku zmianach (np. `quick-link`: API, assets, UI): `pm` nadaje im wspólne pole `group` i trzyma wszystkie w `spec/changes/quick-link/<ID>/`, z plikiem `README.md` grupy (cel, lista zmian w kolejności, zależności, wspólne decyzje). Numery z Jiry, gałęzie i commity dalej używają samego ID. Gotowa grupa trafia do `spec/archive/` w całości. Roadmapa produktu zostaje w `context/foundation/roadmap.md`.
+
 ## 4. MCP: przeglądarka i Figma (opcjonalnie)
 Pliki agentów mają już przypisane serwery MCP:
 

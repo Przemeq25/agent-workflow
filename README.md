@@ -33,6 +33,13 @@ then runs one screenshot test per width against the image (only the named region
 only on failure, at most 2 rounds. Nothing runs without "visual check: yes" and the "Visual check" command in
 `workflow-rules`; `qa` does not repeat a passing check.
 
+## Groups: one feature, several changes
+
+When a feature is split into several changes (e.g. `quick-link`: API, assets, UI), `pm` gives them one `group` in
+`change.json` and puts the folders under `spec/changes/<group>/<ID>/` with a group `README.md` (goal, changes in order,
+`dependsOn`, group-wide decisions). IDs, branches and commits still use only the ID. Finished groups move to
+`spec/archive/` whole. The optional loop reads flat folders only, so do not combine it with groups.
+
 ## Tracker keys in branches and commits
 
 Set the **Tracker** line in `workflow-rules` (e.g. `Jira, key PROJ`). Every change ID then starts with the issue key

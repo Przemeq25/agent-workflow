@@ -1,7 +1,7 @@
 # <ID> — <title> · design (technical spec)
 
 > Revision: R1 · Author: tech-lead · Date: YYYY-MM-DD
-> Change: `spec/changes/<ID>/` (proposal.md, change.json) · Requirements: FR-…, US-…
+> Change: `<change folder>/` (proposal.md, change.json) · Requirements: FR-…, US-…
 > Why: one sentence from the proposal: whose problem this solves and what changes for them.
 > After approval exactly this file is delivered. A change of behaviour, contracts or data after approval needs the user's approval again; fixing stale documentation does not.
 > Describe sections 3, 4 and 9 per subtask (ST-01, ST-02…) when the change has several subtasks.
@@ -46,7 +46,7 @@ Schema changes: tables, columns (type, null, default), keys and cascades, indexe
 
 ## 6. UI and flow
 
-Entry file and composition, owner of state, saving, states: loading, empty, error, conflict, offline. User-facing texts in the user language. Accessibility. Figma frame per screen (link with node ID) or "no frame". Reference image per screen and width (`spec/changes/<ID>/screens/<screen>-390.png`, `-1440.png`) with the compared region (e.g. `main`) and "visual check: yes", only for a new screen or a layout change; otherwise "visual check: no". Name the components (`ui-components.md`) and tokens (`ui-tokens.md`) each part uses; a new component only as a decision D… with a reason. "No UI" is an answer too.
+Entry file and composition, owner of state, saving, states: loading, empty, error, conflict, offline. User-facing texts in the user language. Accessibility. Figma frame per screen (link with node ID) or "no frame". Reference image per screen and width (`<change folder>/screens/<screen>-390.png`, `-1440.png`) with the compared region (e.g. `main`) and "visual check: yes", only for a new screen or a layout change; otherwise "visual check: no". Name the components (`ui-components.md`) and tokens (`ui-tokens.md`) each part uses; a new component only as a decision D… with a reason. "No UI" is an answer too.
 
 ## 7. Errors and edge cases
 

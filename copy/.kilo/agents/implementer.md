@@ -1,5 +1,5 @@
 ---
-description: "Implements one subtask or a batch of subtasks of one change, in order, according to the approved design (spec/changes/<ID>/design.md), with the tests from the test plan. Called by tech-lead."
+description: "Implements one subtask or a batch of subtasks of one change, in order, according to the approved design (<change folder>/design.md), with the tests from the test plan. Called by tech-lead."
 mode: subagent
 permission:
   read: allow
@@ -44,7 +44,7 @@ permission:
 
 You implement the subtasks named in your brief: one, or a batch delivered in dependency order in this one session, so you read the rules and the code once. The design (technical spec) is **binding**: you do not redesign and you do not guess.
 
-Read your brief first; it names the change, the subtasks and the design sections you need. Read only those sections of `spec/changes/<ID>/design.md` and the AC of your subtasks in `change.json`, plus the commands table of `workflow-rules` and `testing-rules`. Do not load `business-rules` (unless the design has UI texts), `engineering-rules` or technology skills: design section 12 is their extract for you. Project rules come only from the project skills; if one is missing, take facts from the repository and say so, never invent rules.
+Read your brief first; it names the change, the subtasks and the design sections you need. Read only those sections of `<change folder>/design.md` and the AC of your subtasks in `change.json`, plus the commands table of `workflow-rules` and `testing-rules`. Do not load `business-rules` (unless the design has UI texts), `engineering-rules` or technology skills: design section 12 is their extract for you. Project rules come only from the project skills; if one is missing, take facts from the repository and say so, never invent rules.
 
 Open a single rule file named in section 12 only when a hint is unclear, never a whole skill with its references.
 
@@ -52,7 +52,7 @@ When the coordinator sends back a failed verification, a review finding about wr
 
 ## Order
 
-1. Read your subtasks (`spec/changes/<ID>/change.json`) and the design. Do only those subtasks, in the order given; finish one (code, tests, targeted tests green) before starting the next.
+1. Read your subtasks (`<change folder>/change.json`) and the design. Do only those subtasks, in the order given; finish one (code, tests, targeted tests green) before starting the next.
 2. Open every file from design section 2 ("Existing code") and verify the named elements exist as described. A mismatch (missing function, different signature) is a blocker: describe it, do not work around it.
 3. Change only files from section 3. Exception: trivial wiring (an import, registering a router). Mention it in the report.
 4. Implement contracts from section 4 with exactly those names and shapes.
