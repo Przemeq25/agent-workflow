@@ -10,13 +10,13 @@
 //   verify/      autopilot reports per subtask
 //
 // Git: a change has branch task/<ID> and one main PR task/<ID> → base (merged by a human).
-// Subtask: branch sub/<ID>/<ST>, PR into task/<ID>; the loop merges it itself when verification,
+// Subtask: branch sub/<ID>/<STEP>, PR into task/<ID>; the loop merges it itself when verification,
 // review and QA passed. A change with one subtask lands directly on task/<ID>.
 // The loop never touches the base branch.
 //
 // Commands:
 //   validate | render | status | approve <ID…> | publish
-//   run [--max N] [--watch] [--change ID] [--retry ID/ST] [--dry-run]
+//   run [--max N] [--watch] [--change ID] [--retry ID/STEP] [--dry-run]
 // No npm dependencies; Node 20+, git, gh (GitHub) or the Bitbucket API.
 
 import { spawnSync } from "node:child_process";
@@ -365,8 +365,8 @@ export function validate(changes, root = ROOT) {
 		const subIds = new Set();
 		for (const st of subs) {
 			const sw = `${w}/${st.id ?? "?"}`;
-			if (!/^ST-\d{2,}$/.test(st.id ?? ""))
-				errors.push(`${sw}: subtask id must look like ST-01`);
+			if (!/^STEP-\d{2,}$/.test(st.id ?? ""))
+				errors.push(`${sw}: subtask id must look like STEP-01`);
 			if (subIds.has(st.id)) errors.push(`${sw}: zduplikowane id`);
 			subIds.add(st.id);
 			if (!st.title) errors.push(`${sw}: missing title`);
@@ -948,7 +948,7 @@ function noneAdapter() {
 		supportsPR: false,
 		findPR(head, base) {
 			if (!remoteHas(head)) return null;
-			// task/<ID> → "Subtask: <ID>/", sub/<ID>/<ST> → "Subtask: <ID>/<ST>".
+			// task/<ID> → "Subtask: <ID>/", sub/<ID>/<STEP> → "Subtask: <ID>/<STEP>".
 			// A fresh task/<ID> without work is not a "merged PR" yet.
 			const marker = `Subtask: ${head.replace(/^(task|sub)\//, "")}${head.startsWith("task/") ? "/" : ""}`;
 			const hasWork = git(
@@ -1738,7 +1738,7 @@ export async function main(argv = process.argv.slice(2)) {
 			return cmdRun(parseFlags(rest));
 		default:
 			console.log(
-				"Usage: agent-workflow validate | render | status | approve <ID…> | publish | loop [--max N] [--watch] [--change ID] [--retry ID/ST-01] [--dry-run]",
+				"Usage: agent-workflow validate | render | status | approve <ID…> | publish | loop [--max N] [--watch] [--change ID] [--retry ID/STEP-01] [--dry-run]",
 			);
 			process.exit(cmd ? 1 : 0);
 	}

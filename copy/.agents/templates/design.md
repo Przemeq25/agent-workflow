@@ -4,7 +4,7 @@
 > Change: `<change folder>/` (proposal.md, change.json) · Requirements: FR-…, US-…
 > Why: one sentence from the proposal: whose problem this solves and what changes for them.
 > After approval exactly this file is delivered. A change of behaviour, contracts or data after approval needs the user's approval again; fixing stale documentation does not.
-> Describe sections 3, 4 and 9 per subtask (ST-01, ST-02…) when the change has several subtasks.
+> Describe sections 3, 4 and 9 per subtask (STEP-01, STEP-02…) when the change has several subtasks.
 > Write the content in the user language set by `business-rules`. Keep the numbered headings; a section that does not apply is one line `n/a: <reason>`. Keep it short: the implementer reads all of it.
 
 ## 1. Approach
@@ -63,7 +63,7 @@ Where the owner comes from, which checks run on the server, what the client may 
 
 ## 9. Test plan
 
-One row per AC (written `ST-01 AC-1`) and per section 7 row (written `§7 <situation>`). Test types from
+One row per AC (written `STEP-01 AC-1`) and per section 7 row (written `§7 <situation>`). Test types from
 `testing-rules`. A row may name evidence instead of a test (`visual check`, `qa UI check`, `build`, `existing tests`) when `testing-rules` says the case needs no test. the approval checklist fails a design where an AC of `change.json` has no row here.
 
 | Covers | Test file | Case (Given/When/Then in short) | Type |

@@ -192,7 +192,7 @@ skills: [team-verification]             # preloaded where the tool supports it
 - One **edge-case checklist** (`.agents/docs/spec-format.md`: input, empty, limits, permissions, conflict, failure,
   states, texts, existing data). `pm` turns user-visible cases into AC and fills the "Edge cases" table of the
   proposal (every category: an AC or "n/a: reason"); `tech-lead` adds technical cases in design section 7.
-- Design section 9 has a row for every AC (`ST-01 AC-1`) and every section 7 row. The **approval checklist**
+- Design section 9 has a row for every AC (`STEP-01 AC-1`) and every section 7 row. The **approval checklist**
   (`.agents/docs/spec-format.md`, done by the role by hand after the user says "ok") fails a design where an AC has
   no test row, a section 7 row has no test (or `not tested: reason`), or the proposal's edge-case table has gaps.
 - `code-reviewer` reviews the design before approval when a change has several subtasks, contracts or data.
@@ -305,7 +305,7 @@ the CLI), then pick the agent in the agent selector of the chat (CLI: `/agents` 
 agent-workflow init [--yes --tools … --models … --runner … --default-agent … --local --no-postinstall]
 agent-workflow sync [--tools …] [--force] [--check]
 agent-workflow validate | render | status | approve <ID…> | publish
-agent-workflow loop [--max N] [--change ID] [--retry ID/ST] [--dry-run]
+agent-workflow loop [--max N] [--change ID] [--retry ID/STEP] [--dry-run]
 agent-workflow watch
 ```
 

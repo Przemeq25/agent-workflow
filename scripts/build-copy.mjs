@@ -148,7 +148,7 @@ export function buildCopy(target) {
 		"Coordinating roles (`tech-lead`, `pm`, `autopilot`, `/prd`)",
 		"Coordinating roles (`tech-lead`, `pm`, `/prd`)",
 	);
-	a = replaceOnce(a, " (the loop also `sub/<ID>/<ST>`)", "");
+	a = replaceOnce(a, " (the loop also `sub/<ID>/<STEP>`)", "");
 	a = replaceOnce(
 		a,
 		" An unattended run asks nothing and records the assumption.",
