@@ -25,6 +25,13 @@ plus general ones). `tech-lead` names components and tokens in design section 6,
 and the reviewer blocks raw colours or sizes, a duplicate component and missing states. Agents read these files only
 for changes that touch UI.
 
+## Tracker keys in branches and commits
+
+Set the **Tracker** line in `workflow-rules` (e.g. `Jira, key PROJ`). Every change ID then starts with the issue key
+(`PROJ-123-rooms`), so the branch `task/PROJ-123-rooms`, every commit subject (`feat(PROJ-123-rooms): …`) and the PR
+title (`PROJ-123 …`) carry it and Jira links them. `pm` and `tech-lead` ask for a missing key and never invent one;
+`tech-lead` checks all commit subjects before opening the PR.
+
 ## Optional MCP tools: browser and Figma
 
 Used only when the tool is in the agent's tool list; otherwise the step is skipped and reported.

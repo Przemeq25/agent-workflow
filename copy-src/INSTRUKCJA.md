@@ -46,6 +46,8 @@ Plik z kluczem ma jedną linię, bez końcowego entera: `printf '%s' 'KLUCZ' > ~
 
 Projekt po starszym `/prd`: dopisz w `workflow-rules` wiersz „Quiet tests” i cichą wersję „Default verification” (tylko błędy i podsumowanie) albo uruchom `/prd tech`.
 
+Numer taska z Jiry: w `workflow-rules` wiersz „Tracker” (np. `Jira, key REM`). Wtedy ID zmiany zaczyna się od klucza (`REM-123-pokoje`), więc gałąź `task/REM-123-pokoje`, każdy commit `feat(REM-123-pokoje): …` i tytuł PR `REM-123 …` mają numer. Bez klucza agent pyta i nic nie wymyśla.
+
 ## 4. MCP: przeglądarka i Figma (opcjonalnie)
 Pliki agentów mają już przypisane serwery MCP:
 

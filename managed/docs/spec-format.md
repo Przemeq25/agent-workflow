@@ -114,7 +114,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 ```
 
 Rules (part of the approval checklist):
-- `id` equals the folder name: tracker key or slug, lower case and hyphens,
+- `id` equals the folder name: the tracker key in upper case with an optional lower-case note (`PROJ-123`, `PROJ-123-rooms`); a lower-case slug only when `workflow-rules` sets no tracker,
 - subtasks `ST-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
 - `approvedAt` is set only after the user's explicit approval. `approvalHash` stays empty; only projects that use the optional loop fill it (the loop's `approve` command).

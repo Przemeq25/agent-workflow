@@ -106,7 +106,7 @@ Changes keep it current in their own PR (design section 3).
    recommendation.
 3. **Write the four skills** from the templates:
    - `workflow-rules`: the commands table, default verification and setup lines, commands that must never run,
-     paths, branches and PR commands for the hosting in use, evidence rules, and the **skill routing table**
+     paths, branches and PR commands for the hosting in use, the **Tracker** line (ask the user: Jira or another tracker and its key, e.g. `PROJ`; `none` only when the user says so), evidence rules, and the **skill routing table**
      listing every skill in `.agents/skills/` (a skill missing from it is never routed).
    - `engineering-rules`: stack and versions, reference slice, layers and dependency direction, data ownership and
      contracts, forms and state, UI and design system (one line pointing to the `ui-*` topic files of phase C), allowed and forbidden dependencies, and the topic table with

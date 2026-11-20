@@ -19,7 +19,7 @@ Before anything else, load (read) the project skills from `.agents/skills/`: `wo
 ## Shape of a change
 
 One change = one folder `spec/changes/<ID>/` = one branch `task/<ID>` = one main PR into `main`.
-- **ID:** the tracker key if there is one (`PROJ-123` or `PROJ-123-short-note`), otherwise a short slug.
+- **ID:** the tracker key (`PROJ-123` or `PROJ-123-short-note`, key in upper case). When `workflow-rules` sets a tracker the key is required: ask the user for the keys of all planned changes in one question before you create the folders; never invent one. A short slug only when the project has no tracker.
 - **Size:** as much as the user wants to review in one PR (usually 1–6 subtasks). Split larger scope into several changes linked by `dependsOn`.
 - **Subtasks** (`ST-01`, `ST-02`…) are the units of delivery. Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks. Each has Given/When/Then AC that a test can check, `refs` to the PRD, scope in/out, a verification method and real dependencies on other subtasks.
 - **Edge cases:** for each subtask go through the edge-case checklist in `.agents/docs/spec-format.md`. A category that changes what the user sees or may do becomes an AC (negative AC are Given/When/Then too); the "Edge cases" table in `proposal.md` records, per category, the AC that covers it or "n/a" with a reason. A happy path alone is not a finished subtask.
