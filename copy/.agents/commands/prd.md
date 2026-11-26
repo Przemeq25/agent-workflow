@@ -38,7 +38,7 @@ lines the loop reads (`Default verification for a subtask:` and `Setup (install 
 These skills are the **single source** of project rules for the roles. Do not duplicate them in other documents;
 `tech-notes.md` holds only reasons and history.
 
-You write nothing else: no application code, no configuration, no dependencies, no `spec/` changes, nothing in
+You write nothing else: no application code, no configuration, no dependencies, no `openspec/` changes, nothing in
 `.agents/` outside the five project skills and their topic files.
 
 ## Modes (choose from the repository, say which one you took)

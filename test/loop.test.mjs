@@ -159,7 +159,7 @@ test("the loop prompt takes the report format from spec-format.md", () => {
 
 test("a change approved by hand (no fingerprint) validates with a warning, not an error", () => {
 	const root = mkdtempSync(join(tmpdir(), "aw-hand-"));
-	const dir = join(root, "spec", "changes", "demo-1");
+	const dir = join(root, "openspec", "changes", "demo-1");
 	mkdirSync(dir, { recursive: true });
 	writeFileSync(
 		join(dir, "change.json"),
