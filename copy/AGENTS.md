@@ -14,6 +14,10 @@ Every token you read is paid on every later step, so:
 
 `scout` (search across many files, returns paths and facts) and `clerk` (multi-step mechanical work) run on the `low` tier. A subagent start reloads all instructions, so use them only when that saves more than it costs.
 
+## Terse output
+
+Every word you write is paid for, and later steps read it again. Answer first, then only what the reader must act on. No greeting, no restating the task, no "I will now…", no closing summary of what the diff already shows, no hedging. Fragments are fine ("Cause: stale cache. Fix: invalidate on save."). Do not shorten code, commands, paths, identifiers, error text, acceptance criteria, the **Squash message** or anything that must stay exact; write security warnings and irreversible-action confirmations in full sentences. Reports to the user and between roles: result, evidence, open questions; nothing else.
+
 ## Asking the user
 
 Only coordinators ask; subagents put open questions at the top of their report. Use your tool's question tool when it has one; otherwise end with a numbered list: `1. <question>? A) <option> (recommended) B) <option>. Blocks: <what>.` At most 3-4 questions, each with a recommendation; answer yourself what the repository answers.

@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
 	existsSync,
+	cpSync,
 	lstatSync,
 	mkdirSync,
 	mkdtempSync,
@@ -11,7 +12,7 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadConfig, readRoles, scaffold, syncProject } from "../lib/sync.mjs";
@@ -591,4 +592,66 @@ test("mcp servers per role: allowed for listed roles, switched off for the other
 	cfg.mcp = { figma: "tech-lead" };
 	writeFileSync(cfgPath, JSON.stringify(cfg));
 	assert.notEqual(run(dir, "sync").status, 0);
+});
+
+test("aktualizuj.mjs: preview writes nothing, updates unedited files, keeps edits, models and project files", () => {
+	const dir = mkdtempSync(join(tmpdir(), "aw-upd-"));
+	const src = join(dir, "src");
+	const dst = join(dir, "proj");
+	const w = (root, p, t) => {
+		mkdirSync(dirname(join(root, p)), { recursive: true });
+		writeFileSync(join(root, p), t);
+	};
+	cpSync(join(PKG, "copy"), src, { recursive: true, verbatimSymlinks: true });
+	mkdirSync(dst);
+	const run = (...a) =>
+		spawnSync("node", [join(src, "aktualizuj.mjs"), "--target", dst, ...a], {
+			encoding: "utf8",
+		});
+	// preview writes nothing
+	assert.equal(run().status, 0);
+	assert.ok(!existsSync(join(dst, ".agents")));
+	// install
+	assert.equal(run("--apply").status, 0);
+	const pm = ".kilo/agents/pm.md";
+	assert.ok(existsSync(join(dst, pm)));
+	assert.ok(existsSync(join(dst, ".agents", ".installed.json")));
+	assert.ok(lstatSync(join(dst, ".claude", "skills")).isSymbolicLink());
+	// local state: model line, project files, an edited file, an own agent
+	const pmText = readFileSync(join(dst, pm), "utf8");
+	writeFileSync(join(dst, pm), pmText.replace(/^---\n/, "---\nmodel: my/model\n"));
+	writeFileSync(join(dst, ".agents", "workflow.json"), '{"mine":true}\n');
+	w(dst, ".agents/skills/business-rules/SKILL.md", "MINE\n");
+	w(dst, ".kilo/agents/own.md", "---\nname: own\n---\nown\n");
+	const edited = ".agents/docs/delivery.md";
+	writeFileSync(join(dst, edited), "edited locally\n");
+	// new version: pm changed, delivery changed, an obsolete file
+	const srcPm = join(src, pm);
+	writeFileSync(srcPm, `${readFileSync(srcPm, "utf8")}\nNEW LINE\n`);
+	writeFileSync(join(src, edited), `${readFileSync(join(src, edited), "utf8")}\nNEW\n`);
+	w(dst, ".agents/docs/old.md", "old\n");
+	const m = JSON.parse(readFileSync(join(dst, ".agents", ".installed.json"), "utf8"));
+	m.files[".agents/docs/old.md"] = createHash("sha256").update("old\n").digest("hex");
+	writeFileSync(join(dst, ".agents", ".installed.json"), JSON.stringify(m));
+	const r = run("--apply");
+	assert.equal(r.status, 0, r.stderr);
+	const after = readFileSync(join(dst, pm), "utf8");
+	assert.match(after, /NEW LINE/);
+	assert.match(after, /^model: my\/model$/m);
+	assert.equal(readFileSync(join(dst, edited), "utf8"), "edited locally\n");
+	assert.equal(readFileSync(join(dst, ".agents", "workflow.json"), "utf8"), '{"mine":true}\n');
+	assert.equal(
+		readFileSync(join(dst, ".agents", "skills", "business-rules", "SKILL.md"), "utf8"),
+		"MINE\n",
+	);
+	assert.ok(existsSync(join(dst, ".kilo/agents/own.md")));
+	assert.ok(!existsSync(join(dst, ".agents/docs/old.md")));
+	// --force overwrites the edited file
+	run("--apply", "--force");
+	assert.notEqual(readFileSync(join(dst, edited), "utf8"), "edited locally\n");
+	// refuses source == target
+	const same = spawnSync("node", [join(src, "aktualizuj.mjs"), "--target", src], {
+		encoding: "utf8",
+	});
+	assert.equal(same.status, 2);
 });
