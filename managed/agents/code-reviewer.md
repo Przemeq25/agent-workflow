@@ -30,11 +30,13 @@ Stale documentation (a wrong path, name or reference in a topic file, the PRD or
 
 Style preferences never block. On re-review, check only the fixed items and the code they touch. Never claim you ran a check you did not run.
 
+Tests: stay within the **Test budget** of `testing-rules`. Never ask for more tests than the design lists; a missing test is blocking only for an AC or section 7 row with logic. Flag as a suggestion (not blocking) tests the budget does not allow: tests for wiring, markup or simple components, duplicate coverage of one behaviour, and tests in a file named differently from its source file.
+
 ## Design review ("Review the design of <ID>")
 
 Before approval you check `design.md` against `proposal.md`, `change.json` and the code. You change no files.
 
-1. Every AC of every subtask has a row in section 9; every section 7 row has a test or `not tested: <reason>`.
+1. Every AC of every subtask has a row in section 9; every section 7 row with logic has a test, the others name other evidence or `not tested: <reason>`.
 2. The proposal's "Edge cases" table covers every checklist category per subtask (AC or "n/a" with a reason that holds); section 7 adds the technical cases the code area needs (look at the real code: error mapping, retries, transactions, ownership checks).
 3. Section 2 references exist (`rg`); section 3 lists every file the contracts and tests need, including the documentation the change makes true.
 4. Contracts (4), data (5) and UI states (6) leave no decision to the implementer.

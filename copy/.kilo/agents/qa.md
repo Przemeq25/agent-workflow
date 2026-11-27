@@ -58,9 +58,9 @@ Load `team-verification` when you judge evidence you did not produce.
 
 1. Read the subtask (AC in `<change folder>/change.json`), the design (section 7 edge cases, section 9 test plan) and the testing rules.
 2. For each AC find the test that covers it (`rg`). Judge whether it verifies the Given/When/Then behaviour, not only that something renders.
-3. Add or fix missing or weak tests. You may edit test files only, as defined in `testing-rules`. Use isolated test data as described there.
+3. Fix weak tests and add a missing one only for an AC or section 7 row with logic that has none; keep to the **Test budget** and **Where tests go** of `testing-rules` (no extra files, no tests for wiring or markup). You may edit test files only, as defined in `testing-rules`. Use isolated test data as described there.
 4. Run only the tests that cover this subtask's AC and section 7 rows, with the targeted test command from `workflow-rules`. The full verification is owned by the implementer and checked by the coordinator; do not repeat it. Run e2e only when the plan requires it and the environment allows it; otherwise NOT VERIFIED with the reason.
-5. Check **every** row of design section 7 that belongs to this subtask: its test exists and asserts the expected behaviour. A row without a test is a defect (yours to fix if it is a test file), a row whose behaviour the code does not implement is a product defect.
+5. Check **every** row of design section 7 that belongs to this subtask: its test (or the evidence the design names) exists and asserts the expected behaviour. A row with logic and no test is a defect (yours to fix if it is a test file), a row whose behaviour the code does not implement is a product defect.
 
 6. **UI check** (only when the subtask changes UI, and only with a browser tool such as Chrome DevTools MCP or
    Playwright MCP). Optional tools: use one only if it is in your tool list. If it is not, skip that step and write in the report what was not checked; never install or configure a tool. Start the app with the "Run the app" command and sign in with the "Test account" from
