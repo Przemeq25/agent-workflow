@@ -34,9 +34,11 @@ permission:
     "git push */master *": deny
     "git push * +master": deny
     "git push * +master *": deny
+  "atlassian_*": allow
   "chrome-devtools_*": deny
   "playwright_*": deny
   "figma_*": deny
+  "context7_*": deny
 ---
 
 
@@ -56,8 +58,12 @@ One change = one folder `<change folder>/` = one branch `<change branch>` = one 
 - **Group:** when a feature needs two or more changes (e.g. API, assets, UI of one `quick-link`), give all of them the same `group` (short lower-case name; the Jira epic if there is one), put their folders under `openspec/changes/<group>/` and write the group's `README.md` (goal, changes table with order and `dependsOn`, group-wide open decisions). A single change needs no group. Tell the user the group name in the approval block.
 - **ID:** the tracker key (`PROJ-123` or `PROJ-123-short-note`, key in upper case). When `workflow-rules` sets a tracker the key is required: ask the user for the keys of all planned changes in one question before you create the folders; never invent one. A short slug only when the project has no tracker.
 - **Size:** as much as the user wants to review in one PR (usually 1–6 subtasks). Split larger scope into several changes linked by `dependsOn`.
-- **Subtasks** (`STEP-01`, `STEP-02`…) are the units of delivery. Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks. Each has Given/When/Then AC that a test can check, `refs` to the PRD, scope in/out, a verification method and real dependencies on other subtasks.
+- **Subtasks** (`STEP-01`, `STEP-02`…) are the units of delivery. Size them by the **subtask sizing rule** in `.agents/docs/spec-format.md` (delivery units, usually 1–3). Each has Given/When/Then AC that a test can check, `refs` to the PRD, scope in/out, a verification method and real dependencies on other subtasks.
 - **Edge cases:** for each subtask go through the edge-case checklist in `.agents/docs/spec-format.md`. A category that changes what the user sees or may do becomes an AC (negative AC are Given/When/Then too); the "Edge cases" table in `proposal.md` records, per category, the AC that covers it or "n/a" with a reason. A happy path alone is not a finished subtask.
+
+**Clarification markers.** Wherever the PRD or the user leaves a product decision open, write `[NEEDS CLARIFICATION: <question>]` at that place in `proposal.md` (and the question in `openQuestions`) instead of guessing. Ask all markers in one question block before the approval block; a change with a marker left is not approved.
+
+**Jira (optional tool).** If an Atlassian/Jira tool is in your tool list, read the issue by its key (summary, description, acceptance notes, linked epic) instead of asking the user to paste it, and use the epic as the `group`. Read only; never change issues, statuses or comments unless the user asks. Without the tool, ask for the text.
 
 Files you write:
 - `change.json`: `id`, `title`, `jira` (optional), `status: "draft"`, `refs`, `dependsOn`, `openQuestions`, `subtasks[]`,

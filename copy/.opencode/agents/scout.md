@@ -22,6 +22,8 @@ permission:
   "chrome-devtools_*": deny
   "playwright_*": deny
   "figma_*": deny
+  "atlassian_*": deny
+  "context7_*": deny
 ---
 
 

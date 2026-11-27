@@ -40,4 +40,4 @@ List from `change.json` (ID, title, dependencies). AC per subtask are in `change
 
 ## Open questions
 
-Empty before approval.
+Empty before approval. Open product decisions are written as `[NEEDS CLARIFICATION: <question>]` where they apply and listed here; none may be left at approval.

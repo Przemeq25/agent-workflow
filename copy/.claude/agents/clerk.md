@@ -3,7 +3,7 @@ name: clerk
 description: "Cheap executor of exactly specified mechanical actions. Multi-step mechanical work only: moves or renames many files, archives finished changes, fills prepared skeletons. Low-tier model, no commit or push. Called by tech-lead or pm; does no design, review or judgement."
 model: haiku
 permissionMode: acceptEdits
-disallowedTools: mcp__chrome-devtools, mcp__playwright, mcp__figma
+disallowedTools: mcp__chrome-devtools, mcp__playwright, mcp__figma, mcp__atlassian, mcp__context7
 hooks:
   PreToolUse:
     - matcher: "Bash|Edit|Write|MultiEdit|NotebookEdit"

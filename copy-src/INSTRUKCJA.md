@@ -58,6 +58,10 @@ Nowa praca nad istniejącą funkcją: przed założeniem folderu agent szuka gru
 
 Nazwy jak w OpenSpec: katalog `openspec/` z `changes/` (zmiany, grupy i `changes/archive/`) i opcjonalnym `specs/` (aktualne zachowanie, wpisuje człowiek). Projekt, który ma już `spec/`: `git mv spec openspec`, a gotowe zmiany z `spec/archive/` przenieś do `openspec/changes/archive/`.
 
+Review i merge: PR idzie ze zwykłymi commitami, poprawki z review to kolejne commity. Rebase na `main` i squash do jednego commita agent robi dopiero, gdy PR jest zaakceptowany albo napiszesz „przygotuj do merge”.
+
+`change.json` ma pole `$schema`: edytor (VS Code, Kilo) podkreśla błędne ID, brak AC czy zły `risk` od razu.
+
 ## 4. MCP: przeglądarka i Figma (opcjonalnie)
 Pliki agentów mają już przypisane serwery MCP:
 
@@ -65,6 +69,8 @@ Pliki agentów mają już przypisane serwery MCP:
 |---|---|---|
 | `chrome-devtools`, `playwright` | `qa` (sprawdzenie UI) | wyłączony |
 | `figma` | `tech-lead` (plan ekranu, `/prd design`), `qa` (porównanie) | wyłączony |
+| `atlassian` (Jira) | `pm` (czyta zadanie po kluczu, epic jako grupa; tylko odczyt) | wyłączony |
+| `context7` (dokumentacja bibliotek) | `tech-lead` (tylko przy designie, gdy API mogło się zmienić) | wyłączony |
 
 Nazwa serwera w konfiguracji narzędzia (np. `mcp` w `kilo.jsonc`) musi być dokładnie taka jak w tabeli; inaczej zmień ją w nagłówkach plików agentów (`"figma_*": allow` w Kilo i OpenCode, `mcp__figma` w Claude Code). Bez tych serwerów agenci pomijają te kroki i piszą o tym w raporcie. Żeby `qa` mógł sprawdzić UI, uzupełnij w `workflow-rules` wiersze „Run the app” i „Test account”.
 

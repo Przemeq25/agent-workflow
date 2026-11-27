@@ -40,6 +40,15 @@ When a feature is split into several changes (e.g. `quick-link`: API, assets, UI
 `dependsOn`, group-wide decisions). IDs, branches and commits still use only the ID. Finished groups move to
 `openspec/changes/archive/` whole. The optional loop reads flat folders only, so do not combine it with groups.
 
+## Review hardening
+
+- The PR is reviewed with normal commits; rebase and squash into one commit happen once, after approval ("prepare for merge").
+- `tech-lead.md` holds only modes and planning; delivery is in `.agents/docs/delivery.md`, design rules in `.agents/docs/design-rules.md`, each read only in the session that needs it.
+- `change.json` points to `.agents/docs/change.schema.json` for editor validation.
+- `[NEEDS CLARIFICATION: …]` markers in `proposal.md` block approval; the approval checklist has a requirement-quality point.
+- `review-rules` has a security item; a weak test is fixed in place, never by adding tests.
+- Optional MCP: `atlassian` for `pm` (read issues by key), `context7` for `tech-lead` (design only).
+
 ## Tracker keys in branches and commits
 
 Set the **Tracker** line in `workflow-rules` (e.g. `Jira, key PROJ`). Every change ID then starts with the issue key
