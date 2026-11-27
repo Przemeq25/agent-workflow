@@ -2,7 +2,7 @@
 // Agent loop of @przemeq25/agent-workflow (generic; project commands come from .agents/skills/workflow-rules,
 // settings from .agents/workflow.json).
 //
-// Model: spec/changes/<ID>/ is one change (a task from pm or a tracker key) with subtasks.
+// Model: openspec/changes/<ID>/ is one change (a task from pm or a tracker key) with subtasks.
 //   change.json  metadata, status, subtasks with AC and dependencies
 //   proposal.md  pm: why and what (AC of the whole change)
 //   design.md    tech-lead: how in code (technical spec + skill guidance)
@@ -36,11 +36,14 @@ import { loadConfig, RUNNERS, syncProject } from "../lib/sync.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(process.env.AGENT_LOOP_ROOT ?? process.cwd());
-// Changes live in spec/. A project that still has only the old work/ keeps working until it renames it.
-const WORK =
-	existsSync(join(ROOT, "spec")) || !existsSync(join(ROOT, "work", "changes"))
+// Changes live in openspec/. A project that still has only spec/ or the older work/ keeps working until it renames it.
+const WORK = existsSync(join(ROOT, "openspec"))
+	? "openspec"
+	: existsSync(join(ROOT, "spec", "changes"))
 		? "spec"
-		: "work";
+		: existsSync(join(ROOT, "work", "changes"))
+			? "work"
+			: "openspec";
 const STATE_DIR = join(ROOT, ".agent-loop");
 const STATE_FILE = join(STATE_DIR, "state.json");
 const LOCK_FILE = join(STATE_DIR, "lock");
@@ -143,7 +146,7 @@ export function loadChanges(root = ROOT) {
 	const dir = join(root, WORK, "changes");
 	if (!existsSync(dir)) return [];
 	return readdirSync(dir, { withFileTypes: true })
-		.filter((d) => d.isDirectory())
+		.filter((d) => d.isDirectory() && d.name !== "archive")
 		.map((d) => {
 			const data = readJson(join(dir, d.name, "change.json"), null);
 			return data
@@ -651,7 +654,7 @@ export function renderIndex(changes) {
 	const lines = [
 		"# Zmiany",
 		"",
-		"> Generated (`agent-workflow render`). Details: `spec/changes/<ID>/`. Delivery state: `agent-workflow status`.",
+		"> Generated (`agent-workflow render`). Details: `openspec/changes/<ID>/`. Delivery state: `agent-workflow status`.",
 		"",
 		"```mermaid",
 		"flowchart TD",
@@ -1491,9 +1494,9 @@ function cmdValidate() {
 	const changeCheck = validate(changes);
 	const errors = [...cfgCheck.errors, ...changeCheck.errors];
 	const warnings = [...cfgCheck.warnings, ...changeCheck.warnings];
-	if (WORK === "work")
+	if (WORK !== "openspec" && existsSync(join(ROOT, WORK, "changes")))
 		warnings.push(
-			"changes are still in work/: the roles now expect spec/. Rename it: git mv work spec",
+			`changes are still in ${WORK}/: the roles now expect openspec/. Rename it: git mv ${WORK} openspec`,
 		);
 	console.log(
 		`.agents: ${cfgCheck.agents?.length ?? 0} roles, ${cfgCheck.skills?.length ?? 0} skills`,
@@ -1532,7 +1535,7 @@ function cmdApprove(ids) {
 		const c = changes.find((x) => x.id === id);
 		const problems = [];
 		if (!c || c._missing)
-			problems.push("no such change (spec/changes/<ID>/change.json)");
+			problems.push("no such change (openspec/changes/<ID>/change.json)");
 		else {
 			if (c.status === "cancelled") problems.push("change cancelled");
 			if ((c.openQuestions ?? []).length)
@@ -1569,7 +1572,7 @@ async function cmdPublish() {
 	const adapter = makeAdapter();
 	if (adapter.name !== "github") {
 		log(
-			`platform ${adapter.name}: no issue tracker. Changes stay in spec/changes (tracker key as ID or the "jira" field).`,
+			`platform ${adapter.name}: no issue tracker. Changes stay in openspec/changes (tracker key as ID or the "jira" field).`,
 		);
 		return;
 	}
@@ -1623,7 +1626,7 @@ async function cmdRun(flags) {
 	const { errors } = validate(changes);
 	if (errors.length)
 		die(
-			`spec/changes has errors (agent-workflow validate):\n${errors.join("\n")}`,
+			`openspec/changes has errors (agent-workflow validate):\n${errors.join("\n")}`,
 		);
 	acquireLock();
 	const base = detectBase();

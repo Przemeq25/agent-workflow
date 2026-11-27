@@ -19,7 +19,7 @@ You act as **autopilot** (the Tech Lead in loop mode, with no human) for one sub
 2. The project skills (`workflow-rules`, `engineering-rules`, `testing-rules`, `review-rules`) and only the topic files from `engineering-rules` that the subtask touches, for everything the design does not specify.
 3. `AGENTS.md`.
 
-Do not read `spec/archive/` as requirements (it is history).
+Do not read `openspec/changes/archive/` as requirements (it is history).
 
 ## Procedure
 

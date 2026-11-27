@@ -48,18 +48,18 @@ test("init without a choice creates only .agents/ and AGENTS.md, no tool adapter
 	assert.ok(!existsSync(join(dir, ".claude")));
 });
 
-test("init creates spec/, and a project with the old work/ still validates with a hint", () => {
+test("init creates openspec/, and a project with the old work/ still validates with a hint", () => {
 	const dir = project();
 	run(dir, "init");
-	assert.ok(existsSync(join(dir, "spec/changes/.gitkeep")));
+	assert.ok(existsSync(join(dir, "openspec/changes/.gitkeep")));
 	assert.ok(!existsSync(join(dir, "work")));
-	assert.match(read(dir, "AGENTS.md"), /spec\/changes\/\[<group>\/\]<ID>\//);
+	assert.match(read(dir, "AGENTS.md"), /openspec\/changes\/\[<group>\/\]<ID>\//);
 	const legacy = project();
 	run(legacy, "init");
-	spawnSync("git", ["mv", "spec", "work"], { cwd: legacy });
-	spawnSync("mv", ["spec", "work"], { cwd: legacy });
+	spawnSync("git", ["mv", "openspec", "work"], { cwd: legacy });
+	spawnSync("mv", ["openspec", "work"], { cwd: legacy });
 	const v = run(legacy, "validate");
-	assert.match(v.stdout, /git mv work spec/);
+	assert.match(v.stdout, /git mv work openspec/);
 	assert.match(v.stdout, /work\/changes valid/);
 });
 

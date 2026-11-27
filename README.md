@@ -27,7 +27,7 @@ for changes that touch UI.
 
 ## Screens 1:1 from images, without Figma
 
-Put reference PNGs in `spec/changes/<ID>/screens/` (`<screen>-390.png`, `<screen>-1440.png`, exported at 1x) and
+Put reference PNGs in `openspec/changes/<ID>/screens/` (`<screen>-390.png`, `<screen>-1440.png`, exported at 1x) and
 name them in design section 6 with "visual check: yes". The implementer looks at each image once, builds the screen,
 then runs one screenshot test per width against the image (only the named region, threshold 2%) and opens the diff
 only on failure, at most 2 rounds. Nothing runs without "visual check: yes" and the "Visual check" command in
@@ -36,9 +36,9 @@ only on failure, at most 2 rounds. Nothing runs without "visual check: yes" and 
 ## Groups: one feature, several changes
 
 When a feature is split into several changes (e.g. `quick-link`: API, assets, UI), `pm` gives them one `group` in
-`change.json` and puts the folders under `spec/changes/<group>/<ID>/` with a group `README.md` (goal, changes in order,
+`change.json` and puts the folders under `openspec/changes/<group>/<ID>/` with a group `README.md` (goal, changes in order,
 `dependsOn`, group-wide decisions). IDs, branches and commits still use only the ID. Finished groups move to
-`spec/archive/` whole. The optional loop reads flat folders only, so do not combine it with groups.
+`openspec/changes/archive/` whole. The optional loop reads flat folders only, so do not combine it with groups.
 
 ## Tracker keys in branches and commits
 
@@ -86,7 +86,7 @@ npm i -D github:Przemeq25/agent-workflow#<tag or commit>   # installs only, gene
 npx agent-workflow init                                    # questions, see below
 ```
 
-`init` creates `.agents/` (managed roles, commands, skills, guard, templates), `AGENTS.md`, `spec/changes/` and
+`init` creates `.agents/` (managed roles, commands, skills, guard, templates), `AGENTS.md`, `openspec/changes/` and
 `.agents/workflow.json`, then asks:
 
 1. **Tools** that get adapter files: `claude`, `codex`, `opencode`, several or none (default: none).
@@ -153,7 +153,7 @@ their rules into the skills and asks before deleting the old files.
 | `.agents/workflow.json` | yes | you (project config) |
 | `.agents/.managed.json` | yes | package (hashes of managed files) |
 | `.agents/workflow.local.json` | no | each developer |
-| `spec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/`), `spec/BACKLOG.md` | yes | `pm`, `tech-lead`, the loop |
+| `openspec/changes/<ID>/` (`change.json`, `proposal.md`, `design.md`, `verify/`), `openspec/BACKLOG.md` | yes | `pm`, `tech-lead`, the loop |
 | `.claude/agents/`, `.claude/skills`, `.claude/settings.json`, `CLAUDE.md` | no | generated |
 | `.codex/agents/*.toml`, `.opencode/agents/*.md`, `.kilo/agents/*.md` | no | generated |
 
@@ -203,7 +203,7 @@ skills: [team-verification]             # preloaded where the tool supports it
 ## Sessions and tokens
 
 Roles hand over through files, not chat history: start a new session after `/prd`, after approval, after a merge,
-and during a long delivery once `spec/changes/<ID>/progress.md` is updated.
+and during a long delivery once `openspec/changes/<ID>/progress.md` is updated.
 
 Every subagent call reloads the rules and the code (about 100k tokens on a strong model), so delivery uses as few
 calls as the change allows:

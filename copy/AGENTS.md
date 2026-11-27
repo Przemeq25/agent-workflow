@@ -1,6 +1,6 @@
 # Agent instructions
 
-Generic agent workflow. Roles are in `.agents/agents/`, project rules only in the project skills `.agents/skills/*-rules`, changes in `spec/changes/[<group>/]<ID>/` (`<change folder>`). If the five project skills are missing, run `/prd` (Codex: `$prd`) first. Started as a role: follow `.agents/agents/<role>.md`; otherwise act as `tech-lead`. Coordinating roles (`tech-lead`, `pm`, `/prd`) also read `.agents/docs/workflow.md`.
+Generic agent workflow. Roles are in `.agents/agents/`, project rules only in the project skills `.agents/skills/*-rules`, changes in `openspec/changes/[<group>/]<ID>/` (`<change folder>`). If the five project skills are missing, run `/prd` (Codex: `$prd`) first. Started as a role: follow `.agents/agents/<role>.md`; otherwise act as `tech-lead`. Coordinating roles (`tech-lead`, `pm`, `/prd`) also read `.agents/docs/workflow.md`.
 
 ## Read little, run quietly
 
