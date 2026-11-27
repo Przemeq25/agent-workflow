@@ -163,6 +163,7 @@ export function buildCopy(target) {
 	);
 	writeFileSync(join(tmp, "AGENTS.md"), a);
 	cpSync(join(PKG, "copy-src", "INSTRUKCJA.md"), join(tmp, "INSTRUKCJA.md"));
+	cpSync(join(PKG, "copy-src", "aktualizuj.mjs"), join(tmp, "aktualizuj.mjs"));
 	// Claude Code reads skills from .claude/skills: a relative link to .agents/skills keeps one copy.
 	const link = join(tmp, ".claude", "skills");
 	if (existsSync(link) || lstatSync(link, { throwIfNoEntry: false }))

@@ -8,7 +8,7 @@ Ten folder jest gotowy do skopiowania. Nie wymaga instalowania żadnej paczki an
 - `openspec/`: tu agenci zapisują zmiany
 - folder swojego narzędzia: `.kilo/` (Kilo), `.opencode/` (OpenCode) albo `.claude/` z `CLAUDE.md` (Claude Code)
 
-Pomiń ten plik. Wszystko commitujesz. Jeśli masz już skille projektu (`.agents/skills/*-rules`), nie nadpisuj ich.
+Pomiń `INSTRUKCJA.md` i `aktualizuj.mjs`. Wszystko commitujesz. Jeśli masz już skille projektu (`.agents/skills/*-rules`), nie nadpisuj ich.
 
 ## 2. Ustaw modele (opcjonalnie)
 W `.kilo/agents/*.md` (tak samo w `.opencode/agents/*.md`) dopisz w nagłówku linię `model:`, np. `model: anthropic/claude-sonnet-...`. Nazwy modeli pokaże `kilo models`. Bez tej linii agent działa na domyślnym modelu.
@@ -78,3 +78,18 @@ Nazwa serwera w konfiguracji narzędzia (np. `mcp` w `kilo.jsonc`) musi być dok
 
 ## Zmiana roli
 Role źródłowe są w `.agents/agents/`. Zmianę roli przenieś ręcznie do pliku w `.kilo/agents/` (albo innego narzędzia), bo narzędzie czyta tylko swój folder.
+
+## Aktualizacja do nowej wersji
+W katalogu głównym projektu uruchom skrypt z nowego folderu (źródło = folder, w którym leży skrypt):
+
+```
+node ŚCIEŻKA/DO/copy/aktualizuj.mjs            # podgląd, nic nie zapisuje
+node ŚCIEŻKA/DO/copy/aktualizuj.mjs --apply    # zapis
+```
+
+Skrypt podmienia tylko pliki, które nie są edytowane w projekcie: agentów, komendy, dokumenty, szablony, hook, skille `team-*`, foldery narzędzi i `AGENTS.md`. Nie rusza `workflow.json`, skilli `*-rules` ani własnych, ani `openspec/`; brakujące pliki projektu tylko dodaje.
+
+- Linia `model:` w agentach zostaje taka, jak ją ustawiłeś.
+- Plik edytowany lokalnie jest pomijany; `--force` go nadpisze.
+- Pierwsze uruchomienie w projekcie skopiowanym ręcznie nie ma punktu odniesienia: różniące się pliki są pomijane. Obejrzyj podgląd i użyj `--force`, jeśli nic tam nie zmieniałeś.
+- Stan zapisuje `.agents/.installed.json` (commituj). Po aktualizacji sprawdź `git diff`.

@@ -88,6 +88,11 @@ command they do not have. Instructions in Polish: `copy/INSTRUKCJA.md`. Download
 then take the `copy/` folder) or `git clone` and copy it. Maintainers rebuild it with `npm run build:copy`; a test
 fails when it is out of date.
 
+To update a project later, run `node <path>/copy/aktualizuj.mjs` in its root (preview), then add `--apply`. It replaces
+only managed files (roles, commands, docs, templates, hook, `team-*` skills, tool folders, `AGENTS.md`) that were not
+edited locally, keeps your `model:` lines, never touches `workflow.json`, `*-rules` skills or `openspec/`, and records
+hashes in `.agents/.installed.json`. `--force` overwrites locally edited files. Agents never run it.
+
 ## Install
 
 ```bash
