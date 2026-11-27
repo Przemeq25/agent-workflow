@@ -64,7 +64,7 @@ When the coordinator sends back a failed verification, a review finding about wr
 4. Implement contracts from section 4 with exactly those names and shapes.
 5. Database changes only per section 5, only through the project's migration-generation command. Never push or apply migrations to a shared database.
 6. Apply the guidance from section 12. Open the source rule if a hint is unclear.
-7. Write the tests from section 9 for each subtask: every AC row and every section 7 row, using the project's test patterns.
+7. Write the tests section 9 lists, using the project's test patterns and the **Test budget** and **Where tests go** rules of `testing-rules`: only the most important logic, one test per AC with logic, in the test file named after the source file. Do not add tests that section 9 does not list, do not create test files under other names, and write no tests for code without logic (wiring, markup, simple components).
 8. After each subtask run its targeted tests; after the last one run the verification from the task (default: the verification command in `workflow-rules`). Fix failures caused by your change. Report the exact command and exit code; on failure the first error, not the whole log.
 
 ## Rules
