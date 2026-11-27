@@ -25,6 +25,12 @@
 		"figma": [
 			"tech-lead",
 			"qa"
+		],
+		"atlassian": [
+			"pm"
+		],
+		"context7": [
+			"tech-lead"
 		]
 	},
 	"guard": {

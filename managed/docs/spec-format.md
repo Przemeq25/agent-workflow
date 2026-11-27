@@ -26,6 +26,10 @@ Never create a new change folder first. Look at what exists: list `openspec/chan
 1. **Add a change to the group `<group>`** (recommended for follow-up work, fixes and extensions of a merged feature: a new ID, a new folder inside the group, a row in the group `README.md`). A flat change that now has siblings moves into a new group folder (`git mv`; the ID, branch and commits do not change).
 2. **Edit the existing change** only when it is still `draft` (not approved) or not merged yet and the task is a fix of it: update `proposal.md`, `design.md`, `change.json` (a new design revision when behaviour, a contract or data changes, then approval again), never a second folder.
 3. **New group** or **standalone change** when nothing fits.
+
+**Scattered changes.** If the search finds two or more flat changes (or changes in different groups) of the same feature, propose in the same question to gather them into one group: `git mv` each folder under `openspec/changes/<group>/`, set `group` in their `change.json`, write the group `README.md` from their titles, statuses and `dependsOn`. IDs, branches and commits do not change, so this is safe for merged changes too; it is a commit `chore(<KEY>): group <group>` of its own.
+
+**Carry the decisions over.** When the new work joins a group, read before planning: the group `README.md` (goal, group-wide decisions) and, of each sibling change, only `proposal.md` "Out of scope" and `design.md` sections 4 (contracts) and 11 (decisions). Reuse those contracts and decisions; a new change that contradicts one says so in its approval block. When a decision applies to the whole feature (a URL format, a data model, a component), add it to the group `README.md` so the next change finds it there in one read.
 Never edit an approved and merged change: follow-up work is a new change in the same group.
 
 ## Groups: one feature, several changes
@@ -48,10 +52,11 @@ Late fixes and extensions of a feature join its group the same way. A feature sp
 Go through every line and read the files; do not set `approved` while one fails. Report failures to the user as a short list.
 
 1. `change.json`: `id` equals the folder name; subtasks are `STEP-01…`; every subtask has size `S` or `M`, risk `QUICK`/`STANDARD`/`COMPLEX` and at least one AC with `id`, `given`, `when`, `then`; dependencies exist and have no cycles; `openQuestions` is empty.
-2. `proposal.md`: the "Edge cases" table has every category E1–E9 filled with an AC id or `n/a: reason`; no section is left empty or as a placeholder.
+2. `proposal.md`: no `[NEEDS CLARIFICATION: …]` marker is left; the "Edge cases" table has every category E1–E9 filled with an AC id or `n/a: reason`; no section is left empty or as a placeholder.
 3. `design.md` (STANDARD and COMPLEX only): all 13 headings exist, each filled or `n/a: <reason>`; the open-questions section is empty; every AC in `change.json` has a row in section 9 (`STEP-01 AC-1`); every section 7 row names a test or `not tested: <reason>`; every test named in section 9 exists in the test plan.
-4. QUICK-only changes need no design: only points 1 and 2 apply.
-5. After approval the change is frozen: a later edit of proposal, design or subtasks is a new revision and needs the user's approval again.
+4. **Requirement quality** (proposal and AC, read once): each AC is testable or observable (a value, a state, a message; never "works", "fast", "user-friendly" without a number); no two AC contradict each other; every AC has `refs` to the PRD or the task; out of scope is stated. A failure here is fixed by `pm` (or `tech-lead` in mode 2), not by the implementer.
+5. QUICK-only changes need no design: only points 1, 2 and 4 apply.
+6. After approval the change is frozen: a later edit of proposal, design or subtasks is a new revision and needs the user's approval again.
 
 ## Edge-case checklist
 
@@ -100,6 +105,7 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 
 ```json
 {
+  "$schema": "../../../.agents/docs/change.schema.json",
   "id": "PROJ-123-rooms",
   "title": "Customer saves rooms with dimensions",
   "jira": "PROJ-123",
@@ -131,13 +137,14 @@ The delivery state is read from git (branches, PRs, commits with `Subtask: <ID>/
 ```
 
 Rules (part of the approval checklist):
+- `$schema` points to `.agents/docs/change.schema.json` relative to the file (`../../../` for a flat change, `../../../../` in a group), so the editor checks ids, risks, sizes and AC while you type. The schema is a help, not the approval: the checklist below still applies,
 - `group` is empty or a lower-case slug equal to the parent folder name under `openspec/changes/`,
 - `id` equals the folder name: the tracker key in upper case with an optional lower-case note (`PROJ-123`, `PROJ-123-rooms`); a lower-case slug only when `workflow-rules` sets no tracker,
 - subtasks `STEP-01…`, size `S` or `M`, risk `QUICK`, `STANDARD` or `COMPLEX`, at least one AC with `id`, `given`, `when`, `then`,
 - dependencies exist and there are no cycles (subtasks within a change, changes between each other),
 - `approvedAt` is set only after the user's explicit approval. `approvalHash` stays empty; only projects that use the optional loop fill it (the loop's `approve` command).
 
-Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks.
+**Subtask sizing rule.** Subtasks are **delivery units, not AC groups**: fewer and bigger. One subtask is one coherent vertical slice (size S up to ~5 files, M up to ~15 files) with 2–10 AC. Split only for a reason you can name: a migration or shared contract that must land first, a COMPLEX part that deserves its own review, or a PR that would be too big to review (about 800 changed lines). Most changes have 1–3 subtasks.
 
 Risk: **QUICK** (text, style, local fix without logic or contracts) needs no design. **STANDARD** and **COMPLEX** need an approved design with all 13 headings (a section that does not apply is one line `n/a: <reason>`).
 

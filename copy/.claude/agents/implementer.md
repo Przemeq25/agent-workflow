@@ -3,7 +3,7 @@ name: implementer
 description: "Implements one subtask or a batch of subtasks of one change, in order, according to the approved design (<change folder>/design.md), with the tests from the test plan. Called by tech-lead."
 model: sonnet
 permissionMode: acceptEdits
-disallowedTools: mcp__chrome-devtools, mcp__playwright, mcp__figma
+disallowedTools: mcp__chrome-devtools, mcp__playwright, mcp__figma, mcp__atlassian, mcp__context7
 skills:
   - team-verification
 hooks:

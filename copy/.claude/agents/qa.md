@@ -3,6 +3,7 @@ name: qa
 description: "Acceptance of a subtask against its acceptance criteria and the design test plan. Runs tests, adds missing tests, never changes production code. Called by tech-lead."
 model: sonnet
 permissionMode: acceptEdits
+disallowedTools: mcp__atlassian, mcp__context7
 skills:
   - team-verification
 hooks:

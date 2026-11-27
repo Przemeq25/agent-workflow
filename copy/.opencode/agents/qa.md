@@ -40,6 +40,8 @@ permission:
   "chrome-devtools_*": allow
   "playwright_*": allow
   "figma_*": allow
+  "atlassian_*": deny
+  "context7_*": deny
 ---
 
 

@@ -27,6 +27,8 @@ permission:
   "chrome-devtools_*": deny
   "playwright_*": deny
   "figma_*": deny
+  "atlassian_*": deny
+  "context7_*": deny
 ---
 
 
@@ -54,7 +56,7 @@ Stale documentation (a wrong path, name or reference in a topic file, the PRD or
 
 Style preferences never block. On re-review, check only the fixed items and the code they touch. Never claim you ran a check you did not run.
 
-Tests: stay within the **Test budget** of `testing-rules`. Never ask for more tests than the design lists; a missing test is blocking only for an AC or section 7 row with logic. Flag as a suggestion (not blocking) tests the budget does not allow: tests for wiring, markup or simple components, duplicate coverage of one behaviour, and tests in a file named differently from its source file.
+Tests: stay within the **Test budget** of `testing-rules`. Never ask for more tests than the design lists; a missing test is blocking only for an AC or section 7 row with logic. A weak test (the test-strength check) is fixed by changing the data or the assertion of that test, never by adding another test. Flag as a suggestion (not blocking) tests the budget does not allow: tests for wiring, markup or simple components, duplicate coverage of one behaviour, and tests in a file named differently from its source file.
 
 ## Design review ("Review the design of <ID>")
 

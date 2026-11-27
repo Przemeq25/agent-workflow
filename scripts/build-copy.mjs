@@ -24,6 +24,8 @@ export const COPY_MCP = {
 	"chrome-devtools": ["qa"],
 	playwright: ["qa"],
 	figma: ["tech-lead", "qa"],
+	atlassian: ["pm"],
+	context7: ["tech-lead"],
 };
 
 function walk(dir, out = []) {
