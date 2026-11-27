@@ -62,6 +62,8 @@ Review i merge: PR idzie ze zwykłymi commitami, poprawki z review to kolejne co
 
 `change.json` ma pole `$schema`: edytor (VS Code, Kilo) podkreśla błędne ID, brak AC czy zły `risk` od razu.
 
+Praca tylko z `tech-lead` (bez `pm`): większe zadanie („wersja mobilna”, „quick linki”) agent sam rozpisuje na grupę zmian, dopisuje funkcję do mapy w PRD (`F-…`, status `planned`) i po Twoim „ok” kończy sesję. Potem piszesz „co dalej” (albo „next quick-links”): agent bierze kolejną niescaloną zmianę z grupy, której zależności są już scalone. Każda zmiana w ostatnim kroku aktualizuje wiersz funkcji w PRD i w `README.md` grupy, więc PRD zostaje mapą projektu.
+
 ## 4. MCP: przeglądarka i Figma (opcjonalnie)
 Pliki agentów mają już przypisane serwery MCP:
 

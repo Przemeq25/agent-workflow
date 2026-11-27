@@ -28,7 +28,7 @@ Every row verified in the repository (search or read). No row means we do not as
 Files outside this list: only trivial wiring (an import, registration in an index). Anything else is a blocker.
 
 Documentation is listed here too, in the subtask that makes it true, so it ships in the same PR as the code:
-the feature line in `context/foundation/prd.md` and the status in `roadmap.md` (usually the last subtask), and
+the feature line in `context/foundation/prd.md`, the status in `roadmap.md` and the change's row in the group `README.md` (usually the last subtask), and
 `.agents/skills/engineering-rules/references/<topic>.md` plus its row in the topic table when this change introduces
 or changes a project-wide way of doing something (configuration, translations, auth, data access…).
 
