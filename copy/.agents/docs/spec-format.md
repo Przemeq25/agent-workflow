@@ -25,6 +25,10 @@ Never create a new change folder first. Look at what exists: list `openspec/chan
 1. **Add a change to the group `<group>`** (recommended for follow-up work, fixes and extensions of a merged feature: a new ID, a new folder inside the group, a row in the group `README.md`). A flat change that now has siblings moves into a new group folder (`git mv`; the ID, branch and commits do not change).
 2. **Edit the existing change** only when it is still `draft` (not approved) or not merged yet and the task is a fix of it: update `proposal.md`, `design.md`, `change.json` (a new design revision when behaviour, a contract or data changes, then approval again), never a second folder.
 3. **New group** or **standalone change** when nothing fits.
+
+**Scattered changes.** If the search finds two or more flat changes (or changes in different groups) of the same feature, propose in the same question to gather them into one group: `git mv` each folder under `openspec/changes/<group>/`, set `group` in their `change.json`, write the group `README.md` from their titles, statuses and `dependsOn`. IDs, branches and commits do not change, so this is safe for merged changes too; it is a commit `chore(<KEY>): group <group>` of its own.
+
+**Carry the decisions over.** When the new work joins a group, read before planning: the group `README.md` (goal, group-wide decisions) and, of each sibling change, only `proposal.md` "Out of scope" and `design.md` sections 4 (contracts) and 11 (decisions). Reuse those contracts and decisions; a new change that contradicts one says so in its approval block. When a decision applies to the whole feature (a URL format, a data model, a component), add it to the group `README.md` so the next change finds it there in one read.
 Never edit an approved and merged change: follow-up work is a new change in the same group.
 
 ## Groups: one feature, several changes
